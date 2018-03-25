@@ -1,0 +1,165 @@
+%%%%%%%%%%%%%
+% Example thesis (CTU FIT) based on CTUstyle 
+% use: pdfcsplain <FIT-ZP.tex>
+% write this document as UTF-8
+%%%%%%%%%%%%%
+% CTUstyle: see more at http://petr.olsak.net/ctustyle.html
+%%%%%%%%%%%%%
+
+% This example created by Ondrej Guth <ondrej.guth@fit.cvut.cz> 2014
+% based on CTUstyle by Petr Olsak
+
+\input ctustyle2
+\overfullrule=0pt
+
+\worktype [B/CZ]  % (thesis type {B,M,D})/(language {CZ,EN})
+\faculty {F8}
+\department {Katedra teoretické informatiky}
+\title {Metoda pohyblivých vážených nejmenších čtverců v Julia}
+\author {Tung Anh Vu}
+\date {Leden 2018}
+\supervisor{Ing. Tomáš Kalvoda, Ph.D.}
+\thanks {Děkuji svému vedoucímu Ing. Tomáši Kalvodovi, Ph.D., za cenné rady, připomínky a pravidelné konzultace, které mi byly vždy cennou zpětnou vazbou.}
+\abstractEN {An implementation of moving weighted least squares method was created.}
+\abstractCZ {V této práci se implementovala metoda nejmenších pohyblivých čtverců.}
+\declaration {
+   Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+   uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým
+   pokynem o~etické přípravě vysokoškolských závěrečných prací.
+
+   Beru na vědomí, že se na moji práci vztahují práva a povinnosti
+   vyplývající ze zákona č.~121/2000~Sb., autorského zákona, ve znění
+   pozdějších předpisů, zejména skutečnost, že České vysoké učení technické
+   v~Praze má právo na uzavření licenční smlouvy o~užití této práce jako
+   školního díla podle §~60 odst.~1 autorského zákona.
+
+   V Praze dne 1. 5. 2018 % !!! Attention, you have to change this item.
+   \signature % makes dots
+}
+
+\makefront
+
+\input uvod.tex
+
+% \sec Prerekvizity a další informace
+
+% Tento dokument slouží jako příklad, jak vytvořit závěrečnou práci s použitím
+% CTUstyle, který vytvořil Petr Olšák. Následující zdroje
+% informací obsahují makra, která můžete použít při psaní své práce.
+
+% Více informací o CTUstyle najdete na \url{http://petr.olsak.net/ctustyle.html} -- návod k pou{ž}ití, povinné {č}ásti, tipy. Doporu{č}ujeme p{ř}e{č}íst.
+
+% Styl je založený na sadě maker OPmac, kterou najdete (včetně dokumentace) na
+% \url{http://petr.olsak.net/opmac.html} -- doporučujeme prohlédnout.
+
+% \sec Použití na FIT
+
+% Kromě samotného textu práce nastavte základní informace o práci (volání před
+% příkazem makefront). U svého jména uvádějte tituly, které máte v
+% okamžiku odevzdání. Text prohlášení je nutné doslova převzít z
+% následující kapitoly (to je opravdu nutné).
+
+
+% \label[sec:prohlaseni]
+% \chap Texty prohlášení
+
+
+% Vyberte si jeden z následujících textů \uv{prohlášení} (strana iii) a ten
+% (doslova a bez jakýchkoli úprav) použijte (příkaz "\declaration").
+% Jakoukoli modifikaci musí předem schválit studijní oddělení fakulty.
+
+% \sec Minimální
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů,
+%    zejména skutečnost, že České vysoké učení technické v~Praze má právo na
+%    uzavření licenční smlouvy o~užití této práce jako školního díla podle
+%    §~60 odst.~1 autorského zákona.
+
+% \sec Udělení práv škole
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
+%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
+%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
+%    programů, jež jsou její součástí či přílohou a veškeré jejich dokumentace
+%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
+%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
+%    hodnotu Díla, avšak pouze k~nevýdělečným účelům. Toto oprávnění je časově,
+%    teritoriálně i množstevně neomezené.
+		
+% \sec Licenční smlouva se školou
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
+%    Dále prohlašuji, že jsem s~Českým vysokým učením technickým v~Praze
+%    uzavřel licenční smlouvu o~užití této práce jako školního díla podle §~60
+%    odst.~1 autorského zákona. Tato skutečnost nemá vliv na ust. §~47b zákona
+%    č.~111/1998~Sb., o~vysokých školách, ve znění pozdějších předpisů.
+
+% \sec Otevřená licence
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
+%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
+%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
+%    programů, jež jsou její součástí či přílohou, a veškeré jejich dokumentace
+%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
+%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
+%    hodnotu Díla, a za jakýmkoli účelem (včetně užití k~výdělečným účelům).
+%    Toto oprávnění je časově, teritoriálně i~množstevně neomezené. Každá osoba,
+%    která využije výše uvedenou licenci, se však zavazuje udělit ke každému
+%    dílu, které vznikne (byť jen zčásti) na základě Díla, úpravou Díla,
+%    spojením Díla s~jiným dílem, zařazením Díla do díla souborného či
+%    zpracováním Díla (včetně překladu), licenci alespoň ve výše uvedeném
+%    rozsahu a zároveň zpřístupnit zdrojový kód takového díla alespoň
+%    srovnatelným způsobem a ve srovnatelném rozsahu, jako je zpřístupněn
+%    zdrojový kód Díla.
+
+% \sec Oprávnění k užití
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
+%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
+%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
+%    programů, jež jsou její součástí či přílohou a veškeré jejich dokumentace
+%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
+%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
+%    hodnotu Díla a za jakýmkoli účelem (včetně užití k~výdělečným účelům).
+%    Toto oprávnění je časově, teritoriálně i množstevně neomezené.
+
+% \sec Po dohodě s ČVUT
+
+%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
+%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
+%    o~etické přípravě vysokoškolských závěrečných prací.
+
+%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
+%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
+%    Dále prohlašuji, že jsem s~Českým vysokým učením technickým v~Praze
+%    uzavřel dohodu, na základě níž se ČVUT vzdalo práva na uzavření licenční
+%    smlouvy o~užití této práce jako školního díla podle §~60 odst.~1
+%    autorského zákona. Tato skutečnost nemá vliv na ust. §~47b zákona
+%    č.~111/1998~Sb., o~vysokých školách, ve znění pozdějších předpisů.
+
+\bye

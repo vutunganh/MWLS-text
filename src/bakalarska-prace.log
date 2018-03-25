@@ -1,0 +1,174 @@
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Arch Linux) (preloaded format=pdfcsplain 2018.3.6)  25 MAR 2018 18:03
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+ encTeX v. Jun. 2004, reencoding enabled
+**bakalarska-prace.tex
+(./bakalarska-prace.tex The format: csplain <Apr. 2016>.
+The cs-fonts are preloaded and A4 size implicitly defined.
+The utf8->iso8859-2 re-encoding of Czech+Slovak alphabet activated by encTeX
+(./ctustyle2.tex
+CTUstyle2: Thesis at Czech Technical University in Prague, <beta(c) Mar.2018>
+\testinput=\read0
+
+(/usr/share/texmf-dist/tex/csplain/opmac/opmac.tex
+This is OPmac (Olsak's Plain macros), version <Jun. 2017>
+\tmpnum=\count28
+\tmpdim=\dimen16
+\iindent=\dimen17
+\ttindent=\dimen18
+\colsep=\dimen19
+\mnoteindent=\dimen20
+\mnotesize=\dimen21
+\ptunit=\dimen22
+\fontdim=\dimen23
+(/usr/share/texmf-dist/tex/csplain/fonts/ams-math.tex
+FONT: AMS math fonts - \mathchardef's prepared, 12 math families preloaded.
+\ptmunit=\dimen24
+)
+The \^, \`, \', \v, \" and \r expands to characters by ISO-8859-2.
+\reffile=\write0
+\testin=\read1
+\chapnum=\count29
+\secnum=\count30
+\seccnum=\count31
+\nonumnum=\count32
+\remskipamount=\skip18
+\tnum=\count33
+\fnum=\count34
+\dnum=\count35
+\itemnum=\count36
+\mullines=\count37
+\oulnum=\count38
+\ttline=\count39
+\viline=\count40
+\vifile=\read2
+\tabdata=\toks12
+\colnum=\count41
+\drulewidth=\dimen25
+\picwidth=\dimen26
+\picheight=\dimen27
+\fnotenum=\count42
+\fnotenumlocal=\count43
+\mnotenum=\count44
+\mnoteskip=\dimen28
+\auxfile=\write1
+\bibnum=\count45
+\bibmark=\toks13
+\lastcitenum=\count46
+\lastpage=\count47
+\pgwidth=\dimen29
+\pgheight=\dimen30
+\shiftoffset=\dimen31
+
+(./bakalarska-prace.ref)
+\openout0 = `bakalarska-prace.ref'.
+
+)
+\faculty=\toks14
+\department=\toks15
+\title=\toks16
+\subtitle=\toks17
+\author=\toks18
+\supervisor=\toks19
+\date=\toks20
+\studyinfo=\toks21
+\authorinfo=\toks22
+\workinfo=\toks23
+\workname=\toks24
+\pagetwo=\toks25
+\titleEN=\toks26
+\titleCZ=\toks27
+\titleSK=\toks28
+\subtitleEN=\toks29
+\subtitleCZ=\toks30
+\subtitleSK=\toks31
+\abstractEN=\toks32
+\abstractCZ=\toks33
+\abstractSK=\toks34
+\keywordsEN=\toks35
+\keywordsCZ=\toks36
+\keywordsSK=\toks37
+\thanks=\toks38
+\declaration=\toks39
+\specification=\toks40
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}
+(/usr/share/texmf-dist/tex/csplain/fonts/lmfonts.tex
+(/usr/share/texmf-dist/tex/csplain/fonts/ff-mac.tex)
+FONT: Latin Modern - {\caps \sans \ttset \slant \nbold \ttprop \ttlight \ttcond
+ \quotset \upital \dunhill } {\rm \bf \it \bi } +AMS
+(/usr/share/texmf-dist/tex/csplain/fonts/chars-8z.tex))
+\leftbox=\box16
+\rightbox=\box17
+\frontht=\dimen32
+\tocbox=\box18
+\tofbox=\box19
+\totbox=\box20
+\appnum=\count48
+\numA=\count49
+\numB=\count50
+\numC=\count51
+\numD=\count52
+\numE=\count53
+\maxglosindent=\dimen33
+\rfcnum=\count54
+)
+cs hyphenation used (\language=5). \frenchspacing is set on. [-1 <./ctulogo-new
+.pdf>] [-2] [-3]
+Overfull \hbox (5.89195pt too wide) in paragraph at lines 40--40
+[]\tenrm An im-ple-men-ta-tion of mov-ing weighted
+
+\hbox(7.57762+2.13887)x190.63347, glue set - 1.0
+.\hbox(0.0+0.0)x11.66563
+.\tenrm A
+.\tenrm n
+.\glue 3.66666 plus 1.83333 minus 1.22221
+.\tenrm i
+.\tenrm m
+.\discretionary
+..\tenrm -
+.\tenrm p
+.\tenrm l
+.\tenrm e
+.\discretionary
+..\tenrm -
+.\tenrm m
+.\tenrm e
+.\discretionary replacing 2
+..\tenrm n
+..\tenrm -
+.\tenrm n
+.\kern-0.30557
+.\tenrm t
+.\tenrm a
+.\discretionary
+..\tenrm -
+.\tenrm t
+.\tenrm i
+.\tenrm o
+.\tenrm n
+.\glue 3.66666 plus 1.83333 minus 1.22221
+.\tenrm o
+.\tenrm f
+.\glue 3.66666 plus 1.83333 minus 1.22221
+.\tenrm m
+.\tenrm o
+.\kern-0.30557
+.etc.
+
+[-4] [-5] [-6] (./uvod.tex) [1] ){/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-c
+s.enc}{/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/share/texmf
+-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/share/texmf-dist/fonts/enc/dvips/c
+s/xl2.enc}<./Technika-Bold.pfb><./Technika-Book.pfb></usr/share/texmf-dist/font
+s/type1/public/lm/lmmi10.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmmi8
+.pfb></usr/share/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/share/texmf-d
+ist/fonts/type1/public/lm/lmri10.pfb></usr/share/texmf-dist/fonts/type1/public/
+lm/lmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10
+.pfb>
+Output written on bakalarska-prace.pdf (7 pages, 121184 bytes).
+PDF statistics:
+ 108 PDF objects out of 1000 (max. 8388607)
+ 89 compressed objects within 1 object stream
+ 13 named destinations out of 1000 (max. 500000)
+ 54 words of extra memory for PDF output out of 10000 (max. 10000000)
+
