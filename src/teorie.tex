@@ -1,0 +1,12 @@
+\chap Teoretická část
+
+\sec Metoda nejmenších čtverců
+
+Nechť je ráno $N$ bodů $\vector{x_i} \in {\bbchar R}^d$, kde $i \in \{1, \ldots, N\}$ a $N$ skalárních hodnot $f_i \in \bbchar R$. Úkolem je nalézt funkci $f$, která minimalizuje chybu ve smyslu nejmenších čtverců s chybovou funkcí $J = \sum_i \| f(\vector{x_i}) - f_i \|^2$. Řešená minimalizační úloha má následující předpis
+\label[ls-statement]
+$$ \min_{f \in \prod^{d}_{m}}\sum_i \| f(\vector{x_i}) - f_i \|^2, \eqmark $$
+kde $f$ je funkce z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných stupně $d$. Funkci $f$ lze zapsat jako
+$$ f(\vector{x_i}) = \vector{b}(\vector{x_i}) \vector{c}, $$
+kde $\vector{b}(\vector{x}) = (b_1(\vector{x}), \ldots, b_k(\vector{x}))^T$ je bazický vektor prostoru polynomů a $\vector{c} = (c_1, \ldots, c_k)^T$ je vektor neznámých koeficientů, které chceme minimalizovat v \ref[ls-statement]. Například pro prostor $\prod^{2}_{2}$ je bazický vektor $(1, x, y, x^2, xy, y^2)$.
+
+{Řešení. } 
