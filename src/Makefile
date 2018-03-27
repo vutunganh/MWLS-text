@@ -1,11 +1,14 @@
 TEX = pdfcsplain
+OUTPUT_DIR = ../build
+TEXFLAGS = -output-directory=$(OUTPUT_DIR)
 
 all: bakalarska-prace.tex
-	$(TEX) bakalarska-prace.tex
-	$(TEX) bakalarska-prace.tex
-	$(TEX) bakalarska-prace.tex
+	mkdir -p ../build
+	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
+	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
+	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
 
 .PHONY: clean
 
 clean:
-	rm *.log
+	rm $(OUTPUT_DIR)/*.log
