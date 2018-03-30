@@ -1,17 +1,6 @@
-%%%%%%%%%%%%%
-% Example thesis (CTU FIT) based on CTUstyle 
-% use: pdfcsplain <FIT-ZP.tex>
-% write this document as UTF-8
-%%%%%%%%%%%%%
-% CTUstyle: see more at http://petr.olsak.net/ctustyle.html
-%%%%%%%%%%%%%
-
-% This example created by Ondrej Guth <ondrej.guth@fit.cvut.cz> 2014
-% based on CTUstyle by Petr Olsak
-
 \input ctustyle2
+\input opmac-bib.tex
 \input tungstyl
-\overfullrule=0pt
 
 \worktype [B/CZ]  % (thesis type {B,M,D})/(language {CZ,EN})
 \faculty {F8}
@@ -42,36 +31,13 @@
 
 \nonum \input uvod.tex
 
-\input implementace.tex
-
 \input teorie.tex
 
-% \sec Prerekvizity a další informace
+\input navrh.tex
 
-% Tento dokument slouží jako příklad, jak vytvořit závěrečnou práci s použitím
-% CTUstyle, který vytvořil Petr Olšák. Následující zdroje
-% informací obsahují makra, která můžete použít při psaní své práce.
+\input implementace.tex
 
-% Více informací o CTUstyle najdete na \url{http://petr.olsak.net/ctustyle.html} -- návod k pou{ž}ití, povinné {č}ásti, tipy. Doporu{č}ujeme p{ř}e{č}íst.
-
-% Styl je založený na sadě maker OPmac, kterou najdete (včetně dokumentace) na
-% \url{http://petr.olsak.net/opmac.html} -- doporučujeme prohlédnout.
-
-% \sec Použití na FIT
-
-% Kromě samotného textu práce nastavte základní informace o práci (volání před
-% příkazem makefront). U svého jména uvádějte tituly, které máte v
-% okamžiku odevzdání. Text prohlášení je nutné doslova převzít z
-% následující kapitoly (to je opravdu nutné).
-
-
-% \label[sec:prohlaseni]
-% \chap Texty prohlášení
-
-
-% Vyberte si jeden z následujících textů \uv{prohlášení} (strana iii) a ten
-% (doslova a bez jakýchkoli úprav) použijte (příkaz "\declaration").
-% Jakoukoli modifikaci musí předem schválit studijní oddělení fakulty.
+\nonum \input literatura.tex
 
 % \sec Minimální
 
