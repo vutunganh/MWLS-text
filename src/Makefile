@@ -4,9 +4,8 @@ TEXFLAGS = -output-directory=$(OUTPUT_DIR)
 
 all: bakalarska-prace.tex
 	mkdir -p $(OUTPUT_DIR)
-	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
-	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
-	$(TEX) $(TEXFLAGS) bakalarska-prace.tex
+	$(TEX) $(TEXFLAGS) $^
+	$(TEX) $(TEXFLAGS) $^
 
 .PHONY: clean
 
