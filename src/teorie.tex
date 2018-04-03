@@ -2,7 +2,7 @@
 
 \sec Definice a značení
 
-Symbolem $\hat n$ značíme posloupnost čísel $1, 2, \ldots, n$.
+Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vector{v} \in \reals^n$ značíme písmenem s šipkou. Matice $\matrix{A} \in \reals^{n, m}$ značíme zdvojeným písmenem.
 
 \sec Metoda nejmenších čtverců
 
@@ -11,7 +11,6 @@ Nechť je dána sada dat $\{(\vector{x_i}, y_i)\}_{i = 1}^n$ a chceme najít lin
 $$
 f = \sum_{i = 1}^m c_if_i
 $$
-
 tak, aby funkční hodnoty funkce $f$ v bodech $x_i$ co nejlépe odpovídaly hodnotám $y_i$ pro každé $i \in \hat n$. Úkolem je určit neznáme koeficienty lineární kombinace $c_1, c_2, \ldots, c_m$. Předpokládejme, že $m \leq n$, typicky je množštví dat $n$ mnohem větší než počet funkcí $m$.
 
 % TODO: volba f
@@ -20,12 +19,12 @@ Metoda nejmenších čtverců spočívá v myšlence minimalizovat kvadrát celk
 $$
 F(\vector{c}) = \sum_{i = 1}^n (y_i - f(x_i))^2 = \sum_{i = 1}^n (y_i - (\matrix{A}\vector{c})_i)^2 = \|\vector{y} - \matrix{A}\vector{c}\|^2_2
 $$
-
 byla co nejmenší. Zde jsme označili
 $$
 (\matrix{A}\vector{c})_i = \sum_{j = 1}^{m} f_j(\vector{x}_i)c_j.
 $$
 
+\secc Jiná definice, ještě se musí vybrat lepší z nich
 Nechť je dáno $N$ bodů $\vector{x_i} \in {\bbchar R}^d$, kde $i \in \{1, \ldots, N\}$ a $N$ skalárních hodnot $f_i \in \bbchar R$. Úkolem je nalézt funkci $f$, která minimalizuje chybu ve smyslu nejmenších čtverců s chybovou funkcí $J = \sum_i \| f(\vector{x_i}) - f_i \|^2$. Řešená minimalizační úloha má následující předpis
 \label[ls-statement]
 $$ \min_{f \in \prod^{d}_{m}}\sum_i \| f(\vector{x_i}) - f_i \|^2, \eqmark $$
