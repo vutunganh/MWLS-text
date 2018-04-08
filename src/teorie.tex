@@ -35,3 +35,11 @@ kde $\vector{b}(\vector{x}) = (b_1(\vector{x}), \ldots, b_k(\vector{x}))^T$ je b
 Například pro prostor $\prod^{2}_{2}$ je bazický vektor $(1, x, y, x^2, xy, y^2)$.
 
 {\bf Řešení. } Minimalizace $\matrix{A}$
+
+\sec Cell linked list
+
+Cell linked list[\rcite[computer_simulation_of_liquids],~s.~149--152] je datová struktura, kterou lze řešit problém hledání nejbližších sousedů. Nechť je dána sada bodů $S := \{\vector{x_i}\}_{i = 1}^n$, kde každé $x_i \in \reals^d$. Chceme pro libovolný dotazovaný bod $q \in \reals^d$ a $\delta \in \reals$ nalézt podmnožinu $S' \subseteq S$ takovou, že pro libovolný bod $\vector{p'} \in S'$ platí, že $\|q - p'\| \leq \delta$ a pro každý bod $p' \in S \setminus S'$ platí, že $\|q - p'\| > \delta$.
+
+Naivní způsob, který prohledá všech $n$, by mohl být časově příliš pomalý. Cell linked list rozdělí prostor $\reals^d$ na $d$-rozměrné krychle s délkou hrany $\epsilon$, které se volí blízko k $\delta$. Nyní stačí najít hyperkrychli, do které patří $q$ a prohledat $\lceil {\delta \over \epsilon} \rceil^d$ sousedních hyperkrychlí.
+
+
