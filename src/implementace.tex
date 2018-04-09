@@ -1,21 +1,26 @@
-\chap Implementace
+\chapter{Implementace}
 
-\sec Volba technologií
+Veškerá měření probíhala na procesoru Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz.
 
-\sec Použití balíčku
+\section{Programovací jazyk Julia}
 
-\secc Návod k instalaci
+Vícerozměrná pole v Julii jsou ukládána v column major pořadí. V paměti s náhodným přístupem jsou v souvislých paměťových blocích uložené sloupce, zatímco řádky mohou být uložené na v paměti různých místech. Demonstrujme na příkladu \ref[major-example].
+
+
+\section{Použití balíčku}
+
+\subsection{Instalace}
 
 Nutnou podmínkou k použití balíčku je nainstalovaná Julia na systému. Instalace záleží na provozovaném operačním systému.
 
-Instalaci balíčku lze v Julii provést příkazem:
+Instalaci balíčku lze v Julii provést příkazem
 
-\begtt
 Pkg.install("MovingWeightedLeastSquares")
-\endtt
 
-a pro použití stačí příkaz:
+a pro použití stačí příkaz
 
-\begtt
 using MovingWeightedLeastSquares
-\endtt
+
+Tímto se připojí balíček do REPL prostředí, ve kterém lze použít libovolný příkaz, který balíček umožňuje. Totožným způsobem lze balíček připojit i ve skriptech.
+
+\subsection{Funkcionality balíčku}

@@ -1,142 +1,104 @@
-\input ctustyle2
-\input opmac-bib.tex
-\input tungstyl
+% arara: pdflatex
+% arara: pdflatex
+% arara: pdflatex
 
-\worktype [B/CZ]  % (thesis type {B,M,D})/(language {CZ,EN})
-\faculty {F8}
-\department {Katedra teoretické informatiky}
-\title {Metoda pohyblivých vážených nejmenších čtverců v Julia}
-\author {Tung Anh Vu}
-\date {Leden 2018}
+% options:
+% thesis=B bachelor's thesis
+% thesis=M master's thesis
+% czech thesis in Czech language
+% slovak thesis in Slovak language
+% english thesis in English language
+% hidelinks remove colour boxes around hyperlinks
+
+\documentclass[thesis=B,czech]{FITthesis}[2012/06/26]
+
+\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+
+\usepackage{graphicx} %graphics files inclusion
+\usepackage{amsmath} %advanced maths
+\usepackage{amssymb} %additional math symbols
+
+\usepackage{dirtree} %directory tree visualisation
+
+% % list of acronyms
+% \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
+% \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
+% \makeglossaries
+
+\newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
+\newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% ODTUD DAL VSE ZMENTE
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+
+\department{Katedra teoretické informatiky}
+\title{Metoda pohyblivých nejmenších čtverců v Julia}
+\authorGN{Tung Anh} %(křestní) jméno (jména) autora
+\authorFN{Vu} %příjmení autora
+\authorWithDegrees{Tung Anh Vu} %jméno autora včetně současných akademických titulů
+\author{Tung Anh Vu} %jméno autora bez akademických titulů
 \supervisor{Ing. Tomáš Kalvoda, Ph.D.}
-\thanks {Děkuji svému vedoucímu Ing. Tomáši Kalvodovi, Ph.D., za cenné rady, připomínky a pravidelné konzultace, které mi byly vždy cennou zpětnou vazbou.}
-\abstractEN {An implementation of moving weighted least squares method was created.}
-\abstractCZ {V této práci se implementovala metoda nejmenších pohyblivých čtverců.}
-\declaration {
-   Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-   uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým
-   pokynem o~etické přípravě vysokoškolských závěrečných prací.
+\acknowledgements{Děkuji svému vedoucímu Ing. Tomáši Kalvodovi, Ph.D., za cenné rady, připomínky a pravidelné konzultace, které mi byly vždy cennou zpětnou vazbou.}
+\abstractCS{V této práci se implementovala metoda nejmenších čtverců v jazyce Julia. Byl formulován problém hledání nejbližších sousedů a předvedla se 2 řešení toho problému. Také lze nalézt krátký popis programovacího jazyka Julia.}
+\abstractEN{The moving weighted least squares was implemented. Nearest neighbor search problem was formulated and 2 solutions were presented. Also a short description of Julia programming language can be found.}
+\placeForDeclarationOfAuthenticity{V~Praze}
+\declarationOfAuthenticityOption{4} %volba Prohlášení (číslo 1-6)
+\keywordsCS{metoda pohyblivých nejmenších čtverců, programovací jazyk Julia, hledání nejbliších sousedů, aproximace funkce}
+\keywordsEN{moving weighted least squares, Julia programming language, nearest neighbor search, function approximation}
+% \website{http://site.example/thesis} %volitelná URL práce, objeví se v tiráži - úplně odstraňte, nemáte-li URL práce
 
-   Beru na vědomí, že se na moji práci vztahují práva a povinnosti
-   vyplývající ze zákona č.~121/2000~Sb., autorského zákona, ve znění
-   pozdějších předpisů, zejména skutečnost, že České vysoké učení technické
-   v~Praze má právo na uzavření licenční smlouvy o~užití této práce jako
-   školního díla podle §~60 odst.~1 autorského zákona.
+\newcommand{\reals}{\mathbb{R}}
 
-   V Praze dne 1. 5. 2018 % !!! Attention, you have to change this item.
-   \signature % makes dots
-}
+\begin{document}
 
-\def\veta {\numberedpar A{Věta}}
-\def\dusledek {\numberedpar A{Důsledek}}
-\def\definice {\numberedpar B{Definice}}
-\def\priklad {\numberedpar C{Příklad}}
-\def\algoritmus {\numberedpar D{Algoritmus}}
+% \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
+% \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 
-\makefront
+\begin{introduction}
+Předpokládejme, že je zadána sada dat s jejími výstupními hodnotami $S := \{(x_i, y_i)\}_{i = 1}^n$. Naším cílem je nalézt funkci $f$, která co nejlépe popisuje vztah mezi vstupy a výstupy dat $S$.
 
-\nonum \input uvod.tex
+Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánům Adrien Marie Legendre a Carl Fridrich Gauss. Adrien Marie Legendre v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{historyOfStatistics}.
 
-\input teorie.tex
+V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Kromě přesnějších výsledků dokáže metoda například interpolovat nad vstupními daty.
 
-\input navrh.tex
+Častým problémem při programování numerických metod a podobně výkonných programů je ,,problém dvou jazyků'' -- prototypování probíhá ve dynamických vysokoúrovňových jazycích jako jsou například Matlab, R nebo Python a výsledná implementace vznikne přepsáním prototypu do výkonnějších, staticky typovaných jazyků, kde častými volbami jsou Fortran nebo C. Autoři jazyku Julia si dávají za cíl vytvořit dynamicky typovaný jazyk, který bude výkonem schopen konkurovat nízkoúrovňovému Fortranu nebo C.\cite{doi:10.1137/141000671}
 
-\input implementace.tex
+Hlavním výstupem práce by měla být implementace metody pohyblivých vážených nejmenších čtverců v programovacím jazyce Julia.
 
-\nonum \input literatura.tex
+V teoretické části si zformulujeme problém, který se dá řešit metodou nejmenších čtverců. Představíme metodu pohyblivých vážených nejmenších čtverců. Dále budeme pokračovat rešerší existujicích implementací metody a rešerší datových struktur, jímiž lze řešit stěžejní podproblém metody pohyblivých vážených nejmenších čtverců a to problém hledání nejbližších bodů. V poslední části si popíšeme návrh a naši implementaci v jazyce Julia, jež je hlavním výstupem této práce.
 
-% \sec Minimální
+\end{introduction}
 
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
+\include{teorie}
 
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů,
-%    zejména skutečnost, že České vysoké učení technické v~Praze má právo na
-%    uzavření licenční smlouvy o~užití této práce jako školního díla podle
-%    §~60 odst.~1 autorského zákona.
+\include{implementace}
 
-% \sec Udělení práv škole
+\begin{conclusion}
+  %sem napište závěr Vaší práce
+\end{conclusion}
 
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
+\bibliographystyle{csn690}
+\bibliography{mybibliographyfile}
 
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
-%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
-%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
-%    programů, jež jsou její součástí či přílohou a veškeré jejich dokumentace
-%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
-%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
-%    hodnotu Díla, avšak pouze k~nevýdělečným účelům. Toto oprávnění je časově,
-%    teritoriálně i množstevně neomezené.
-		
-% \sec Licenční smlouva se školou
+\appendix
 
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
 
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
-%    Dále prohlašuji, že jsem s~Českým vysokým učením technickým v~Praze
-%    uzavřel licenční smlouvu o~užití této práce jako školního díla podle §~60
-%    odst.~1 autorského zákona. Tato skutečnost nemá vliv na ust. §~47b zákona
-%    č.~111/1998~Sb., o~vysokých školách, ve znění pozdějších předpisů.
+\chapter{Obsah přiloženého CD}
 
-% \sec Otevřená licence
+%upravte podle skutecnosti
 
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
+\begin{figure}
+  \dirtree{%
+    .1 readme.txt\DTcomment{stručný popis obsahu CD}.
+    .1 exe\DTcomment{adresář se spustitelnou formou implementace}.
+    .1 src.
+    .2 impl\DTcomment{zdrojové kódy implementace}.
+    .2 thesis\DTcomment{zdrojová forma práce ve formátu \LaTeX{}}.
+    .1 text\DTcomment{text práce}.
+    .2 thesis.pdf\DTcomment{text práce ve formátu PDF}.
+    .2 thesis.ps\DTcomment{text práce ve formátu PS}.
+  }
+\end{figure}
 
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
-%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
-%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
-%    programů, jež jsou její součástí či přílohou, a veškeré jejich dokumentace
-%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
-%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
-%    hodnotu Díla, a za jakýmkoli účelem (včetně užití k~výdělečným účelům).
-%    Toto oprávnění je časově, teritoriálně i~množstevně neomezené. Každá osoba,
-%    která využije výše uvedenou licenci, se však zavazuje udělit ke každému
-%    dílu, které vznikne (byť jen zčásti) na základě Díla, úpravou Díla,
-%    spojením Díla s~jiným dílem, zařazením Díla do díla souborného či
-%    zpracováním Díla (včetně překladu), licenci alespoň ve výše uvedeném
-%    rozsahu a zároveň zpřístupnit zdrojový kód takového díla alespoň
-%    srovnatelným způsobem a ve srovnatelném rozsahu, jako je zpřístupněn
-%    zdrojový kód Díla.
-
-% \sec Oprávnění k užití
-
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
-
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
-%    V~souladu s~ust. §~46 odst.~6 tohoto zákona tímto uděluji nevýhradní
-%    oprávnění (licenci) k~užití této mojí práce, a to včetně všech počítačových
-%    programů, jež jsou její součástí či přílohou a veškeré jejich dokumentace
-%    (dále souhrnně jen \uv{Dílo}), a to všem osobám, které si přejí Dílo užít.
-%    Tyto osoby jsou oprávněny Dílo užít jakýmkoli způsobem, který nesnižuje
-%    hodnotu Díla a za jakýmkoli účelem (včetně užití k~výdělečným účelům).
-%    Toto oprávnění je časově, teritoriálně i množstevně neomezené.
-
-% \sec Po dohodě s ČVUT
-
-%    Prohlašuji, že jsem předloženou práci vypracoval(a) samostatně a že jsem
-%    uvedl(a) veškeré použité informační zdroje v~souladu s~Metodickým pokynem
-%    o~etické přípravě vysokoškolských závěrečných prací.
-
-%    Beru na vědomí, že se na moji práci vztahují práva a povinnosti vyplývající
-%    ze zákona č.~121/2000~Sb., autorského zákona, ve znění pozdějších předpisů.
-%    Dále prohlašuji, že jsem s~Českým vysokým učením technickým v~Praze
-%    uzavřel dohodu, na základě níž se ČVUT vzdalo práva na uzavření licenční
-%    smlouvy o~užití této práce jako školního díla podle §~60 odst.~1
-%    autorského zákona. Tato skutečnost nemá vliv na ust. §~47b zákona
-%    č.~111/1998~Sb., o~vysokých školách, ve znění pozdějších předpisů.
-
-\bye
+\end{document}
