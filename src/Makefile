@@ -6,8 +6,9 @@ all: bakalarska-prace.tex
 	mkdir -p $(OUTPUT_DIR)
 	$(TEX) $(TEXFLAGS) $^
 	$(TEX) $(TEXFLAGS) $^
+	$(TEX) $(TEXFLAGS) $^
 
 .PHONY: clean
 
 clean:
-	rm $(OUTPUT_DIR)/*.log $(OUTPUT_DIR)/*.aux $(OUTPUT_DIR)/*.bbl $(OUTPUT_DIR)/*.blg $(OUTPUT_DIR)/*.ref
+	cd $(OUTPUT_DIR) && rm *.log *.aux *.bbl *.blg *.ref *.lof *.out *.toc
