@@ -1,22 +1,17 @@
-% arara: pdflatex
-% arara: pdflatex
-% arara: pdflatex
-
-% options:
-% thesis=B bachelor's thesis
-% thesis=M master's thesis
-% czech thesis in Czech language
-% slovak thesis in Slovak language
-% english thesis in English language
-% hidelinks remove colour boxes around hyperlinks
-
 \documentclass[thesis=B,czech]{FITthesis}[2012/06/26]
 
 \usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+\usepackage[czech]{babel}
 
 \usepackage{graphicx} %graphics files inclusion
 \usepackage{amsmath} %advanced maths
 \usepackage{amssymb} %additional math symbols
+\usepackage{amsthm}
+
+\usepackage[chapter]{algorithm}
+\usepackage{algorithmic}
+
+\usepackage{enumerate}
 
 \usepackage{dirtree} %directory tree visualisation
 
@@ -27,10 +22,30 @@
 
 \newcommand{\tg}{\mathop{\mathrm{tg}}} %cesky tangens
 \newcommand{\cotg}{\mathop{\mathrm{cotg}}} %cesky cotangens
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\mx}[1]{\mathbb{#1}}
+\newcommand{\norm}[1]{\|#1\|}
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmus}
+\makeatother
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% ODTUD DAL VSE ZMENTE
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+\newtheoremstyle{newthm}%
+  {4pt}         % space above
+  {4pt}         % space below
+  {\normalfont} % body font
+  {}            % indent amount
+  {\bfseries}   % theorem head font
+  {:}           % punctuation after theorem head
+  {.5em}        % space after theorem head
+  {}            % head spec (?)
+
+\theoremstyle{newthm}
+\newtheorem{defi}{Definice}
+\newtheorem{veta}[defi]{Věta}
+\newtheorem{lemma}[defi]{Lemma}
+\newtheorem{dusl}[defi]{Důsledek}
 
 \department{Katedra teoretické informatiky}
 \title{Metoda pohyblivých nejmenších čtverců v Julia}
@@ -48,8 +63,6 @@
 \keywordsEN{moving weighted least squares, Julia programming language, nearest neighbor search, function approximation}
 % \website{http://site.example/thesis} %volitelná URL práce, objeví se v tiráži - úplně odstraňte, nemáte-li URL práce
 
-\newcommand{\reals}{\mathbb{R}}
-
 \begin{document}
 
 % \newacronym{CVUT}{{\v C}VUT}{{\v C}esk{\' e} vysok{\' e} u{\v c}en{\' i} technick{\' e} v Praze}
@@ -58,7 +71,7 @@
 \begin{introduction}
 Předpokládejme, že je zadána sada dat s jejími výstupními hodnotami $S := \{(x_i, y_i)\}_{i = 1}^n$. Naším cílem je nalézt funkci $f$, která co nejlépe popisuje vztah mezi vstupy a výstupy dat $S$.
 
-Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánům Adrien Marie Legendre a Carl Fridrich Gauss. Adrien Marie Legendre v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{historyOfStatistics}.
+Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánům Adrien Marie Legendre a Carl Fridrich Gauss. Adrien Marie Legendre v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{history_of_statistics}.
 
 V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Kromě přesnějších výsledků dokáže metoda například interpolovat nad vstupními daty.
 
@@ -67,7 +80,6 @@ V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých 
 Hlavním výstupem práce by měla být implementace metody pohyblivých vážených nejmenších čtverců v programovacím jazyce Julia.
 
 V teoretické části si zformulujeme problém, který se dá řešit metodou nejmenších čtverců. Představíme metodu pohyblivých vážených nejmenších čtverců. Dále budeme pokračovat rešerší existujicích implementací metody a rešerší datových struktur, jímiž lze řešit stěžejní podproblém metody pohyblivých vážených nejmenších čtverců a to problém hledání nejbližších bodů. V poslední části si popíšeme návrh a naši implementaci v jazyce Julia, jež je hlavním výstupem této práce.
-
 \end{introduction}
 
 \include{teorie}
@@ -79,7 +91,7 @@ V teoretické části si zformulujeme problém, který se dá řešit metodou ne
 \end{conclusion}
 
 \bibliographystyle{csn690}
-\bibliography{mybibliographyfile}
+\bibliography{literatura}
 
 \appendix
 
