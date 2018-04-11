@@ -5,6 +5,7 @@ TEXFLAGS = -output-directory=$(OUTPUT_DIR)
 all: bakalarska-prace.tex
 	mkdir -p $(OUTPUT_DIR)
 	$(TEX) $(TEXFLAGS) $^
+	biber $(OUTPUT_DIR)/bakalarska-prace.bcf
 	$(TEX) $(TEXFLAGS) $^
 	$(TEX) $(TEXFLAGS) $^
 

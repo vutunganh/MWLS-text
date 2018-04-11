@@ -3,13 +3,19 @@
 \usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
 \usepackage[czech]{babel}
 
+\usepackage[backend=biber, sorting=none]{biblatex}
+
 \usepackage{graphicx} %graphics files inclusion
+
 \usepackage{amsmath} %advanced maths
 \usepackage{amssymb} %additional math symbols
 \usepackage{amsthm}
 
 \usepackage[chapter]{algorithm}
 \usepackage{algorithmic}
+
+\usepackage{csquotes}
+\usepackage{xevlna}
 
 \usepackage{enumerate}
 
@@ -25,11 +31,8 @@
 \newcommand{\reals}{\mathbb{R}}
 \newcommand{\mx}[1]{\mathbb{#1}}
 \newcommand{\norm}[1]{\|#1\|}
-\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
-\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
-\makeatletter
-\renewcommand{\ALG@name}{Algoritmus}
-\makeatother
+
+\addbibresource{literatura.bib}
 
 \newtheoremstyle{newthm}%
   {4pt}         % space above
@@ -46,6 +49,12 @@
 \newtheorem{veta}[defi]{Věta}
 \newtheorem{lemma}[defi]{Lemma}
 \newtheorem{dusl}[defi]{Důsledek}
+
+\renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
+\renewcommand{\algorithmicensure}{\textbf{Výstup:}}
+\makeatletter
+\renewcommand{\ALG@name}{Algoritmus}
+\makeatother
 
 \department{Katedra teoretické informatiky}
 \title{Metoda pohyblivých nejmenších čtverců v Julia}
@@ -90,15 +99,11 @@ V teoretické části si zformulujeme problém, který se dá řešit metodou ne
   %sem napište závěr Vaší práce
 \end{conclusion}
 
-\bibliographystyle{csn690}
-\bibliography{literatura}
+\printbibliography
 
 \appendix
 
-
 \chapter{Obsah přiloženého CD}
-
-%upravte podle skutecnosti
 
 \begin{figure}
   \dirtree{%
