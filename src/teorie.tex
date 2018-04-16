@@ -46,7 +46,7 @@ Reálná čísla standardně značíme zdvojeným $\reals$. Symbolem $\hat n$ zn
 
 Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$ a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
 
-\begin{algorithm}[h!]
+\begin{algorithm}[ht!]
   \caption{Naivní řešení problému hledání nejbližších sousedů}
   \label{algo:naive-nns}
   \begin{algorithmic}
@@ -62,11 +62,83 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \end{algorithmic}
 \end{algorithm}
 
-V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly použity v implementační části práce. Cílem je zejména snížit časovou složitost při hledání nejbližších sousedů. Budeme se zabývat pouze exaktními metodami.
+V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly použity v implementační části práce. Cílem je zejména snížit časovou složitost při hledání nejbližších sousedů.
 
 \subsection{Cell linked list}
 
-Naivní způsob, který prohledá všech $n$, by mohl být časově příliš pomalý. Cell linked list rozdělí prostor $\reals^d$ na $d$-rozměrné krychle s délkou hrany $\epsilon$, které se volí blízko k $\delta$. Nyní stačí najít hyperkrychli, do které patří $q$ a prohledat $\lceil \delta / \epsilon \rceil^d$ sousedních hyperkrychlí.
+\label{defi:cll}
+\begin{defi}
+  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \textit{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou pravidelnou hyperkrychlovou mřížku s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, který se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
+\end{defi}
+
+Cell linked list podporuje následující operace.
+
+\begin{table}[ht!]
+  \begin{tabular}{lll}
+    Operace & Komentář\\
+    CllBuild & Sestavení struktury.\\
+    CllCount & Spočte pro sadu dat rozměry děleného prostoru.\\
+    CllSearch & Nalezení sousedů.\\
+    CllRebuild & Přenos buňek mezi cell linked listy.\\
+    CllAdd & Přidání vektoru do struktury.\\
+    CllRemove & Odebrání vektoru ze struktury.\\
+  \end{tabular}
+\end{table}
+
+Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$.
+Data, která si cell linked list $C$ uchovává značíme $S(G)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(\vec{c}, C)$.
+Funkce $\min(C)$ vrátí vektor $\vec{p} \in \reals^d$, který má v $i$-té složce nejmenší hodnotu $i$-té složky přes všechny vektory $S(G)$. Tento postup je zachycen algoritmem \ref{algo:min-cll}. Funkce $\max(C)$ funguje obdobně, akorát na řádku \ref{algo:min-cll:infty} se do proměnné $\vec{p}$ nastaví vektor $(-\infty, \ldots, \infty)$ a na řádku \ref{algo:min-cll:minmax} budeme hledat maximum místo minima.
+
+\begin{algorithm}[!h]
+  \caption{Funkce \textit{min} cell linked listu}
+  \label{algo:min-cll}
+  \begin{algorithmic}[1]
+    \REQUIRE cell linked list $C$
+    \ENSURE $\vec{p} \in \reals^d$
+    \STATE $\vec{p} \leftarrow (\infty, \ldots, \infty)^T$ \label{algo:min-cll:infty}
+      \FORALL{$\vec{u} \in S(G)$}
+        \FORALL{$i \in {1, \ldots, d}$}
+          \STATE $\vec{p_i} \leftarrow \min(\vec{p_i}, \vec{u_i})$ \label{algo:min-cll:minmax}
+        \ENDFOR
+    \ENDFOR
+    \RETURN $\vec{p}$
+  \end{algorithmic}
+\end{algorithm}
+
+Souřadnice vektoru $\vec{u}$ v cell linked listu $C$ budeme značit $i(\vec{u}, C)$ a zavádíme jako $i(\vec{u}, C) := ((1 / \varepsilon(C)) \vec{u} + \min(C))$.
+
+\textit{CllCount} pro sadu vektorů $S$ spočte velikost co nejmenší mřižky $G$ s délkou hrany $\varepsilon$ tak, aby bylo možné v mřížce $G$ zaindexovat každý vektor množiny $S$. Nejprve se spočte minimální a maximální hodnota přes všechny složky všech vektorů množiny $S$ a tyto vektory se uloží do. TODO: tohle se osemetne formuluje
+
+\begin{algorithm}[h!]
+  \caption{Algoritmus CllCount}
+  \label{algo:cll-count}
+  \begin{algorithmic}
+    \REQUIRE $S \subset \reals^d$, $\varepsilon \in \reals$
+    \ENSURE $\vec{r} \in \reals^d$
+    \RETURN $\max(C) - \min(C) + (1, \ldots, 1)^T$
+  \end{algorithmic}
+\end{algorithm}
+
+Operace \textit{CllBuild} pro zadanou sadu vektorů $S$ sestrojí co nejmenší $d$-rozměrnou pravidelnou mřížku $G$ takovou, že pro každý vektor z množiny $S$ půjde nalézt buňku, do které patří. 
+
+Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$ takové, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze na buňky se souřadnicemi $\vec{a}$ takové, jejichž maximová norma $\|\vec{c} - \vec{a}\|_\infty$ je menší nebo rovna $\lceil\delta / \varepsilon(C)\rceil$.
+
+\begin{algorithm}[h!]
+  \caption{Algoritmus CllSearch}
+  \label{algo:cll-build}
+  \begin{algorithmic}
+    \REQUIRE $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
+    \ENSURE $M \subseteq S(G)$
+    \STATE $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
+    \STATE $c \leftarrow i(\vec{q}, C)$
+    \STATE $M \leftarrow \emptyset$
+    \FORALL{$\vec{m} \in \reals^d: \|\vec{m} - \vec{c}\|_{\infty} < r$}
+      \FORALL{$\vec{u} \in S(\vec{m}, C): \|\vec{u} - \vec{q}\| < \delta$}
+        \STATE $M \leftarrow M \cup \vec{u}$
+      \ENDFOR
+    \ENDFOR
+  \end{algorithmic}
+\end{algorithm}
 
 \subsection{K-d strom}
 
