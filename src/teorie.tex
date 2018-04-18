@@ -6,16 +6,17 @@ Reálná čísla standardně značíme zdvojeným $\reals$. Symbolem $\hat n$ zn
 
 \section{Metoda nejmenších čtverců}
 
-Nechť je dána sada dat $\{\vec{x_i}, y_i\}_{i = 1}^n$, kde $x_i \in \reals^d$ a $y_i \in \reals$. Úkolem je nalézt funkci $f$, která aproximuje sadu dat ve smyslu nejmenších čtverců s chybovou funkcionálou $J(f) := \sum_i \| f(\vec{x_i}) - y_i \|^2$. Řešená minimalizační úloha má předpis
+Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^n$, kde $x_i \in \reals^d$ a $y_i \in \reals^o$. Úkolem je nalézt funkci $f$, která aproximuje sadu dat ve smyslu nejmenších čtverců s chybovou funkcionálou $J(f) := \sum_i \| f(\vec{x_i}) - \vec{y_i} \|^2$. Řešená minimalizační úloha má předpis
 \label{def:ls-min}
 \begin{equation}
-  \min_{f \in \prod^{d}_{m}}\sum_i \| f(x_i) - f_i \|^2,
+  \min_{f \in \prod^{d}_{m}}\sum_i \| f(\vec{x_i}) - \vec{y_i} \|^2,
 \end{equation}
-kde $f$ je funkce z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných stupně $d$. Funkce $f$ je dána předpisem
+kde $f$ je vektor funkcí z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných stupně $d$. Jednotlivé složky $f_1, \ldots, f_o$ vektoru $f$ jsou dány předpisem
+\label{def:ls-f}
 \begin{equation}
-  f(\vec{x}) = \sum_{i} c_ib_i(\vec{x}),
+  f_i(\vec{x}) = \sum_{j} \mx{A}_{ij}b_j(\vec{x}) = \mx{A}_{i:}\vec{b}(\vec{x})
 \end{equation}
-kde $b_i$ jsou bazické vektory vektorového prostoru $\prod^d_m$ a $c_i$ jsou neznámé koeficienty. V obecném případě je dimenze vektorového prostoru dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
+kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{A}$ je matice neznámých koeficientů. V obecném případě je dimenze vektorového prostoru $\prod^d_m$ dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
 
 Minimalizační úlohu \ref{def:ls-min} lze řešit položením parciálních derivací $J(f)$ rovno nule pro jednotlivé neznámé $c_1, \ldots, c_k$ z nutné podmínky pro existenci lokálního extrému.
 
