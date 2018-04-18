@@ -18,8 +18,15 @@ kde $f$ je vektor funkcí z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných
 \end{equation}
 kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{A} \in \reals^{o, k}$ je matice neznámých koeficientů. V obecném případě je dimenze vektorového prostoru $\prod^d_m$ dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
 
-Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkcionály $J(f)$ rovny nule pro neznáme $A_{1,1}, \ldots, A_{o,k}$.
-
+Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkcionály $J(f)$ rovny nule pro neznáme $A_{1,1}, \ldots, A_{o,k}$. Pro obecné $p, q \in \integers$ platí
+\begin{multline}
+  \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}}^2 = 
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}}\norm{\vec{f}(\vec{x_i}) - \vec{y_i}} = \\
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}} \sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j} = \\
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{1}{2}\cfrac{1}{\sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o \vec{f}(\vec{x_i} - \vec{y_i})_j^2 = \\
+  \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i})-\vec{y_i}} \frac{1}{\norm{\vec{f}(\vec{x_i}) - \vec{y_i}}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
+  \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 = \frac{\partial}{\partial\mx{A}_{p,q}} \norm{\vec{f}(\vec{x_i}) - \vec{y_i}}^2 = \\
+\end{multline}
 TODO: dukaz
 
 Řešením soustavy je
