@@ -16,9 +16,16 @@ kde $f$ je vektor funkcí z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných
 \begin{equation}
   f_i(\vec{x}) = \sum_{j} \mx{A}_{ij}b_j(\vec{x}) = \mx{A}_{i:}\vec{b}(\vec{x})
 \end{equation}
-kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{A}$ je matice neznámých koeficientů. V obecném případě je dimenze vektorového prostoru $\prod^d_m$ dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
+kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{A} \in \reals^{o, k}$ je matice neznámých koeficientů. V obecném případě je dimenze vektorového prostoru $\prod^d_m$ dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
 
-Minimalizační úlohu \ref{def:ls-min} lze řešit položením parciálních derivací $J(f)$ rovno nule pro jednotlivé neznámé $c_1, \ldots, c_k$ z nutné podmínky pro existenci lokálního extrému.
+Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkcionály $J(f)$ rovny nule pro neznáme $A_{1,1}, \ldots, A_{o,k}$.
+
+TODO: dukaz
+
+Řešením soustavy je
+\begin{equation}
+  \mx{A} = (\sum_{i = 1}^n \vec{b}(\vec{x_i})\vec{b}(\vec{x_i})^T)^{-1} \sum_{i = 1} \vec{b}(\vec{x_i})\vec{y_i}
+\end{equation}
 
 \section{Problém hledání nejbližších sousedů}
 
