@@ -21,15 +21,18 @@ kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{
 Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkcionály $J(f)$ rovny nule pro neznáme $A_{1,1}, \ldots, A_{o,k}$. Pro obecné $p, q \in \integers$ platí
 \begin{multline}
   \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}}^2 = 
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}}\norm{\vec{f}(\vec{x_i}) - \vec{y_i}} = \\
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}} \sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j} = \\
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{1}{2}\cfrac{1}{\sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o \vec{f}(\vec{x_i} - \vec{y_i})_j^2 = \\
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}}\norm{\vec{f}(\vec{x_i}) - \vec{y_i}} =\\
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}} \sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j} =\\
+  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{1}{2}\cfrac{1}{\sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o \vec{f}(\vec{x_i} - \vec{y_i})_j^2 =\\
   \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i})-\vec{y_i}} \frac{1}{\norm{\vec{f}(\vec{x_i}) - \vec{y_i}}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
-  \sum_{i = 1}^n \frac{\partial nejak jsem se zacyklil}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 = \\
+  \sum_{i = 1}^n \frac{\partial nejak jsem se zacyklil}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
   \sum_{i = 1}^n \sum_{j = 1}^o \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i})-\vec{y_i})_j= \\
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j-\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{y_i})_j) =
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j) = \\
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i})-\vec{y_i})_j =\\
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j-\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{y_i})_j)=
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j) =\\
+  2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \mx{A}_{j,:}\vec{b}(\vec{x_i})) =
+  2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \sum_{l=1}^k\mx{A}_{j,l}\vec{b}_l(\vec{x_i})) =\\
+  2\sum_{i=1}^n(\vec{f}(\vec{x_i}) - \vec{y_i})\vec{b}_q(\vec{x_i})\\
 \end{multline}
 TODO: dukaz
 
