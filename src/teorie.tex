@@ -26,6 +26,10 @@ Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro
   2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{1}{2}\cfrac{1}{\sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o \vec{f}(\vec{x_i} - \vec{y_i})_j^2 = \\
   \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i})-\vec{y_i}} \frac{1}{\norm{\vec{f}(\vec{x_i}) - \vec{y_i}}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
   \sum_{i = 1}^n \frac{\partial nejak jsem se zacyklil}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 = \\
+  \sum_{i = 1}^n \sum_{j = 1}^o \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i})-\vec{y_i})_j= \\
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j-\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{y_i})_j) =
+  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j) = \\
 \end{multline}
 TODO: dukaz
 
@@ -38,7 +42,7 @@ TODO: dukaz
 
 \label{defi:nns}
 \begin{defi}
-  Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalést pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
+  Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 \end{defi}
 
 Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$ a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
@@ -76,7 +80,7 @@ Cell linked list podporuje následující operace.
     CllBuild & Sestavení struktury.\\
     CllCount & Spočte pro sadu dat rozměry děleného prostoru.\\
     CllSearch & Nalezení sousedů.\\
-    CllRebuild & Přenos buňek mezi cell linked listy.\\
+    CllRebuild & Přenos buněk mezi cell linked listy.\\
     CllAdd & Přidání vektoru do struktury.\\
     CllRemove & Odebrání vektoru ze struktury.\\
   \end{tabular}
