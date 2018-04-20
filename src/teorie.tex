@@ -11,43 +11,44 @@ Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \rea
   f = \sum_{i=1}^l c_if_i,
 \end{equation}
 s neznámými koeficienty $c_1,\ldots,c_l$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
-\label{def:ls-min}
 \begin{equation}
+\label{def:ls-min}
   J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
   \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =
-  \sum_{i=1}^k\sum_{u=1}^m(\sum_{j=1}^l c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u).
+  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.
 \end{equation}
 
-Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkce $J(f)$ rovny nule pro neznáme $c_1,\ldots,c_m$. Pro obecné $p, q \in \integers$ platí
-\begin{multline}
-  \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}}^2 = 
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}}\norm{\vec{f}(\vec{x_i}) - \vec{y_i}} =\\
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}} \sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j} =\\
-  2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{1}{2}\cfrac{1}{\sqrt{\sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})^2_j}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o \vec{f}(\vec{x_i} - \vec{y_i})_j^2 =\\
-  \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i})-\vec{y_i}} \frac{1}{\norm{\vec{f}(\vec{x_i}) - \vec{y_i}}} \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
-  \sum_{i = 1}^n \frac{\partial nejak jsem se zacyklil}{\partial\mx{A}_{p,q}} \sum_{j = 1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =\\
-  \sum_{i = 1}^n \sum_{j = 1}^o \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}) - \vec{y_i})_j^2 =
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j \frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i})-\vec{y_i})_j =\\
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j-\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{y_i})_j)=
-  2\sum_{i = 1}^n \sum_{j = 1}^o (\vec{f}(\vec{x_i})-\vec{y_i})_j (\frac{\partial}{\partial\mx{A}_{p,q}}(\vec{f}(\vec{x_i}))_j) =\\
-  2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \mx{A}_{j,:}\vec{b}(\vec{x_i})) =
-  2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \sum_{l=1}^k\mx{A}_{j,l}\vec{b}_l(\vec{x_i})) =\\
-  2\sum_{i=1}^n(\vec{f}(\vec{x_i}) - \vec{y_i})\vec{b}_q(\vec{x_i})\\
-\end{multline}
-Nyní položme tyto derivace pro všechna $\mx{A}_{1,1}, \ldots, \mx{A}_{o, k}$ rovny 0. Tímto vznikne soustava rovnic
-\begin{multline}
-\end{multline}
-TODO: dukaz
-
-Řešením soustavy je
+Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkce $J(f)$ rovny nule pro neznáme $c_1,\ldots,c_m$. Pro obecné $v \in \hat l$ platí
 \begin{equation}
-  \mx{A} = (\sum_{i = 1}^n \vec{b}(\vec{x_i})\vec{b}(\vec{x_i})^T)^{-1} \sum_{i = 1} \vec{b}(\vec{x_i})\vec{y_i}
+  \frac{\partial}{\partial c_v}J(f) = 2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l(c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u.
+\end{equation}
+
+Položme tedy tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat l$
+\begin{multline}
+\label{eq:solve-ls}
+  2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u = 0\\
+  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l c_j(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u\\
+  \sum_{j=1}^l(\sum_{i=1}^k\sum_{u=1}^m(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u)c_j = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
+\end{multline}
+Nyní zaveďme matici $\mx{A} \in \reals^{ll}$, kde 
+\begin{equation}
+\label{eq:solve-ls-lhs}
+  \mx{A}_{vj} = \sum_{i=1}^k\sum_{u=1}^m = (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u
+\end{equation}
+a vektor $\vec{c} = (c_1,\ldots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:solve-ls} zapsat jako $\mx{A}\vec{c}$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_l)$, kde pro jednotlivá $v \in \hat l$ platí
+\begin{equation}
+\label{eq:solve-ls-rhs}
+  b_v = \sum_{i=1}^k\sum_{u=1}^m (\vec{y_i})_u (f_v(\vec{x_i}))_u.
+\end{equation}
+Dosaďme rovnice \ref{eq:solve-ls-lhs} a \ref{eq:solve-ls-rhs} do \ref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznáných $\vec{c}$
+\begin{equation}
+  \mx{A}\vec{c} = \vec{b}.
 \end{equation}
 
 \section{Problém hledání nejbližších sousedů}
 
-\label{defi:nns}
 \begin{defi}
+\label{defi:nns}
   Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 \end{defi}
 
