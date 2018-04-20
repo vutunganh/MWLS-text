@@ -6,19 +6,19 @@ Reálná čísla standardně značíme zdvojeným $\reals$. Symbolem $\hat n$ zn
 
 \section{Metoda nejmenších čtverců}
 
-Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^n$, kde $x_i \in \reals^d$ a $y_i \in \reals^o$. Úkolem je nalézt funkci $f$, která aproximuje sadu dat ve smyslu nejmenších čtverců s chybovou funkcionálou $J(f) := \sum_i \| f(\vec{x_i}) - \vec{y_i} \|^2$. Řešená minimalizační úloha má předpis
+Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$ a sada funkcí $f_1,\ldots,f_l$. Úkolem je nalézt funkci
+\begin{equation}
+  f = \sum_{i=1}^l c_if_i,
+\end{equation}
+s neznámými koeficienty $c_1,\ldots,c_l$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
 \label{def:ls-min}
 \begin{equation}
-  \min_{f \in \prod^{d}_{m}}\sum_i \| f(\vec{x_i}) - \vec{y_i} \|^2,
+  J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
+  \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =
+  \sum_{i=1}^k\sum_{u=1}^m(\sum_{j=1}^l c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u).
 \end{equation}
-kde $f$ je vektor funkcí z $\prod^{d}_{m}$, prostoru polynomů $m$ proměnných stupně $d$. Jednotlivé složky $f_1, \ldots, f_o$ vektoru $f$ jsou dány předpisem
-\label{def:ls-f}
-\begin{equation}
-  f_i(\vec{x}) = \sum_{j} \mx{A}_{ij}b_j(\vec{x}) = \mx{A}_{i:}\vec{b}(\vec{x})
-\end{equation}
-kde $b_j$ jsou složky báze vektorového prostoru polynomů $\prod^d_m$ a $\mx{A} \in \reals^{o, k}$ je matice neznámých koeficientů. V obecném případě je dimenze vektorového prostoru $\prod^d_m$ dána vztahem $k = \frac{(d+m)!}{d!m!}$.\cite{mwls-approximation-power, classification-of-meshfree}
 
-Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkcionály $J(f)$ rovny nule pro neznáme $A_{1,1}, \ldots, A_{o,k}$. Pro obecné $p, q \in \integers$ platí
+Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkce $J(f)$ rovny nule pro neznáme $c_1,\ldots,c_m$. Pro obecné $p, q \in \integers$ platí
 \begin{multline}
   \frac{\partial}{\partial\mx{A}_{p,q}} \sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}}^2 = 
   2\sum_{i = 1}^n \norm{\vec{f}(\vec{x_i}) - \vec{y_i}} \frac{\partial}{\partial\mx{A}_{p,q}}\norm{\vec{f}(\vec{x_i}) - \vec{y_i}} =\\
@@ -33,6 +33,9 @@ Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro
   2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \mx{A}_{j,:}\vec{b}(\vec{x_i})) =
   2\sum_{i=1}^n\sum_{j=1}^o(\vec{f}(\vec{x_i}) - \vec{y_i})(\frac{\partial}{\partial\mx{A}_{p,q}} \sum_{l=1}^k\mx{A}_{j,l}\vec{b}_l(\vec{x_i})) =\\
   2\sum_{i=1}^n(\vec{f}(\vec{x_i}) - \vec{y_i})\vec{b}_q(\vec{x_i})\\
+\end{multline}
+Nyní položme tyto derivace pro všechna $\mx{A}_{1,1}, \ldots, \mx{A}_{o, k}$ rovny 0. Tímto vznikne soustava rovnic
+\begin{multline}
 \end{multline}
 TODO: dukaz
 
