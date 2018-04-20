@@ -12,4 +12,4 @@ all: bakalarska-prace.tex
 .PHONY: clean
 
 clean:
-	cd $(OUTPUT_DIR) && rm *.log *.aux *.bbl *.blg *.ref *.lof *.out *.toc
+	cd $(OUTPUT_DIR) && rm *.log *.aux *.bbl *.blg *.ref *.lof *.out *.toc *.bcf *.lot *.run.xml
