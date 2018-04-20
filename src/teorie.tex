@@ -18,7 +18,7 @@ s neznámými koeficienty $c_1,\ldots,c_l$, která aproximuje sadu dat co nejlé
   \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.
 \end{equation}
 
-Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Položme parciální derivace funkce $J(f)$ rovny nule pro neznáme $c_1,\ldots,c_m$. Pro obecné $v \in \hat l$ platí
+Minimalizační úlohu \ref{def:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat l$ platí
 \begin{equation}
   \frac{\partial}{\partial c_v}J(f) = 2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l(c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u.
 \end{equation}
@@ -28,7 +28,7 @@ Položme tedy tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat
 \label{eq:solve-ls}
   2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u = 0\\
   \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l c_j(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u\\
-  \sum_{j=1}^l(\sum_{i=1}^k\sum_{u=1}^m(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u)c_j = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
+  \sum_{j=1}^l\underbrace{(\sum_{i=1}^k\sum_{u=1}^m(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u)}_{\mx{A}_{vj}}c_j = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
 \end{multline}
 Zaveďme matici $\mx{A} \in \reals^{l,l}$, kde 
 \begin{equation}
