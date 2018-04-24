@@ -81,9 +81,9 @@
 \begin{introduction}
 Předpokládejme, že je zadána sada dat s jejími výstupními hodnotami $S := \{(x_i, y_i)\}_{i = 1}^n$. Naším cílem je nalézt funkci $f$, která co nejlépe popisuje vztah mezi vstupy a výstupy dat $S$.
 
-Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánům Adrien Marie Legendre a Carl Fridrich Gauss. Adrien Marie Legendre v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{history_of_statistics}.
+Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánovi A. M. Legendre, který v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{history_of_statistics}.
 
-V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Kromě přesnějších výsledků dokáže metoda například interpolovat nad vstupními daty.
+V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Metoda pro každý bod $\vec{x}$ vytvoří lokální aproximaci $f_{\vec{x}}(\vec{x})$, která kromě přesnějšího výsledku dokáže například interpolovat nad vstupními daty.
 
 Častým problémem při programování numerických metod a podobně výkonných programů je ,,problém dvou jazyků'' -- prototypování probíhá ve dynamických vysokoúrovňových jazycích jako jsou například Matlab, R nebo Python a výsledná implementace vznikne přepsáním prototypu do výkonnějších, staticky typovaných jazyků, kde častými volbami jsou Fortran nebo C. Autoři jazyku Julia si dávají za cíl vytvořit dynamicky typovaný jazyk, který bude výkonem schopen konkurovat nízkoúrovňovému Fortranu nebo C.\cite{julia}
 
