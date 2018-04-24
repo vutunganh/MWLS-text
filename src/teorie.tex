@@ -176,7 +176,7 @@ Souřadnice vektoru $\vec{u}$ v cell linked listu $C$ budeme značit $I(C, \vec{
 Operace \textit{CllBuild} pro zadanou sadu vektorů $S$ sestrojí co nejmenší $d$-rozměrnou pravidelnou mřížku takovou, že pro každý vektor z množiny $S$ půjde nalézt buňku, do které patří. Funkcí \textit{CllCount} se spočte velikost výsledné mřížky a v každé buňce se vytvoří z počátku prázdný spojový seznam vektorů z $\reals^d$. Následně se pro každý vektor $\vec{u} \in S$ spočte jeho souřadnice v cell linked listu a připojí se ke spojovému seznamu. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
 \begin{algorithm}[h!]
-  \caption{Algoritmus CllBuild}
+  \caption{CllBuild}
   \label{algo:cll-build}
   \begin{algorithmic}
     \REQUIRE $S \subset \reals^d$, $\varepsilon \in \reals$
@@ -194,7 +194,7 @@ Operace \textit{CllBuild} pro zadanou sadu vektorů $S$ sestrojí co nejmenší 
 Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$ takové, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze vektory v buňkách se souřadnicemi $\vec{a}$ takovými, jejichž maximová norma $\|\vec{c} - \vec{a}\|_\infty$ je menší nebo rovna $r := \lceil\delta / \varepsilon(C)\rceil$. Lze si rozmyslet, že pokud se zvolí TODO: best r
 
 \begin{algorithm}[h!]
-  \caption{Algoritmus CllSearch}
+  \caption{CllSearch}
   \label{algo:cll-build}
   \begin{algorithmic}
     \REQUIRE $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
@@ -213,9 +213,41 @@ Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou ho
 
 \subsection{K-d strom}
 
-K-d strom je binárním vyhledávacím stromem, jehož klíči v jednotlivých vrcholech jsou body z $\reals{}^k$. Pro účely této sekce zavádíme následující značení: nechť $v = (v_0, ..., v_{k - 1})  \in \reals^k$ je klíčem vrcholu $P$, pak jednotlivé složky značíme $K_0(P), K_1(P), \ldots, K_{k - 1}(P)$. Ukazatele vrcholu $P$ na svého levého a pravého potomka značíme $L(P)$, resp. $R(P)$. Diskriminátor vrcholu $P$ značíme $D(P)$.
+K-d strom je binární vyhledávací strom, jehož klíči v jednotlivých vrcholech jsou vektory z $\reals{}^k$. Levého potomka vrcholu $P$ značíme $L(P)$, pravého $R(P)$. Diskriminátor vrcholu $P$ je číslo z množiny $\{0, \ldots, k-1\}$ a značíme $D(P)$. Vrchol $P$ dokáže udržovat vektory v rozsahu $B_L(P) \in \reals^k$ až $B_U(P) \in \reals^k$.
 
-Každému vrcholu $P$ k--d stromu $T$ přiřazujeme tzv. diskriminátor, jenž je přirozeným číslem o $0$ do $k - 1$. Nechť $j := D(P)$, pak 
+V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů.
 
-V této části popíšeme pouze ty operace, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání sousedů v rozsahu.
+  Konstrukce k-d stromu probíhá rekurzivně. Parametry pro sestavení vrcholu je množina vstupních dat $S$, číslo $m$ udávající velikost listu a vektory $B_L$ a $B_R$. Určíme složku $p := \max(\vec{u}_i, \vec{v}_i) \forall i \in {0,\ldots,k} \forall u, v \in M u \neq v$ množiny $S$ takovou, že  $k$ rozsah. Nalezneme medián z $u_{1,k}, \ldots, u_{|M|,k}$, který bude použit k rozdělení.
+
+\begin{algorithm}[h!]
+  \caption{Algoritmus sestavení k-d stromu (kdBuild)}
+  \label{algo:kd-tree-build}
+  \begin{algorithmic}
+    \REQUIRE $S = \{\forall \vec{u} \in S: \vec{u} \in \reals^k\}, d \in \reals, \vec{B_L} \in \reals^k, \vec{B_R} \in \reals^k$
+    \ENSURE vrchol k-d strom $T$
+    \IF{$|S| < s$}
+      \RETURN KdNode($S, d, \emptyset, \emptyset, \vec{B}_L, \vec{B}_R$)
+    \ENDIF
+    \STATE $p \leftarrow -\infty$
+    \FORALL{$\vec{u}, \vec{v} \in S$, kde $\vec{u} \neq \vec{v}$}
+      \FORALL{$i \in 0, \ldots, k-1$}
+        \STATE $p \leftarrow \max(p, \vec{u}_i - \vec{v}_i$)
+      \ENDFOR
+    \ENDFOR
+    \STATE $m \leftarrow \textrm{median}(\{\vec{u}_p: \forall \vec{u} \in S\})$ 
+    \STATE $\vec{b_l} \leftarrow (\vec{B_L}_1, \ldots, \vec{B_L}_{p-1}, m, \vec{B_L}_{p+1}, \ldots, \vec{B_L}_k)$
+    \STATE $\vec{b_r} \leftarrow (\vec{B_R}_1, \ldots, \vec{B_R}_{p-1}, m, \vec{B_R}_{p+1}, \ldots, \vec{B_R}_k)$
+    \STATE $s_l \leftarrow \emptyset$
+    \STATE $s_r \leftarrow \emptyset$
+    \FORALL{$\vec{u} \in S$}
+      \IF{$\vec{u} \leq \vec{b_l}$}
+        \STATE $\vec{s_l} \leftarrow \vec{s_l} \cup \vec{u}$
+      \ELSE
+        \STATE $\vec{s_r} \leftarrow \vec{s_r} \cup \vec{u}$
+      \ENDIF
+    \ENDFOR
+    \RETURN KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_L}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_R}, \vec{b_r}), \vec{B_L}, \vec{B_R}$)
+  \end{algorithmic}
+
+\end{algorithm}
 
