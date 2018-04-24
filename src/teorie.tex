@@ -213,7 +213,7 @@ Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou ho
 
 \subsection{K-d strom}
 
-K-d strom je binární vyhledávací strom, jehož klíči v jednotlivých vrcholech jsou vektory z $\reals{}^k$. Levého potomka vrcholu $P$ značíme $L(P)$, pravého $R(P)$. Diskriminátor vrcholu $P$ je číslo z množiny $\{0, \ldots, k-1\}$ a značíme $D(P)$. Vrchol $P$ dokáže udržovat vektory v rozsahu $B_L(P) \in \reals^k$ až $B_U(P) \in \reals^k$.
+K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \{0, \ldots, k-1\}$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$.
 
 V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů.
 
