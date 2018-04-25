@@ -250,6 +250,7 @@ Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom 
     \ENDFOR
     \RETURN KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_l}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_r}, \vec{b_r}), \vec{B_l}, \vec{B_r}$)
   \end{algorithmic}
-
 \end{algorithm}
+
+Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
 
