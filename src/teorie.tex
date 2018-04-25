@@ -209,24 +209,24 @@ Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou ho
     \ENDFOR
     \RETURN $M$
   \end{algorithmic}
-\end{algorithm}
+  \end{algorithm}
 
 \subsection{K-d strom}
 
-K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \{0, \ldots, k-1\}$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$.
+K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \hat k$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$. Pokud budeme přistupovat k položkám vrcholu $V$, pak píšeme $m(V)$, resp. $\vec{B_l}(V)$ a $\vec{B_r}(V)$.
 
 V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů.
 
-  Konstrukce k-d stromu probíhá rekurzivně. Parametry pro sestavení vrcholu je množina vstupních dat $S$, číslo $m$ udávající velikost listu a vektory $B_L$ a $B_R$. Určíme složku $p := \max(\vec{u}_i, \vec{v}_i) \forall i \in {0,\ldots,k} \forall u, v \in M u \neq v$ množiny $S$ takovou, že  $k$ rozsah. Nalezneme medián z $u_{1,k}, \ldots, u_{|M|,k}$, který bude použit k rozdělení.
+Konstrukce k-d stromu probíhá rekurzivně. Parametry pro sestavení vrcholu je množina vstupních dat $S$, číslo $h$ udávající velikost listu a vektory $B_l$ a $B_r$. Pro konstrukci zcela nového stromu se zavolá funkce \textit{kdBuild} s parametry $S, h, (-\infty, \ldots, -\infty)^T, (\infty, \ldots, \infty)^T$, které postupně udávají množinu ukládaných dat, maximální velikost listu a spodní a horní hranici pro vektory, které jsou v podstromě udržovány. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$ složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$ složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$ a $\vec{b_r} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} < \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $m(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levý potomek vrcholu $V$ bude výsledek volání funkce \textit{kdBuild} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravý potomek bude obdobně výsledek volání funkce \textit{kdBuild} s parametry $S_r, h, \vec{B_r}, \vec{b_r}$.
 
 \begin{algorithm}[h!]
   \caption{Algoritmus sestavení k-d stromu (kdBuild)}
   \label{algo:kd-tree-build}
   \begin{algorithmic}
-    \REQUIRE $S = \{\forall \vec{u} \in S: \vec{u} \in \reals^k\}, d \in \reals, \vec{B_L} \in \reals^k, \vec{B_R} \in \reals^k$
+    \REQUIRE $S = \{\forall \vec{u} \in S: \vec{u} \in \reals^k\}, d \in \reals, \vec{B_l} \in \reals^k, \vec{B_r} \in \reals^k$
     \ENSURE vrchol k-d strom $T$
     \IF{$|S| < s$}
-      \RETURN KdNode($S, d, \emptyset, \emptyset, \vec{B}_L, \vec{B}_R$)
+      \RETURN KdNode($S, d, \emptyset, \emptyset, (\vec{B_l}), (\vec{B_r})$)
     \ENDIF
     \STATE $p \leftarrow -\infty$
     \FORALL{$\vec{u}, \vec{v} \in S$, kde $\vec{u} \neq \vec{v}$}
@@ -235,8 +235,8 @@ V této části popíšeme pouze ty operace k-d stromu, které jsou v práci pou
       \ENDFOR
     \ENDFOR
     \STATE $m \leftarrow \textrm{median}(\{\vec{u}_p: \forall \vec{u} \in S\})$ 
-    \STATE $\vec{b_l} \leftarrow (\vec{B_L}_1, \ldots, \vec{B_L}_{p-1}, m, \vec{B_L}_{p+1}, \ldots, \vec{B_L}_k)$
-    \STATE $\vec{b_r} \leftarrow (\vec{B_R}_1, \ldots, \vec{B_R}_{p-1}, m, \vec{B_R}_{p+1}, \ldots, \vec{B_R}_k)$
+    \STATE $\vec{b_l} \leftarrow ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, m, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$
+    \STATE $\vec{b_r} \leftarrow ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, m, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$
     \STATE $s_l \leftarrow \emptyset$
     \STATE $s_r \leftarrow \emptyset$
     \FORALL{$\vec{u} \in S$}
@@ -246,7 +246,7 @@ V této části popíšeme pouze ty operace k-d stromu, které jsou v práci pou
         \STATE $\vec{s_r} \leftarrow \vec{s_r} \cup \vec{u}$
       \ENDIF
     \ENDFOR
-    \RETURN KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_L}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_R}, \vec{b_r}), \vec{B_L}, \vec{B_R}$)
+    \RETURN KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_l}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_r}, \vec{b_r}), \vec{B_l}, \vec{B_r}$)
   \end{algorithmic}
 
 \end{algorithm}
