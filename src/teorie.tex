@@ -12,12 +12,12 @@ Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \rea
   f = \sum_{i=1}^l c_if_i,
 \end{equation}
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
-\begin{equation}
+\begin{multline}
 \label{defi:ls-min}
-  J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
-  \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =
-  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.
-\end{equation}
+  J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =\\
+  \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =\\
+  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
+\end{multline}
 
 Minimalizační úlohu \ref{defi:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat l$ platí
 \begin{equation}
@@ -43,9 +43,10 @@ a vektor $\vec{c} = (c_1,\ldots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:so
 \end{equation}
 Dosaďme rovnice \ref{eq:solve-ls-lhs} a \ref{eq:solve-ls-rhs} do \ref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
 \begin{equation}
+  \label{eq:sle-ls}
   \mx{A}\vec{c} = \vec{b}.
 \end{equation}
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá.
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-ls} získáme hodnoty hledaných koeficientů.
 
 \section{Metoda vážených nejmenších čtverců}
 
@@ -57,7 +58,7 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí ,,globální'' aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Obdobným způsobem lze zavést chybovou funkci
 \begin{multline}
   \label{defi:wls-min}
-  J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =
+  J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =\\
   \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =\\
   \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\sum_{u=1}^m(\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
 \end{multline}
@@ -71,8 +72,8 @@ Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat l$
   \label{eq:solve-wls}
   2\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l (c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i})_u)) = 0\\
   \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) - (\vec{y_i})_u(f_v(\vec{x_i}))_u = 0\\
-  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u\\
-  \sum_{j=1}^l \underbrace{(\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u)}_{A_{vj}}c_j(\vec{x}) = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
+  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) =\\ \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u\\
+  \sum_{j=1}^l \underbrace{(\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u)}_{\mx{A}_{vj}}c_j(\vec{x}) =\\ \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
 \end{multline}
 Zaveďme matici $\mx{A} \in \reals^{l,l}$, kde
 \begin{equation}
@@ -86,9 +87,11 @@ a vektor $\vec{c} = (c_1,\dots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:sol
 \end{equation}
 Dosaďme rovnice \ref{eq:solve-wls-lhs} a \ref{eq:solve-wls-rhs} do \ref{eq:solve-wls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
 \begin{equation}
+  \label{eq:sle-wls}
   \mx{A}\vec{c} = \vec{b}.
 \end{equation}
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá.
+% TODO: citace regularity
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů.
 
 \section{Metoda pohyblivých vážených nejmenších čtverců}
 
@@ -100,14 +103,32 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in
 s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
 \begin{equation}
   \label{defi:mwls-min}
-  J(f(\vec{x},\varepsilon)) := \sum_{\vec{x_i}: \norm{\vec{x} - \vec{x_i}} \leq \varepsilon} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
+  J(f(\vec{x},\varepsilon)) := \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
-V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ takový, že $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
+V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ platí $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
+
+Minimalizace chybové funkce \ref{defi:mwls-min} se příliš neliší od \ref{eq:solve-wls}. Výsledkem je opět soustava lineárních rovnic
+\begin{equation}
+  \label{eq:sle-mwls}
+  \mx{A}\vec{c} = \vec{b},
+\end{equation}
+kde $\mx{A} \in \reals^{l,l}$ a
+\begin{equation}
+  \label{eq:solve-mwls-lhs}
+  \mx{A}_{vj} := \sum_{\{\vec{x_i}: \norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
+\end{equation}
+$\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
+\begin{equation}
+  \label{eq:solve-mwls-rhs}
+  \vec{b}_v = \sum_{\{\vec{x_i}: \norm{\vec{x} - \vec{x_i}} \leq \varepsilon \}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+\end{equation}
+
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
 
 \section{Problém hledání nejbližších sousedů}
 
 \begin{defi}
-\label{defi:nns}
+  \label{defi:nns}
   Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 \end{defi}
 
@@ -197,7 +218,7 @@ Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou ho
 
 \begin{algorithm}[h!]
   \caption{CllSearch}
-  \label{algo:cll-build}
+  \label{algo:cll-search}
   \begin{algorithmic}
     \REQUIRE $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
     \ENSURE $M \subseteq S(G)$
