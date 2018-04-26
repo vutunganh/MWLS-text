@@ -2,7 +2,7 @@
 
 \section{Definice a značení}
 
-Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V této kapitole se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách.
+Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V této kapitole se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách.
 
 \section{Metoda nejmenších čtverců}
 
@@ -125,7 +125,7 @@ $\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ 
 
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
 
-\section{Problém hledání nejbližších sousedů}
+\section{Problém hledání sousedů v daném rozsahu}
 
 \begin{defi}
   \label{defi:nns}
@@ -156,8 +156,10 @@ V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly pou
 
 \label{defi:cll}
 \begin{defi}
-  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \textit{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou rovnoměrnou ,,hyperkrychlovou'' mřížku s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, který se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
+  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \textit{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou rovnoměrnou mřížku s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, který se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
 \end{defi}
+
+Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
 
 Cell linked list podporuje následující operace.
 
@@ -165,38 +167,15 @@ Cell linked list podporuje následující operace.
   \begin{tabular}{lll}
     Operace & Komentář\\
     CllBuild & Sestavení struktury.\\
-    CllCount & Spočte pro sadu dat rozměry děleného prostoru.\\
     CllSearch & Nalezení sousedů.\\
-    CllRebuild & Přenos buněk mezi cell linked listy.\\
-    CllAdd & Přidání vektoru do struktury.\\
-    CllRemove & Odebrání vektoru ze struktury.\\
   \end{tabular}
 \end{table}
 
-Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikosti mřížky značíme $|S(G)|$. Množina vektorů $S$ uchovávána v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
-Funkce $\min(C)$ vrátí vektor $\vec{p} \in \reals^d$, který má v $i$-té složce nejmenší hodnotu $i$-té složky přes všechny vektory $S(C)$. Tento postup je zachycen algoritmem \ref{algo:min-cll}. Funkce $\max(C)$ funguje obdobně, akorát na řádku \ref{algo:min-cll:infty} se do proměnné $\vec{p}$ nastaví vektor $(-\infty, \ldots, \infty)$ a na řádku \ref{algo:min-cll:minmax} budeme hledat maximum místo minima. Tento postup lze analogicky aplikovat na množinu vektorů a pro množinu vektorů $W \in \reals^d$ budeme operaci značit podobně $\min(W)$ resp. $\max(W)$.
+Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávána v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
 
-\begin{algorithm}[!h]
-  \caption{Funkce \textit{min} cell linked listu}
-  \label{algo:min-cll}
-  \begin{algorithmic}[1]
-    \REQUIRE cell linked list $C$
-    \ENSURE $\vec{p} \in \reals^d$
-    \STATE $\vec{p} \leftarrow (\infty, \ldots, \infty)^T$ \label{algo:min-cll:infty}
-      \FORALL{$\vec{u} \in S(G)$}
-        \FORALL{$i \in {1, \ldots, d}$}
-          \STATE $\vec{p_i} \leftarrow \min(\vec{p_i}, \vec{u_i})$ \label{algo:min-cll:minmax}
-        \ENDFOR
-    \ENDFOR
-    \RETURN $\vec{p}$
-  \end{algorithmic}
-\end{algorithm}
+Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1}, \ldots, \floor{\vec{u}_d})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexování pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
 
-Souřadnice vektoru $\vec{u}$ v cell linked listu $C$ budeme značit $I(C, \vec{u})$ a zavádíme jako $I(C, \vec{u}) := ((1 / \varepsilon(C)) \vec{u} + \min(C))$.
-
-\textit{CllCount} pro sadu vektorů $S$ spočte velikost co nejmenší mřižky s délkou hrany $\varepsilon$ tak, aby bylo možné v mřížce $G$ zaindexovat každý vektor množiny $S$. Nejprve se spočte minimální a maximální hodnota přes všechny složky všech vektorů množiny $S$ a tyto vektory se uloží do. TODO: tohle se osemetne formuluje. Hodnotu \textit{CllCount} pro cell linked list $C$ spočteme vztahem $\mathit{CllCount}(C) := \lceil\max(C)/\varepsilon\rceil - \lfloor\min(C)/\varepsilon\rfloor + (1, \ldots, 1)^T$. Uvažme nejprve, že chceme do struktury ukládat pouze vektory s nezápornými složkami. Pak zjevně stačí, aby mřížka obsahovala $\lceil\max(C)/\varepsilon\rceil$ buněk. V případě, že připustíme i vektory se zápornými TODO: proof
-
-Operace \textit{CllBuild} pro zadanou sadu vektorů $S$ sestrojí co nejmenší $d$-rozměrnou pravidelnou mřížku takovou, že pro každý vektor z množiny $S$ půjde nalézt buňku, do které patří. Funkcí \textit{CllCount} se spočte velikost výsledné mřížky a v každé buňce se vytvoří z počátku prázdný spojový seznam vektorů z $\reals^d$. Následně se pro každý vektor $\vec{u} \in S$ spočte jeho souřadnice v cell linked listu a připojí se ke spojovému seznamu. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
+Operace \textit{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
 \begin{algorithm}[h!]
   \caption{CllBuild}
@@ -204,17 +183,18 @@ Operace \textit{CllBuild} pro zadanou sadu vektorů $S$ sestrojí co nejmenší 
   \begin{algorithmic}
     \REQUIRE $S \subset \reals^d$, $\varepsilon \in \reals$
     \ENSURE cell linked list $C$ obsahující množinu $S$
-    \STATE $\varepsilon(C) \leftarrow \varepsilon$
-    \STATE $|S(G)| \leftarrow \max(S) - \min(S) + (1, \ldots, 1)^T$
-    \STATE $G(C) \leftarrow d\hbox{-rozměrné pole prázdných spojových seznamů velikosti } |S(G)|$
+    \STATE $C \leftarrow$ prázdný cell linked list
     \FORALL{$\vec{u} \in S$}
-      \STATE insert $\vec{u}$ into $G(C, I(C, \vec{u}))$
+      \STATE $\vec{c} \leftarrow I(C, \vec{u})$
+      \STATE $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
     \ENDFOR
     \RETURN $C$
   \end{algorithmic}
 \end{algorithm}
 
-Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$ takové, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze vektory v buňkách se souřadnicemi $\vec{a}$ takovými, jejichž maximová norma $\|\vec{c} - \vec{a}\|_\infty$ je menší nebo rovna $r := \lceil\delta / \varepsilon(C)\rceil$. Lze si rozmyslet, že pokud se zvolí TODO: best r
+Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$ takové, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze vektory v buňkách se souřadnicemi $\vec{a}$ takovými, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|_\infty$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně ,,blízko'' k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
+
+Složitost tohoto algoritmu se nesnadno určuje bez znalosti rozdělení dat $S(C)$. Proto jej (prozatím?) vynecháváme.
 
 \begin{algorithm}[h!]
   \caption{CllSearch}
@@ -223,16 +203,16 @@ Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou ho
     \REQUIRE $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
     \ENSURE $M \subseteq S(G)$
     \STATE $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
-    \STATE $c \leftarrow i(\vec{q}, C)$
+    \STATE $c \leftarrow I(C, \vec{q})$
     \STATE $M \leftarrow \emptyset$
-    \FORALL{$\vec{m} \in \reals^d: \|\vec{m} - \vec{c}\|_{\infty} < r$}
-      \FORALL{$\vec{u} \in S(\vec{m}, C): \|\vec{u} - \vec{q}\| < \delta$}
+    \FORALL{$\vec{m} \in \mathbb{Z}^d: \|\vec{m} - \vec{c}\|_{\infty} < r$}
+      \FORALL{$\vec{u} \in S(C, \vec{m}): \|\vec{u} - \vec{q}\| < \delta$}
         \STATE $M \leftarrow M \cup \vec{u}$
       \ENDFOR
     \ENDFOR
     \RETURN $M$
   \end{algorithmic}
-  \end{algorithm}
+\end{algorithm}
 
 \subsection{K-d strom}
 
@@ -249,7 +229,7 @@ Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom 
   \label{algo:kd-tree-build}
   \begin{algorithmic}
     \REQUIRE $S = \{\forall \vec{u} \in S: \vec{u} \in \reals^k\}, d \in \reals, \vec{B_l} \in \reals^k, \vec{B_r} \in \reals^k$
-    \ENSURE vrchol k-d strom $T$
+    \ENSURE kořen k-d stromu $T$
     \IF{$|S| < s$}
       \RETURN KdNode($S, d, \emptyset, \emptyset, (\vec{B_l}), (\vec{B_r})$)
     \ENDIF
@@ -276,4 +256,12 @@ Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom 
 \end{algorithm}
 
 Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
+
+\begin{algorithm}
+  \label{algo:kd-tree-range-search}
+  \caption{Algoritmus pro }
+  \begin{algorithmic}
+    \REQUIRE vrchol k-d stromu
+  \end{algorithmic}
+\end{algorithm}
 
