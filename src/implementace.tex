@@ -1,26 +1,60 @@
-\chapter{Implementace}
+\chapter{Realizace}
 
 Veškerá měření probíhala na procesoru Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz.
 
 \section{Programovací jazyk Julia}
 
-Vícerozměrná pole v Julii jsou ukládána v column major pořadí. V paměti s náhodným přístupem jsou v souvislých paměťových blocích uložené sloupce, zatímco řádky mohou být uložené na v paměti různých místech. Demonstrujme na příkladu \ref[major-example].
+Vícerozměrná pole v Julii jsou ukládána ve tzv. sloupcové majoritě. V paměti s náhodným přístupem jsou v souvislých paměťových blocích uložené sloupce, zatímco řádky mohou být uložené na různých místech.
 
+\section{Použité externí knihovny}
 
-\section{Použití balíčku}
+Při implementaci byly použity následující externí knihovny:
+\begin{itemize}
+  \item \texttt{DynamicPolynomials} a \texttt{MultivariatePolynomials} poskytují třídy pro práci s polynomy.
+  \item \texttt{NearestNeighbors} poskytuje implementaci k-d stromu.
+  \item \texttt{DataStructures} poskytuje spojový seznam.
+  \item \texttt{Plots} umožňuje vykreslování grafů.
+\end{itemize}
 
-\subsection{Instalace}
+Při testování se používal \texttt{Jupyter}, který v prohlížeči vytvoří interaktivní prostředí.
 
-Nutnou podmínkou k použití balíčku je nainstalovaná Julia na systému. Instalace záleží na provozovaném operačním systému.
+\section{Implementace cell linked listu}
 
-Instalaci balíčku lze v Julii provést příkazem
+TODO: Nějaká omáčka o nereálných implementacích z teoretické části sem.
 
-Pkg.install("MovingWeightedLeastSquares")
+V teoretické části se pro reprezentaci mřížky cell linked listu použilo nekonečně velké pole, což může být v praxi překážkou. Nechť je dána sada vektorů $S := \{\vec{x_i}\}_{i=1}^n$, kde $\vec{x_i} \in \reals^d$ a cell linked list $C$ s daným parametrem $\varepsilon(C)$. Chceme určit minimální možnou velikost mřížky $G(C)$ tak, aby v ní bylo možné uchovat všechny vektory z množiny $S$. Zaveďme značení $\min(V)$ a $\max(V)$, čímž se myslí nejmenší resp. největší vektor z nějaké množiny vektorů $V$. Je přiřozené, aby vektor $\min(S)$ měl souřadnice $(0, \ldots, 0)^T$. Proto v implementaci je modifikována funkce $I(C, \vec{u}), \vec{u} \in S$ a její výsledek je dán vztahem
+\begin{equation}
+  \label{cll-index}
+  I_m(C, \vec{u}) = I(C, \vec{u}) - I(C, \min(S(C))) + (1, \ldots, 1).
+\end{equation}
+V Julii se pole indexují od 1, proto je k výsledku \ref{cll-index} přičten jednotkový vektor. Velikost mřížky, která je potřeba k uchování celé sady $S$ získáme spočtením funkce $I(C, \max(S))$.
 
-a pro použití stačí příkaz
+Další implemenační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, ke kterému chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Určeme souřadnice $c = I_m(C, \vec{q})$. Místo naivní iterace přes celou mřížku $G(C)$ budeme pouze iterovat přes takové buňky $b \in G(C)$, které mají 
 
-using MovingWeightedLeastSquares
+\section{Implementace metody pohyblivých vážených nejmenších čtverců}
 
-Tímto se připojí balíček do REPL prostředí, ve kterém lze použít libovolný příkaz, který balíček umožňuje. Totožným způsobem lze balíček připojit i ve skriptech.
+Těžištěm implementace je objekt \texttt{MwlsObject}, který si uchovává potřebné vstupy pro výpočet požadovaných aproximací. Mezi jeho atributy patří:
+\begin{itemize}
+  \item \texttt{inputs} -- sada vstupních dat $\{\vec{x_i}\}_{i=1}^k, x_i \in \reals^n$,
+  \item \texttt{outputs} -- sada výstupních dat $\{\vec{y_i}\}_{i=1}^k, y_i \in \reals^m$,
+  \item \texttt{EPS} -- reálná hodnota udávající implicitní velikost ,,okolí'' pro konstrukci aproximace,
+  \item \texttt{weightFunc} -- váhová funkce pro konstrukci aproximace.
+\end{itemize}
+Atributy \texttt{inputs} a \texttt{outputs} lze předat dvěma způsoby, buď jako dvě různá vícerozměrná pole, nebo jedním vícerozměrným polem a kladným celočíselným parametrem, které udává dimenzi výstupních dat. Ačkoliv si Julia uchovává vícerozměrná pole ve sloupcové majoritě, tak se na vstupu očekávají data tak, že dvojice vstupů a výstupů jsou na jednom řádku.
 
-\subsection{Funkcionality balíčku}
+Třída \texttt{MwlsObject} má 3 různé implementace, které se liší způsobem hledání sousedů v rozsahu. Struktura \texttt{MwlsNaiveObject} používá k hledání naivní iteraci přes celou množinu vstupních dat, \texttt{MwlsCllObject} používá cell linked list a \texttt{MwlsKdObject} používá k-d strom. Pro snadnější vytvoření jednotlivých objektů jsou připraveny pomocné funkce \texttt{mwlsNaive}, \texttt{mwlsCll} a \texttt{mwlsKd}.
+
+V teoretické části se pro aproximaci používala (téměř) libovolná sada funkcí $f_1, \ldots, f_l$. V implementaci se však pouze předá celočíselný parametr \texttt{maxDegree}, který určuje maximální stupeň \textit{polynomiální báze} \texttt{b} použité k aproximaci v každé z jednotlivých dimenzí. Demonstrujeme na příkladu \ref{exer:basis-example}.
+\begin{priklad}
+  \label{exer:basis-example}
+  Pro parametr $\texttt{maxDegree} = 2$ a dimenzi výstupních dat $m = 2$ se vytvoří sada funkcí $f_1(x_1, x_2), \ldots, f_{12}(x_1, x_2)$
+  \begin{multline}
+    f_1 = (1, 0), f_2 = (x, 0), f_3 = (y, 0), f_4 = (x^2, 0), f_5 = (xy, 0), f_6 = (y^2, 0),\\
+    f_7 = (0, 1), f_8 = (0, x), f_9 = (0, y), f_{10} = (0, x^2), f_{11} = (0, xy), f_{12} = (0, y^2)\\
+  \end{multline}
+  která bude použita pro konstrukci aproximace.
+\end{priklad}
+Lze si však všimnout, že se mnoho funkcí často opakuje a liší se pouze ve složce, která je nenulová. Proto budeme generovat bázi tak, aby se funkce neduplikovaly. Výsledkem příkladu \ref{exer:basis-example} tedy bude pouze $f_1(x, y) = 1, f_2(x, y) = x, f_3(x,y) = y, f_4(x,y)=x^2,f_5=xy,f_6=y^2$.
+
+Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Jak již bylo naznačeno, mnoho funkcí se v polynomiální bázi použité k aproximaci opakuje. Proto se místo vektoru $\vec{b}$ použije matice $\mx{B}$, kde v řádcích jsou jednotlivé výstupní vektory $y_i$.
+
