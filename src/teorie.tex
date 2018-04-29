@@ -2,7 +2,7 @@
 
 \section{Definice a značení}
 
-Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V této kapitole se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách.
+Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V následujících kapitolách se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách.
 
 \section{Metoda nejmenších čtverců}
 
@@ -94,6 +94,7 @@ Dosaďme rovnice \ref{eq:solve-wls-lhs} a \ref{eq:solve-wls-rhs} do \ref{eq:solv
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů.
 
 \section{Metoda pohyblivých vážených nejmenších čtverců}
+\label{sec:mwls}
 
 Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
 \begin{equation}
@@ -161,7 +162,7 @@ V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly pou
 
 Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
 
-Cell linked list podporuje následující operace.
+\noindent Cell linked list podporuje následující operace.
 
 \begin{table}[ht!]
   \begin{tabular}{lll}
@@ -173,7 +174,7 @@ Cell linked list podporuje následující operace.
 
 Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávána v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
 
-Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1}, \ldots, \floor{\vec{u}_d})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexování pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
+Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
 
 Operace \textit{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
@@ -194,7 +195,7 @@ Operace \textit{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked list
 
 Operace \textit{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$ takové, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze vektory v buňkách se souřadnicemi $\vec{a}$ takovými, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|_\infty$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně ,,blízko'' k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
 
-Složitost tohoto algoritmu se nesnadno určuje bez znalosti rozdělení dat $S(C)$. Proto jej (prozatím?) vynecháváme.
+Složitost algoritmu \textit{CllSearch} není snadné určit bez znalosti rozdělení dat $S(C)$ a proto jej vynecháváme.
 
 \begin{algorithm}[h!]
   \caption{CllSearch}
@@ -222,7 +223,7 @@ V této části popíšeme pouze ty operace k-d stromu, které jsou v práci pou
 
 Konstrukce k-d stromu probíhá rekurzivně. Parametry pro sestavení vrcholu je množina vstupních dat $S$, číslo $h$ udávající velikost listu a vektory $B_l$ a $B_r$. Pro konstrukci zcela nového stromu se zavolá funkce \textit{kdBuild} s parametry $S, h, (-\infty, \ldots, -\infty)^T, (\infty, \ldots, \infty)^T$, které postupně udávají množinu ukládaných dat, maximální velikost listu a spodní a horní hranici pro vektory, které jsou v podstromě udržovány. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$ složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$ složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$ a $\vec{b_r} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} < \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $m(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levý potomek vrcholu $V$ bude výsledek volání funkce \textit{kdBuild} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravý potomek bude obdobně výsledek volání funkce \textit{kdBuild} s parametry $S_r, h, \vec{B_r}, \vec{b_r}$.
 
-Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\lceil |S| / h \rceil - 1$ (dále už budeme označovat pouze jako $n$) listů. Ze struktury binárního vyhledávácího stromu plyne, že strom bude mít $O(n\log(n))$ vrcholů. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
+Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\lceil |S| / h \rceil - 1$ (dále už budeme označovat pouze jako $n$) listů. Ze struktury binárního vyhledávacího stromu plyne, že strom bude mít $O(n\log(n))$ vrcholů. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
 \begin{algorithm}[h!]
   \caption{Algoritmus sestavení k-d stromu (kdBuild)}
