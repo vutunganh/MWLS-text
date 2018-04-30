@@ -12,11 +12,50 @@ Jako ve většině programovacích jazyků je i v Julii možné definovat si vla
 
 Složené typy jsou v Julii realizované strukturami, které téměř totožné se strukturami z jazyka C. Tyto struktury a jejich členské proměnné jsou implicitně \textit{immutable} (česky neměnné). Pokud jsou immutable členskými proměnnými složené typy (např. pole), pak lze měnit jejich obsahy, protože immutable jsou pouze reference na tyto objekty a ne objekty samotné. Pokud nechceme, aby byla deklarovaná struktura immutable, pak použijeme klíčové slovo \texttt{mutable} před deklarací struktury. Implicitní neměnnost nemusí být na škodu, poskytují mnoho nezanedbatelných výhod, např. snadnější srozumitelnost kódu a výkonnost plynoucí z toho, že neměnné objekty v některých případech není potřeba alokovat na haldu. Tohoto se využívá v naší implementaci, objekty pro sestrojení aproximace jsou vždy neměnné, ačkoliv v sobě obsahují pole se vstupními daty. Všechny struktury mají implicitní konstruktor s totožným názvem a přijímají tolik argumentů, kolik má struktura členských proměnných a v takovém pořadí, v jakém jsou deklarovány jednotlivé členské proměnné. Konstruktory si lze samozřejmě dodefinovat dle potřeby.
 
-V Julii se immutable objekty předávají do funkcí hodnotou, zatímco mutable objekty se předávají referencí. Proměnné samy o sobě žádný typ nemají, jsou pouze ,,pojmenováním'' nějakého objektu.
+V Julii se immutable objekty předávají do funkcí hodnotou, zatímco mutable objekty se předávají referencí. Proměnné samy o sobě žádný typ nemají, jsou pouze ,,pojmenováním'' nějakého objektu. Tedy například sekvence příkazů
+\begin{Verbatim}
+a = 3 # typeof(a) -> Int64
+a = "Ahoj" # typeof(a) -> String
+a = 4.0 # typeof(a) -> Float64
+\end{Verbatim}
+žádnou chybu nevyvolá. Pokud se ovšem proměnné určíme typ operátorem \texttt{::}, pak už do ní nelze přiřadit hodnotu s jiným typem. Toto je znázorněno na příkladu \ref{julia-example:cannot-override-declared-types}. Globálním proměnným (tedy i proměnným v terminálovém prostředí) nelze přiřadit typ, proto jsme založili dočasnou funkci. Mohlo by nás napadnout, proč se úspěšně podařilo definovat funkci \texttt{foo} (indikováno na řádku 5 v příkladu), přestože v sobě obsahuje chybu. Důvodem je to, že definice funkce \texttt{foo} tělo funkce neprovedla. Chybné příkazy se vyvolaly teprve voláním funkce na řádku 7.
+\begin{figure}
+  \renewcommand{\figurename}{Příklad}
+  \label{julia-example:cannot-override-declared-types}
+  \begin{Verbatim}[numbers=left]
+  julia> function foo()
+           a::String = "Ahoj"
+           a = 4
+         end
+  foo (generic function with 1 method)
 
-Objektově orientované paradigma je v Julii realizováno poněkud netradičním způsobem. Abstraktní typy se deklarují klíčovým slovem \texttt{abstract}, nemají žádné členské proměnné a slouží pouze jako ,,vrchol'' v grafu typů Julie. Dědit se smí pouze z abstraktních typů. V Julii se dědičnost vztahuje pouze na chování objektů a nikoliv na členské proměnné.
+  julia> foo()
+  ERROR: MethodError: Cannot `convert` an object of type Int64
+  to an object of type String...
+  \end{Verbatim}
+  \caption{Pokus o předefinování typu proměnné.}
+\end{figure}
 
-Objekty sice nemají třídní metody, ale polymorfismus se dá aplikovat na funkce. Například funkce $foo(x::Number)$ dokáže pracovat s libovolným číselným typem, ať už se jedná o celé číslo či reálné číslo.
+Objektově orientované paradigma je v Julii realizováno poněkud netradičním způsobem. Abstraktní typy se deklarují klíčovým slovem \texttt{abstract}, nemají žádné členské proměnné a slouží pouze jako ,,vrchol'' v grafu typů Julie. Dědit se smí pouze z abstraktních typů. Dá se tedy říct, že v Julii se dědičnost vztahuje pouze na chování objektů a nikoliv na členské proměnné. Účelem je sémanticky svázat chování různých objektů, které se mohou lišit implementací. Například funkce \texttt{transpose(A::Matrix)} dokáže transponovat libovolný druh matice.
+
+V práci se pro různé účely často používá pole, které se může chováním může lišit od všemožných programovacích jazyků a proto si jej popíšeme. Pole v Julii se indexují od 1. Existuje typ vícerozměrné pole, které nelze zaměňovat s polem polí. Pole v Julii jsou v paměti uložena ve sloupcově majoritním pořadí (stejně jako ve Fortranu). Pragmaticky to například znamená, že pokud se iteruje přes dvourozměrné pole velikosti 3 řádky a 2 sloupce, pak by se mělo nejprve iterovat přes sloupec sloupec a poté teprve řádek, tzn. $[1, 1], [2, 1], [3, 1], [1, 2], [2, 2], [3, 2]$, kde první index značí řádek a druhý sloupec. 
+
+Julia má vestavěnou funkcionalitu pro vytváření dokumentace. Před definice funkcí a struktur lze vytvořit řetězec, který bude obsahovat dokumentaci k definovanému objektu. Tuto dokumentaci lze v terminálovém příkazu otevřít pomocí příkazu \texttt{?<název objektu>}. Tuto vlastnost demonstrujeme na příkladu \ref{julia-example:documentation}. Všimněme si, že stisknutí otazníku změní prompt z \texttt{julia>} na \texttt{help?>}.
+\begin{figure}
+  \renewcommand{\figurename}{Příklad}
+  \label{julia-example:documentation}
+  \begin{Verbatim}
+julia> """
+       This is sample documentation of Foo.
+       """struct Foo end
+
+help?> Foo
+search: ....
+
+  This is sample documentation of Foo.
+  \end{Verbatim}
+  \caption{Demonstrace vestavěné dokumentace v Julii.}
+\end{figure}
 
 \section{Použité externí knihovny}
 
