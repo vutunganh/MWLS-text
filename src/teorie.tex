@@ -14,7 +14,7 @@ Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \rea
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
 \begin{multline}
 \label{defi:ls-min}
-  J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =\\
+  J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
   \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =\\
   \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
 \end{multline}
@@ -125,6 +125,8 @@ $\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ 
 \end{equation}
 
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
+
+Metoda pohyblivých (i nepohyblivých) vážených nejmenších čtverců patří mezi tzv. \textit{meshfree} metody pro rekonstrukci funkce mimo pravidelnou mřížku. Nevyžadují, aby vstupní (vzorová) data $S$ byla umístěná na pravidelné mřížce. Také neexistovalo žádné omezení pro hodnotu vektoru $\vec{x} \in \reals^n$, k němuž jsme chtěli sestrojit aproximaci $f(\vec{x}, \varepsilon)$, což nemusí nutně platit pro metody, které vyžadují po vstupních datech, aby byla umístěná na pravidelné mřížce.
 
 \section{Problém hledání sousedů v daném rozsahu}
 
@@ -273,4 +275,3 @@ Pro řešení problému existuje řada dalších metod. Datová struktura \texti
 K-d strom je v podstatě binární vyhledávací strom. Vyhledávací stromy mohou však být i obecné a v jednotlivých vrcholech mohou mít více dat a tím pádem i více potomků. Příkladem takové struktury je \textit{(a, b)-strom}, kde kořen může mít 2 až $b$ potomků a vnitřní vrcholy mají $a$ až $b$ potomků.\cite[s.~190--198]{pruvodce} Tento koncept se dá modifikovat i pro náš problém a příkladem takové modifikace je \textit{R-strom}.\cite{r-tree}
 
 Operace přidávání, odebírání a modifikace prvků v k-d stromě mají slabinu v tom, že jejich provedením může vzniknout nevyvážený strom. Nevyváženosti v binárních vyhledávacích stromech většinou řešíme pomocí rotací vrcholů, ale mohl by nastat problém kvůli nerovnosti diskriminátoru rotovaného vrcholu a jeho rodiče. Kvůli tomu by se musel podstrom zakořeněný v rodiči rotovaného vrcholu celý přestavět, což není příliš časově efektivní. Jednou z modifikací k-d stromu, která si s tímto problémem umí poradit je Bkd-strom, který mj. pravidelně strom přestavuje.\cite{bkd-tree}
-
