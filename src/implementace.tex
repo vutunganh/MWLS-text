@@ -1,10 +1,22 @@
 \chapter{Realizace}
 
-Veškerá měření probíhala na procesoru Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz.
-
 \section{Programovací jazyk Julia}
 
-Vícerozměrná pole v Julii jsou ukládána ve tzv. sloupcové majoritě. V paměti s náhodným přístupem jsou v souvislých paměťových blocích uložené sloupce, zatímco řádky mohou být uložené na různých místech.
+Julia je relativně nový programovací jazyk (poprvé se objevil v roce 2012\cite{julia-first}) a proto by bylo na místě jej představit a zvýraznit některé důležité, ne zcela obvyklé vlastnosti.
+
+Julia je dynamicky typovaný jazyk. Oproti známějším, dynamicky typovaným jazykům jako je například Python\footnote{pomineme-li typové anotace} nebo Javascript lze u proměnných, třídních proměnných a parametrů funkcí specifikovat typ. Pro tento účel je existuje postfixový operátor \texttt{::<název typu>}. Například \texttt{a = 20} vytvoří proměnnou \texttt{a} s typem \texttt{Int64} (64bitové celé číslo), zatímco \texttt{a::Int8 = 20} vytvoří proměnnou \texttt{a} s typem \texttt{Int8} (8bitové celé číslo). Specifikace typu se však nikdy explicitně nevyžaduje a vždy je možné ji vynechat.
+
+Nicméně v některých případech je výhodnější typ uvést. U třídních proměnných je vždy lepší typ uvést z výkonnostních důvodů. Pokud typ není specifikován, pak musí být schopen udržet v sobě libovolný objekt a z tohoto důvodu se třídní typy bez uvedeného typu musí alokovat na haldě. Tento princip platí i u kontejnerů a vždy je lepší specifikovat typ ukládaných objektů.\cite{julia-performance}
+
+Jako ve většině programovacích jazyků je i v Julii možné definovat si vlastní typy.
+
+Složené typy jsou v Julii realizované strukturami, které téměř totožné se strukturami z jazyka C. Tyto struktury a jejich členské proměnné jsou implicitně \textit{immutable} (česky neměnné). Pokud jsou immutable členskými proměnnými složené typy (např. pole), pak lze měnit jejich obsahy, protože immutable jsou pouze reference na tyto objekty a ne objekty samotné. Pokud nechceme, aby byla deklarovaná struktura immutable, pak použijeme klíčové slovo \texttt{mutable} před deklarací struktury. Implicitní neměnnost nemusí být na škodu, poskytují mnoho nezanedbatelných výhod, např. snadnější srozumitelnost kódu a výkonnost plynoucí z toho, že neměnné objekty v některých případech není potřeba alokovat na haldu. Tohoto se využívá v naší implementaci, objekty pro sestrojení aproximace jsou vždy neměnné, ačkoliv v sobě obsahují pole se vstupními daty. Všechny struktury mají implicitní konstruktor s totožným názvem a přijímají tolik argumentů, kolik má struktura členských proměnných a v takovém pořadí, v jakém jsou deklarovány jednotlivé členské proměnné. Konstruktory si lze samozřejmě dodefinovat dle potřeby.
+
+V Julii se immutable objekty předávají do funkcí hodnotou, zatímco mutable objekty se předávají referencí. Proměnné samy o sobě žádný typ nemají, jsou pouze ,,pojmenováním'' nějakého objektu.
+
+Objektově orientované paradigma je v Julii realizováno poněkud netradičním způsobem. Abstraktní typy se deklarují klíčovým slovem \texttt{abstract}, nemají žádné členské proměnné a slouží pouze jako ,,vrchol'' v grafu typů Julie. Dědit se smí pouze z abstraktních typů. V Julii se dědičnost vztahuje pouze na chování objektů a nikoliv na členské proměnné.
+
+Objekty sice nemají třídní metody, ale polymorfismus se dá aplikovat na funkce. Například funkce $foo(x::Number)$ dokáže pracovat s libovolným číselným typem, ať už se jedná o celé číslo či reálné číslo.
 
 \section{Použité externí knihovny}
 
@@ -16,7 +28,7 @@ Při implementaci byly použity následující externí knihovny:
   \item \texttt{Plots} umožňuje vykreslování grafů.
 \end{itemize}
 
-Při testování se používal \texttt{Jupyter}, který v prohlížeči vytvoří interaktivní prostředí.
+Při implementaci a testování se používal \texttt{Jupyter}, který v prohlížeči vytvoří interaktivní prostředí. Terminálové prostředí je nevhodné pro tvorbu rozsáhlejších programů, které se často pouštějí vícekrát, což by znamenalo ruční přepisování příkazů při každém provádění. Na druhou stranu modifikovat skripty často znamená, že i při malých změnách se musí znovu provést interpretace celého skriptu. Navíc je obtížné nechat si k jednotlivým příkazům zobrazit jejich dílčí výstupy. \texttt{Jupyter} kombinuje oba přístupy a umožňuje snadnou modifikaci skriptů (zvané notebooky), zobrazování výstupu každého příkazu a možnost ukládat si posloupnosti příkazů.
 
 \section{Implementace cell linked listu}
 
