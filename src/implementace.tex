@@ -12,17 +12,14 @@ Jako ve většině programovacích jazyků je i v Julii možné definovat si vla
 
 Složené typy jsou v Julii realizované strukturami, které téměř totožné se strukturami z jazyka C. Tyto struktury a jejich členské proměnné jsou implicitně \textit{immutable} (česky neměnné). Pokud jsou immutable členskými proměnnými složené typy (např. pole), pak lze měnit jejich obsahy, protože immutable jsou pouze reference na tyto objekty a ne objekty samotné. Pokud nechceme, aby byla deklarovaná struktura immutable, pak použijeme klíčové slovo \texttt{mutable} před deklarací struktury. Implicitní neměnnost nemusí být na škodu, poskytují mnoho nezanedbatelných výhod, např. snadnější srozumitelnost kódu a výkonnost plynoucí z toho, že neměnné objekty v některých případech není potřeba alokovat na haldu. Tohoto se využívá v naší implementaci, objekty pro sestrojení aproximace jsou vždy neměnné, ačkoliv v sobě obsahují pole se vstupními daty. Všechny struktury mají implicitní konstruktor s totožným názvem a přijímají tolik argumentů, kolik má struktura členských proměnných a v takovém pořadí, v jakém jsou deklarovány jednotlivé členské proměnné. Konstruktory si lze samozřejmě dodefinovat dle potřeby.
 
-V Julii se immutable objekty předávají do funkcí hodnotou, zatímco mutable objekty se předávají referencí. Proměnné samy o sobě žádný typ nemají, jsou pouze ,,pojmenováním'' nějakého objektu. Tedy například sekvence příkazů
+V Julii se immutable objekty předávají do funkcí hodnotou, zatímco mutable objekty se předávají referencí. Proměnné samy o sobě žádný typ nemají, jsou pouze ,,pojmenováním'' nějakého objektu. Tedy například posloupnost příkazů
 \begin{Verbatim}
 a = 3 # typeof(a) -> Int64
 a = "Ahoj" # typeof(a) -> String
 a = 4.0 # typeof(a) -> Float64
 \end{Verbatim}
-žádnou chybu nevyvolá. Pokud se ovšem proměnné určíme typ operátorem \texttt{::}, pak už do ní nelze přiřadit hodnotu s jiným typem. Toto je znázorněno na příkladu \ref{julia-example:cannot-override-declared-types}. Globálním proměnným (tedy i proměnným v terminálovém prostředí) nelze přiřadit typ, proto jsme založili dočasnou funkci. Mohlo by nás napadnout, proč se úspěšně podařilo definovat funkci \texttt{foo} (indikováno na řádku 5 v příkladu), přestože v sobě obsahuje chybu. Důvodem je to, že definice funkce \texttt{foo} tělo funkce neprovedla. Chybné příkazy se vyvolaly teprve voláním funkce na řádku 7.
-\begin{figure}
-  \renewcommand{\figurename}{Příklad}
-  \label{julia-example:cannot-override-declared-types}
-  \begin{Verbatim}[numbers=left]
+žádnou chybu nevyvolá. Pokud se ovšem proměnné určíme typ operátorem \texttt{::}, pak už do ní nelze přiřadit hodnotu s jiným typem. Toto je znázorněno na příkladu \ref{julia-example:cannot-override-declared-types}. Globálním proměnným (tedy i proměnným v terminálovém prostředí) nelze přiřadit typ, proto se ukázka prováděla ve funkci. Mohlo by nás napadnout, proč se úspěšně podařilo definovat funkci \texttt{foo} (indikováno řádkem v příkladu), přestože v sobě obsahuje chybu. Důvodem je to, že definice funkce \texttt{foo} neprovádí příkazy v těle funkce. Chybné příkazy se provedly teprve voláním funkce na řádku 7.
+\begin{lstlisting}[caption={Pokus o předefinování proměnné}, label={julia-example:cannot-override-declared-types}]
   julia> function foo()
            a::String = "Ahoj"
            a = 4
@@ -30,32 +27,25 @@ a = 4.0 # typeof(a) -> Float64
   foo (generic function with 1 method)
 
   julia> foo()
-  ERROR: MethodError: Cannot `convert` an object of type Int64
-  to an object of type String...
-  \end{Verbatim}
-  \caption{Pokus o předefinování typu proměnné.}
-\end{figure}
+  ERROR: MethodError: Cannot `convert` an object of type
+  Int64 to an object of type String ...
+\end{lstlisting}
 
 Objektově orientované paradigma je v Julii realizováno poněkud netradičním způsobem. Abstraktní typy se deklarují klíčovým slovem \texttt{abstract}, nemají žádné členské proměnné a slouží pouze jako ,,vrchol'' v grafu typů Julie. Dědit se smí pouze z abstraktních typů. Dá se tedy říct, že v Julii se dědičnost vztahuje pouze na chování objektů a nikoliv na členské proměnné. Účelem je sémanticky svázat chování různých objektů, které se mohou lišit implementací. Například funkce \texttt{transpose(A::Matrix)} dokáže transponovat libovolný druh matice.
 
 V práci se pro různé účely často používá pole, které se může chováním může lišit od všemožných programovacích jazyků a proto si jej popíšeme. Pole v Julii se indexují od 1. Existuje typ vícerozměrné pole, které nelze zaměňovat s polem polí. Pole v Julii jsou v paměti uložena ve sloupcově majoritním pořadí (stejně jako ve Fortranu). Pragmaticky to například znamená, že pokud se iteruje přes dvourozměrné pole velikosti 3 řádky a 2 sloupce, pak by se mělo nejprve iterovat přes sloupec sloupec a poté teprve řádek, tzn. $[1, 1], [2, 1], [3, 1], [1, 2], [2, 2], [3, 2]$, kde první index značí řádek a druhý sloupec. 
 
 Julia má vestavěnou funkcionalitu pro vytváření dokumentace. Před definice funkcí a struktur lze vytvořit řetězec, který bude obsahovat dokumentaci k definovanému objektu. Tuto dokumentaci lze v terminálovém příkazu otevřít pomocí příkazu \texttt{?<název objektu>}. Tuto vlastnost demonstrujeme na příkladu \ref{julia-example:documentation}. Všimněme si, že stisknutí otazníku změní prompt z \texttt{julia>} na \texttt{help?>}.
-\begin{figure}
-  \renewcommand{\figurename}{Příklad}
-  \label{julia-example:documentation}
-  \begin{Verbatim}
+\begin{lstlisting}[caption={Demonstrace vestavěné dokumentace v Julii.}, label={julia-example:documentation}]
 julia> """
        This is sample documentation of Foo.
        """struct Foo end
 
 help?> Foo
-search: ....
+search: ...
 
   This is sample documentation of Foo.
-  \end{Verbatim}
-  \caption{Demonstrace vestavěné dokumentace v Julii.}
-\end{figure}
+\end{lstlisting}
 
 \section{Použité externí knihovny}
 
@@ -71,20 +61,45 @@ Při implementaci a testování se používal \texttt{Jupyter}, který v prohlí
 
 \section{Implementace cell linked listu}
 
-TODO: Nějaká omáčka o nereálných implementacích z teoretické části sem.
-
-V teoretické části se pro reprezentaci mřížky cell linked listu použilo nekonečně velké pole, což může být v praxi překážkou. Nechť je dána sada vektorů $S := \{\vec{x_i}\}_{i=1}^n$, kde $\vec{x_i} \in \reals^d$ a cell linked list $C$ s daným parametrem $\varepsilon(C)$. Chceme určit minimální možnou velikost mřížky $G(C)$ tak, aby v ní bylo možné uchovat všechny vektory z množiny $S$. Zaveďme značení $\min(V)$ a $\max(V)$, čímž se myslí nejmenší resp. největší vektor z nějaké množiny vektorů $V$. Je přiřozené, aby vektor $\min(S)$ měl souřadnice $(0, \ldots, 0)^T$. Proto v implementaci je modifikována funkce $I(C, \vec{u}), \vec{u} \in S$ a její výsledek je dán vztahem
+V teoretické části se pro reprezentaci mřížky cell linked listu použilo nekonečně velké pole, což může být v praxi překážkou. Nechť je dána sada vektorů $S := \{\vec{x_i}\}_{i=1}^n$, kde $\vec{x_i} \in \reals^d$ a cell linked list $C$ s pevně určeným parametrem $\varepsilon(C)$. Chceme určit minimální možnou velikost mřížky $G(C)$ tak, aby v ní bylo možné uchovat všechny vektory z množiny $S$. Zaveďme značení $\min(V)$ a $\max(V)$, čímž se myslí nejmenší resp. největší vektor z nějaké množiny vektorů $V$. Je přirozené, aby vektor $\min(S)$ měl souřadnice $(0, \ldots, 0)^T$. Proto v implementaci je modifikována funkce $I(C, \vec{u}), \vec{u} \in S$ a její výsledek je dán vztahem
 \begin{equation}
   \label{cll-index}
   I_m(C, \vec{u}) = I(C, \vec{u}) - I(C, \min(S(C))) + (1, \ldots, 1).
 \end{equation}
 V Julii se pole indexují od 1, proto je k výsledku \ref{cll-index} přičten jednotkový vektor. Velikost mřížky, která je potřeba k uchování celé sady $S$ získáme spočtením funkce $I(C, \max(S))$.
 
-Další implemenační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, ke kterému chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Určeme souřadnice $c = I_m(C, \vec{q})$. Místo naivní iterace přes celou mřížku $G(C)$ budeme pouze iterovat přes takové buňky $b \in G(C)$, které mají 
+Další implementační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, ke kterému chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Určeme souřadnice $c = I_m(C, \vec{q})$. Místo naivní iterace přes celou mřížku $G(C)$ budeme pouze iterovat přes takové buňky $b \in G(C)$, které mají 
 
 \section{Implementace metody pohyblivých vážených nejmenších čtverců}
 
-Těžištěm implementace je objekt \texttt{MwlsObject}, který si uchovává potřebné vstupy pro výpočet požadovaných aproximací. Mezi jeho atributy patří:
+V této části si popíšeme samotnou implementaci metody pohyblivých vážených nejmenších čtverců. Obsah této části navazuje na popis v teoretické části práce \ref{sec:mwls} a bude používat totožné značení. Metodu pohyblivých vážených nejmenších čtverců jsme si odvodili pro aproximaci funkce $\reals^n \rightarrow \reals^m$. Pro účely této sekce si ji zjednodušíme pro případ, kde výstupní dimenze je $1$, tzn. pro aproximaci funkce $\reals^n \rightarrow \reals$. 
+
+Nechť je dána sada dat $S := \{\vec{x_i}, y_i\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
+\begin{equation}
+  \label{defi:mwls-1d}
+  f(\vec{x},\varepsilon) = \sum_{i=1}^lc_i(\vec{x})f_i,
+\end{equation}
+s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
+\begin{multline}
+  \label{defi:mwls-min-1d}
+  J(f(\vec{x},\varepsilon)) :=
+  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - y_i}^2 =\\
+  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =\\
+  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i})^2.\\
+\end{multline}
+Je-li hledaná funkce ve tvaru $\reals^n \rightarrow \reals$, pak je jednodušší práce s normou, která se ve vztahu objevuje. Objekt, který se v normě nachází je obyčejné číslo z $\reals$ a pro libovolné $a \in \reals$ platí, že $\norm{a} = \abs{a}$.
+
+Opět budeme minimalizovat chybovou funkci $J$ pomocí parciálních derivací podle neznámých koeficientů $c_1, \ldots, c_l$. Pro obecné $v \in \hat l$ platí
+\begin{equation}
+  \label{eq:1d-mwls-diff}
+  \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x}, \varepsilon)) =
+  2\sum_{\substack{\vec{x_i} \in S,\\\norm{\vec{x} - \vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})(c_v(\vec{x})f_v(\vec{x_i})).\\
+\end{equation}
+
+%TODO: dokončit
+Položme tyto derivace rovny $0$ pro
+
+Těžištěm implementace je objekt \texttt{MwlsObject}, který si uchovává potřebné vstupy pro výpočet požadovaných aproximací. Mezi jeho členské proměnné patří
 \begin{itemize}
   \item \texttt{inputs} -- sada vstupních dat $\{\vec{x_i}\}_{i=1}^k, x_i \in \reals^n$,
   \item \texttt{outputs} -- sada výstupních dat $\{\vec{y_i}\}_{i=1}^k, y_i \in \reals^m$,
@@ -105,7 +120,16 @@ V teoretické části se pro aproximaci používala (téměř) libovolná sada f
   \end{multline}
   která bude použita pro konstrukci aproximace.
 \end{priklad}
-Lze si však všimnout, že se mnoho funkcí často opakuje a liší se pouze ve složce, která je nenulová. Proto budeme generovat bázi tak, aby se funkce neduplikovaly. Výsledkem příkladu \ref{exer:basis-example} tedy bude pouze $f_1(x, y) = 1, f_2(x, y) = x, f_3(x,y) = y, f_4(x,y)=x^2,f_5=xy,f_6=y^2$.
+Lze si však všimnout, že se mnoho funkcí často opakuje a liší se pouze ve složce, která je nenulová. Proto budeme generovat bázi tak, aby se funkce neduplikovaly. Výsledkem příkladu \ref{exer:basis-example} tedy bude pouze $f_1(x, y) = 1, f_2(x, y) = x, f_3(x,y) = y, f_4(x,y)=x^2,f_5(x, y)=xy,f_6(x, y)=y^2$.
 
-Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Jak již bylo naznačeno, mnoho funkcí se v polynomiální bázi použité k aproximaci opakuje. Proto se místo vektoru $\vec{b}$ použije matice $\mx{B}$, kde v řádcích jsou jednotlivé výstupní vektory $y_i$.
-
+Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Vytvoření matice $\mx{A}$ je přímočarým přepsáním vztahu \ref{eq:solve-mwls-lhs}. Pro výpočet vektoru $\vec{b}$ se bude muset provést několik změn. Způsob, jakým jsme si zavedli funkce, které budou použity k vytvoření aproximace, nám umožňuje pracovat s jednotlivými složkami jednotlivých vektorů $\vec{y_i}$ nezávisle na ostatních. Vytvořme si tedy vektory $\vec{u}_1, \ldots, \vec{u}_m$, kde $u_{ij}$ neznámým koeficientem $j$-té proměnné v $i$-té dimenzi a vektory $\vec{v}_1, \ldots, \vec{v}_m$, kde $\vec{v_i}$ je vektor na pravé straně metody vážených pohyblivých nejmenších čtverců v 1 rozměrné variantě. Budeme tedy řešit soustavy soustav lineárních rovnic
+\begin{align}
+  \mx{A}\vec{u_1} &= \vec{v_1}\notag\\
+                  &\;\;\vdots\notag\\
+  \mx{A}\vec{u_m} &= \vec{v_m}\notag.
+\end{align}
+V implementaci všechny soustavy vyřeší najednou tak, že se vytvoří matice $\mx{U}$ a $\mx{V}$, kde $\mx{U}_{:i} = \vec{u_i}, \forall i \in \hat m$ a $\mx{V}_{:i} = \vec{v_i}, \forall i \in \hat m$ a vyřeší se soustava
+\begin{equation}
+  \mx{A}\mx{U} = \mx{V}.
+\end{equation}
+Samotné řešení soustavy se provádí v Julii operátorem \texttt{\textbackslash}.
