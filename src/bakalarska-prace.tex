@@ -56,6 +56,12 @@
 \newtheorem{dusl}[defi]{Důsledek}
 \newtheorem{priklad}{Příklad}
 
+\lstset{
+  basicstyle=\ttfamily,
+  captionpos=b,
+  numbers=left
+}
+
 \renewcommand{\algorithmicrequire}{\textbf{Vstup:}}
 \renewcommand{\algorithmicensure}{\textbf{Výstup:}}
 \makeatletter
@@ -94,7 +100,7 @@ V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých 
 
 Výstupem práce by měla být implementace metody pohyblivých vážených nejmenších čtverců v programovacím jazyce Julia.
 
-Metoda pohyblivých vážených čtverců teoreticky i prakticky dosahuje velmi dobrých výsledků.\cite{surfaces-mwls} V době tvorby práce však neexistovala žádná implementace metody a proto jsem se rozhodl práci realizovat.
+Metoda pohyblivých vážených čtverců teoreticky i prakticky dosahuje velmi dobrých výsledků.\cite{surfaces-mwls, mwls-approximation-power} V době tvorby práce však neexistovala žádná implementace metody a proto jsem se rozhodl práci realizovat.
 
 V teoretické části si zformulujeme problém, který se dá řešit metodou nejmenších čtverců. Představíme metodu pohyblivých vážených nejmenších čtverců. Dále budeme pokračovat rešerší existujicích implementací metody a rešerší datových struktur, jímiž lze řešit stěžejní podproblém metody pohyblivých vážených nejmenších čtverců a to \textit{problém hledání dat v zadaném rozsahu}. V poslední části si popíšeme návrh a naši implementaci v jazyce Julia, jež je hlavním výstupem této práce.
 \end{introduction}
@@ -102,6 +108,8 @@ V teoretické části si zformulujeme problém, který se dá řešit metodou ne
 \include{teorie}
 
 \include{implementace}
+
+\include{experimenty}
 
 \begin{conclusion}
   %sem napište závěr Vaší práce
