@@ -172,7 +172,7 @@ Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si kaž
   \end{tabular}
 \end{table}
 
-Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávána v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
+Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávánou v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
 
 Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
 
