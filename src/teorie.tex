@@ -2,7 +2,7 @@
 
 \section{Definice a značení}
 
-Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V následujících kapitolách se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách. Často budeme používat pro různé účely $d$-rozměrná pole a indexaci těchto polí budeme provádět vektory z $\mathbb{Z}^d$ nebo $\integers_0^d$. Máme-li například 2 rozměrné pole, pak se indexem (1, 2) bude rozumět prvek na prvním řádku a druhém sloupci.
+Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V následujících kapitolách se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách. Často budeme používat pro různé účely $d$-rozměrná pole a indexaci těchto polí budeme provádět vektory z $\mathbb{Z}^d$ nebo $\integers_0^d$. Máme-li například 2-rozměrné pole, pak se indexem (1, 2) bude rozumět prvek na prvním řádku a druhém sloupci. Mluvíme-li o souřadnicích, pak zpravidla myslíme souřadnice v kartézském souřadnicovém systému.
 
 \section{Metoda nejmenších čtverců}
 
@@ -131,7 +131,7 @@ Metoda pohyblivých (i nepohyblivých) vážených nejmenších čtverců patř�
   Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 \end{defi}
 
-Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$ a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
+Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$, a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
 
 \begin{algorithm}[ht!]
   \caption{Naivní řešení problému hledání nejbližších sousedů}
@@ -270,7 +270,7 @@ Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom 
 \end{align}
 z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
-Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. Hledání průniku hyperkvádru a hyperkoule není konstantní operací, proto pokud $H \cap B = H$, pak hledání průniku přeskočíme pro všechny vrcholy podstromu zakořeněném ve vrcholu $V$ a rovnou se podíváme na všechny listy tohoto podstromu a provádíme kontrolu z předchozí věty.
+Algoritmus pro hledání všech záznamů v rozmezí také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vhodnou představou je, že $\vec{q}$ a $\delta$ určují hyperkouli $B$ a cílem je nalézt všechny záznamy v k-d stromu, které jsou ,,uvnitř'' $B$. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$, který má hrany rovnoběžné s osami kartézského souřadnicového systému. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. Hledání průniku hyperkvádru a hyperkoule není konstantní operací, proto pokud $H \cap B = H$, pak hledání průniku přeskočíme pro všechny vrcholy podstromu zakořeněném ve vrcholu $V$ a rovnou se podíváme na všechny listy tohoto podstromu a provádíme kontrolu z předchozí věty.
 
 \begin{algorithm}
   \caption{Algoritmus pro hledání sousedů v daném rozsahu}
@@ -282,12 +282,15 @@ Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se st�
       \If{$L(V) = \emptyset \land R(V) = \emptyset$}
         \State \Return \Call{NaiveSearch}{$S(V)$}
       \EndIf
+      \State $H_l \leftarrow \hbox{ hyperkvádr určený vektory } \vec{L(B_l)} \hbox{ a } \vec{L(B_r)}$
+      \State $H_r \leftarrow \hbox{ hyperkvádr určený vektory } \vec{R(B_l)} \hbox{ a } \vec{R(B_r)}$
+      \State $B \leftarrow \hbox{ hyperkoule se středem v } \vec{q} \hbox{ a poloměrem } \delta$
       \State $R \leftarrow \emptyset$
-      \If{\Call{InRange}{$L(V)$}}
-        \State $R \leftarrow R \cup \hbox{\Call{KdSearch}{$L(V), q, \delta$}}$
+      \If{$H_l \cap B \neq \emptyset$}
+        \State $R \leftarrow R \cup \hbox{ \Call{KdSearch}{$L(V), q, \delta$}}$
       \EndIf
-      \If{\Call{InRange}{$R(V)$}}
-        \State $R \leftarrow R \cup \hbox{\Call{KdSearch}{$R(V), q, \delta$}}$
+      \If{$H_r \cap B \neq \emptyset$}
+        \State $R \leftarrow R \cup \hbox{ \Call{KdSearch}{$R(V), q, \delta$}}$
       \EndIf
       \State \Return{$R$}
     \EndProcedure
