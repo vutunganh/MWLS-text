@@ -217,20 +217,9 @@ Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozděle
 
 K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \hat k$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Každý vrchol $V$ k-d stromu obsahuje tyto 2 vektory a budeme je značit $\vec{B_l}(V)$, resp. $\vec{B_r}(V)$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$. Pokud budeme přistupovat k vektorům uloženým ve vrcholu $V$, pak píšeme $S(V)$. Diskriminátor vrcholu $V$ budeme značit $m(V)$.
 
-V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů.
+V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů. Popisujeme k-d strom dle \cite{kd-tree} a \cite{kd-tree-optimized}.
 
 Konstrukce k-d stromu probíhá rekurzivně. Algoritmus rozdělen do 2 funkcí, kde funkce \func{KdBuild} je pomocnou funkcí volajíc funkci \func{KdBuildRec}, která provádí samotné rekurzivní sestavování stromu. Pro konstrukci zcela nového stromu se zavolá funkce \func{KdBuild} s parametry $S, h$, které postupně udávají množinu ukládaných dat a maximální velikost listu. Rekurzivní funkce \func{KdBuildRec} pro sestavování stromu má navíc 2 parametry $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$, které udávají rozmezí pro vektory, které se nachází v právě sestavovaném vrcholu. Funkce \func{KdBuild} pouze vrací výsledek volání funkce \func{KdBuildRec}, kde hodnotou $\vec{B_l}$ je vektor $(-\infty, \ldots, -\infty)^T$ a hodnotou $\vec{B_r}$ je vektor $(\infty, \ldots, \infty)^T$. Nyní lze přejít k popisu rekurzivní funkce \func{KdBuildRec}. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$ složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$ složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$ a $\vec{b_r} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} \leq \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $d(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levým potomkem vrcholu $V$ bude výsledek volání funkce \func{KdBuildRec} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravým potomkem bude obdobně výsledek volání funkce \func{KdBuildRec} s parametry $S_r, h, \vec{b_r}, \vec{B_r}$. Návratovou hodnotou této rekurzivní funkce je vrchol $V$.
-
-Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\ceil{|S|/h}- 1$ (dále už budeme označovat pouze jako $n$) listů. Každý vrchol má buď oba potomky, nebo je listem. Kořen má stupeň 2, listy mají stupně 1 a vnitřní vrcholy mají stupeň 3 (1 z rodiče a 2 do potomků). Označme neznámý počet vnitřních vrcholů jako $x$. Z principu sudosti a vlastnosti, že počet vrcholů ve stromě je o $1$ větší než počet hran, lze sestavit rovnici
-\begin{align}
-  \label{eq:kd-tree-vertex-count}
-  \sum_{v \in T}deg(v) &= 2|E|\notag\\
-            n + 2 + 3x &= 2(|V|-1)\notag\\
-            n + 2 + 3x &= 2|V|-2\notag\\
-            n + 2 + 3x &= 2(1+n+x)-2\notag\\
-                     x &= n-2\notag 
-\end{align}
-z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
 \begin{algorithm}[ht!]
   \caption{Algoritmus sestavení k-d stromu}
@@ -268,17 +257,30 @@ z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová 
   \end{algorithmic}
 \end{algorithm}
 
+Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\ceil{|S|/h}- 1$ (dále už budeme označovat pouze jako $n$) listů. Každý vrchol má buď oba potomky, nebo je listem. Kořen má stupeň 2, listy mají stupně 1 a vnitřní vrcholy mají stupeň 3 (1 z rodiče a 2 do potomků). Označme neznámý počet vnitřních vrcholů jako $x$. Z principu sudosti a vlastnosti, že počet vrcholů ve stromě je o $1$ větší než počet hran, lze sestavit rovnici
+\begin{align}
+  \label{eq:kd-tree-vertex-count}
+  \sum_{v \in T}deg(v) &= 2|E|\notag\\
+            n + 2 + 3x &= 2(|V|-1)\notag\\
+            n + 2 + 3x &= 2|V|-2\notag\\
+            n + 2 + 3x &= 2(1+n+x)-2\notag\\
+                     x &= n-2\notag
+\end{align}
+z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
+
 Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
 
 \begin{algorithm}
-  \label{algo:kd-tree-range-search}
   \caption{Algoritmus pro hledání sousedů v daném rozsahu}
+  \label{algo:kd-tree-range-search}
   \begin{algorithmic}
     \Require k-d strom $T$, vektor $\vec{q} \in \reals^k$, reálné číslo $\delta \in \reals$
     \Ensure podmnožina vektorů $M \subseteq m(T)$ v k-d stromu $T$ taková, že $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in m(T) \setminus M: \norm{\vec{u} - \vec{q}} > \delta$
     
   \end{algorithmic}
 \end{algorithm}
+
+Složitost algoritmu \ref{algo:kd-tree-range-search} se obtížně určuje a proto tuto analýzu přeskočíme. Lee a Wong v \cite{kd-tree-worst} ukázali, že v nejhorším případě je tato složitost $O(kN^{1-1/k})$, kde $N$ je počet záznamů ve stromě a $k$ je dimenze, ve níž se pracuje. Důsledkem tohoto výsledku je, že s rostoucí dimenzí se asymptotická složitost přibližuje k naivnímu vyhledávání přes celou množinu dat $S$.
 
 \subsection{Další možná řešení}
 
