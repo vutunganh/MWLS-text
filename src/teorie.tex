@@ -141,15 +141,15 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \caption{Naivní řešení problému hledání nejbližších sousedů}
   \label{algo:naive-nns}
   \begin{algorithmic}
-    \REQUIRE $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
-    \ENSURE $M \subseteq S$
-    \STATE $M \leftarrow \emptyset$
-    \FORALL{$\vec{u} \in S$}
-        \IF{$\norm{\vec{u} - \vec{q}} \leq \delta$}
-          \STATE $M \leftarrow M \cup \vec{u}$
-        \ENDIF
-    \ENDFOR
-    \RETURN $M$
+    \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
+    \Ensure $M \subseteq S$
+    \State $M \leftarrow \emptyset$
+    \ForAll{$\vec{u} \in S$}
+        \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
+          \State $M \leftarrow M \cup \vec{u}$
+        \EndIf
+    \EndFor
+    \Return $M$
   \end{algorithmic}
 \end{algorithm}
 
@@ -184,14 +184,14 @@ Operace \textit{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked list
   \caption{CllBuild}
   \label{algo:cll-build}
   \begin{algorithmic}
-    \REQUIRE $S \subset \reals^d$, $\varepsilon \in \reals$
-    \ENSURE cell linked list $C$ obsahující množinu $S$
-    \STATE $C \leftarrow$ prázdný cell linked list
-    \FORALL{$\vec{u} \in S$}
-      \STATE $\vec{c} \leftarrow I(C, \vec{u})$
-      \STATE $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
-    \ENDFOR
-    \RETURN $C$
+    \Require $S \subset \reals^d$, $\varepsilon \in \reals$
+    \Ensure cell linked list $C$ obsahující množinu $S$
+    \State $C \leftarrow$ prázdný cell linked list
+    \ForAll{$\vec{u} \in S$}
+      \State $\vec{c} \leftarrow I(C, \vec{u})$
+      \State $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
+    \EndFor
+    \Return $C$
   \end{algorithmic}
 \end{algorithm}
 
@@ -203,17 +203,17 @@ Složitost algoritmu \textit{CllSearch} není snadné určit bez znalosti rozdě
   \caption{CllSearch}
   \label{algo:cll-search}
   \begin{algorithmic}
-    \REQUIRE $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
-    \ENSURE $M \subseteq S(G)$
-    \STATE $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
-    \STATE $c \leftarrow I(C, \vec{q})$
-    \STATE $M \leftarrow \emptyset$
-    \FORALL{$\vec{m} \in \mathbb{Z}^d: \|\vec{m} - \vec{c}\|_{\infty} < r$}
-      \FORALL{$\vec{u} \in S(C, \vec{m}): \|\vec{u} - \vec{q}\| < \delta$}
-        \STATE $M \leftarrow M \cup \vec{u}$
-      \ENDFOR
-    \ENDFOR
-    \RETURN $M$
+    \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
+    \Ensure $M \subseteq S(G)$
+    \State $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
+    \State $c \leftarrow I(C, \vec{q})$
+    \State $M \leftarrow \emptyset$
+    \ForAll{$\vec{m} \in \mathbb{Z}^d: \|\vec{m} - \vec{c}\|_{\infty} < r$}
+      \ForAll{$\vec{u} \in S(C, \vec{m}): \|\vec{u} - \vec{q}\| < \delta$}
+        \State $M \leftarrow M \cup \vec{u}$
+      \EndFor
+    \EndFor
+    \Return $M$
   \end{algorithmic}
 \end{algorithm}
 
@@ -223,48 +223,54 @@ K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje di
 
 V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů.
 
-Konstrukce k-d stromu probíhá rekurzivně. Parametry pro sestavení vrcholu je množina vstupních dat $S$, číslo $h$ udávající velikost listu a vektory $B_l$ a $B_r$. Pro konstrukci zcela nového stromu se zavolá funkce \textit{kdBuild} s parametry $S, h, (-\infty, \ldots, -\infty)^T, (\infty, \ldots, \infty)^T$, které postupně udávají množinu ukládaných dat, maximální velikost listu a spodní a horní hranici pro vektory, které jsou v podstromě udržovány. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$ složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$ složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$ a $\vec{b_r} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} < \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $m(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levý potomek vrcholu $V$ bude výsledek volání funkce \textit{kdBuild} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravý potomek bude obdobně výsledek volání funkce \textit{kdBuild} s parametry $S_r, h, \vec{B_r}, \vec{b_r}$.
+Konstrukce k-d stromu probíhá rekurzivně. V pseudokódu je algoritmus rozdělen do 2 funkcí, kde první z nich je pomocnou funkcí volajíc druhou funkci, která provádí samotné rekurzivní sestavování stromu. Pro konstrukci zcela nového stromu se zavolá funkce \textsc{KdBuild} s parametry $S, h$, které postupně udávají množinu ukládaných dat a maximální velikost listu. Rekurzivní funkce \textsc{KdBuildRec} pro sestavování stromu má navíc 2 parametry $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$, které udávají rozmezí pro vektory, které se nachází v právě sestavovaném vrcholu. Funkce \textsc{KdBuild} pouze vrací výsledek volání funkce \textsc{KdBuildRec}, kde hodnotou $\vec{B_l}$ je vektor $(-\infty, \ldots, -\infty)^T$ a hodnotou $\vec{B_r}$ je vektor $(\infty, \ldots, \infty)^T$. Nyní lze přejít k popisu rekurzivní funkce \textsc{KdBuildRec}. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$ složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$ složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$ a $\vec{b_r} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} < \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $m(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levý potomek vrcholu $V$ bude výsledek volání funkce \textit{kdBuild} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravý potomek bude obdobně výsledek volání funkce \textit{kdBuild} s parametry $S_r, h, \vec{B_r}, \vec{b_r}$.
 
 Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\lceil |S| / h \rceil - 1$ (dále už budeme označovat pouze jako $n$) listů. Ze struktury binárního vyhledávacího stromu plyne, že strom bude mít $O(n\log(n))$ vrcholů. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
-
 \begin{algorithm}[h!]
-  \caption{Algoritmus sestavení k-d stromu (kdBuild)}
+  \caption{Algoritmus sestavení k-d stromu}
   \label{algo:kd-tree-build}
   \begin{algorithmic}
-    \REQUIRE $S = \{\forall \vec{u} \in S: \vec{u} \in \reals^k\}, d \in \reals, \vec{B_l} \in \reals^k, \vec{B_r} \in \reals^k$
-    \ENSURE kořen k-d stromu $T$
-    \IF{$|S| < s$}
-      \RETURN KdNode($S, d, \emptyset, \emptyset, (\vec{B_l}), (\vec{B_r})$)
-    \ENDIF
-    \STATE $p \leftarrow -\infty$
-    \FORALL{$\vec{u}, \vec{v} \in S$, kde $\vec{u} \neq \vec{v}$}
-      \FORALL{$i \in 0, \ldots, k-1$}
-        \STATE $p \leftarrow \max(p, \vec{u}_i - \vec{v}_i$)
-      \ENDFOR
-    \ENDFOR
-    \STATE $m \leftarrow \textrm{median}(\{\vec{u}_p: \forall \vec{u} \in S\})$ 
-    \STATE $\vec{b_l} \leftarrow ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, m, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$
-    \STATE $\vec{b_r} \leftarrow ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, m, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$
-    \STATE $s_l \leftarrow \emptyset$
-    \STATE $s_r \leftarrow \emptyset$
-    \FORALL{$\vec{u} \in S$}
-      \IF{$\vec{u} \leq \vec{b_l}$}
-        \STATE $\vec{s_l} \leftarrow \vec{s_l} \cup \vec{u}$
-      \ELSE
-        \STATE $\vec{s_r} \leftarrow \vec{s_r} \cup \vec{u}$
-      \ENDIF
-    \ENDFOR
-    \RETURN KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_l}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_r}, \vec{b_r}), \vec{B_l}, \vec{B_r}$)
+    \Require množina vstupních dat $S$, maximální velikost listu k-d stromu $h \in \mathbb{N}$
+    \Ensure kořen k-d stromu $T$
+    \Procedure{KdBuild}{$S, h$}
+      \State \Return \Call{KdBuildRec}{$S, h, (-\infty, \ldots, -\infty)^T, (\infty, \ldots, \infty)^T$}
+    \EndProcedure
+    \Procedure{KdBuildRec}{$S, s, \vec{B_l}, \vec{B_r}$}
+      \If{$|S| < s$}
+        \Return KdNode($S, d, \emptyset, \emptyset, (\vec{B_l}), (\vec{B_r})$)
+      \EndIf
+      \State $p \leftarrow -\infty$
+      \ForAll{$\vec{u}, \vec{v} \in S$, kde $\vec{u} \neq \vec{v}$}
+        \ForAll{$i \in 0, \ldots, k-1$}
+          \State $p \leftarrow \max(p, \vec{u}_i - \vec{v}_i$)
+        \EndFor
+      \EndFor
+      \State $m \leftarrow \textrm{median}(\{\vec{u}_p: \forall \vec{u} \in S\})$ 
+      \State $\vec{b_l} \leftarrow ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, m, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$
+      \State $\vec{b_r} \leftarrow ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, m, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$
+      \State $s_l \leftarrow \emptyset$
+      \State $s_r \leftarrow \emptyset$
+      \ForAll{$\vec{u} \in S$}
+        \If{$\vec{u} \leq \vec{b_l}$}
+          \State $\vec{s_l} \leftarrow \vec{s_l} \cup \vec{u}$
+        \Else
+          \State $\vec{s_r} \leftarrow \vec{s_r} \cup \vec{u}$
+        \EndIf
+      \EndFor
+      \Return KdNode($S, p, \textrm{kdBuild}(\vec{s_l}, d, \vec{B_l}, \vec{b_l}), \textrm{kdBuild}(\vec{s_r}, d, \vec{B_r}, \vec{b_r}), \vec{B_l}, \vec{B_r}$)
+    \EndProcedure
   \end{algorithmic}
 \end{algorithm}
 
-Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
+Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
 
 \begin{algorithm}
   \label{algo:kd-tree-range-search}
-  \caption{Algoritmus pro }
+  \caption{Algoritmus pro hledání sousedů v daném rozsahu}
   \begin{algorithmic}
-    \REQUIRE vrchol k-d stromu
+    \Require k-d strom $T$, vektor $\vec{q} \in \reals^k$, reálné číslo $\delta \in \reals$
+    \Ensure podmnožina vektorů $M \subseteq m(T)$ v k-d stromu $T$ taková, že $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in m(T) \setminus M: \norm{\vec{u} - \vec{q}} > \delta$
+    
   \end{algorithmic}
 \end{algorithm}
 
