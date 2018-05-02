@@ -139,12 +139,14 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \begin{algorithmic}
     \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
     \Ensure $M \subseteq S$
-    \State $M \leftarrow \emptyset$
-    \ForAll{$\vec{u} \in S$}
-        \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
-          \State $M \leftarrow M \cup \vec{u}$
-        \EndIf
-    \EndFor
+    \Procedure{NaiveSearch}{$S, q, \delta$}
+      \State $M \leftarrow \emptyset$
+      \ForAll{$\vec{u} \in S$}
+          \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
+            \State $M \leftarrow M \cup \vec{u}$
+          \EndIf
+      \EndFor
+    \EndProcedure
     \Return $M$
   \end{algorithmic}
 \end{algorithm}
@@ -268,24 +270,34 @@ Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom 
 \end{align}
 z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
-Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. 
+Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se středem ve vektoru $\vec{q}$ a poloměrem $\delta$ také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má ,,větší'' průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. Hledání průniku hyperkvádru a hyperkoule není konstantní operací, proto pokud $H \cap B = H$, pak hledání průniku přeskočíme pro všechny vrcholy podstromu zakořeněném ve vrcholu $V$ a rovnou se podíváme na všechny listy tohoto podstromu a provádíme kontrolu z předchozí věty.
 
 \begin{algorithm}
   \caption{Algoritmus pro hledání sousedů v daném rozsahu}
   \label{algo:kd-tree-range-search}
   \begin{algorithmic}
     \Require k-d strom $T$, vektor $\vec{q} \in \reals^k$, reálné číslo $\delta \in \reals$
-    \Ensure podmnožina vektorů $M \subseteq m(T)$ v k-d stromu $T$ taková, že $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in m(T) \setminus M: \norm{\vec{u} - \vec{q}} > \delta$
-    
+    \Ensure podmnožina vektorů $M \subseteq S(T)$ v k-d stromu $T$ taková, že $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in m(T) \setminus S: \norm{\vec{u} - \vec{q}} > \delta$
+    \Procedure{KdSearch}{kořen k-d stromu $V$, $q \in \reals^k, \delta \in \reals$}
+      \If{$L(V) = \emptyset \land R(V) = \emptyset$}
+        \State \Return \Call{NaiveSearch}{$S(V)$}
+      \EndIf
+      \If{\Call{InRange}{$L(V)$}}
+        \State \Call{KdSearch}{$L(V), q, \delta$}
+      \EndIf
+      \If{\Call{InRange}{$R(V)$}}
+        \State \Call{KdSearch}{$R(V), q, \delta$}
+      \EndIf
+    \EndProcedure
   \end{algorithmic}
 \end{algorithm}
 
-Složitost algoritmu \ref{algo:kd-tree-range-search} se obtížně určuje a proto tuto analýzu přeskočíme. Lee a Wong v \cite{kd-tree-worst} ukázali, že v nejhorším případě je tato složitost $O(kN^{1-1/k})$, kde $N$ je počet záznamů ve stromě a $k$ je dimenze, ve níž se pracuje. Důsledkem tohoto výsledku je, že s rostoucí dimenzí se asymptotická složitost přibližuje k naivnímu vyhledávání přes celou množinu dat $S$.
+Složitost algoritmu \ref{algo:kd-tree-range-search} se obtížně určuje a proto tuto analýzu přeskočíme. Lee a Wong v \cite{kd-tree-worst} ukázali, že v nejhorším případě je tato složitost $O(kN^{1-1/k})$, kde $N$ je počet záznamů ve stromě a $k$ je dimenze, v níž se pracuje. Důsledkem tohoto výsledku je, že s rostoucí dimenzí se asymptotická složitost přibližuje k naivnímu vyhledávání přes celou množinu dat $S$.
 
 \subsection{Další možná řešení}
 
 Pro řešení problému existuje řada dalších metod. Datová struktura \textit{quadtree} funguje obdobně jako k-d strom, ale pouze v 2D prostoru. Každé vrchol stromu má 4 potomky, kteří odpovídají rozdělení roviny na 4 části pomocí 2 na sobě kolmých přímek tak, aby v každé části byla přibližně čtvrtina vstupu. Pro obecný k-dimenzionální prostor bude mít každý vrchol $2^k$ potomků, čímž exponenciálně poroste počet vrcholů takového stromu. V praxi se například používá \textit{octree}, který pracuje jako quadtree v 3D prostoru, pro práci s grafikou.\cite{octree-usage}
 
-K-d strom je v podstatě binární vyhledávací strom. Vyhledávací stromy mohou však být i obecné a v jednotlivých vrcholech mohou mít více dat a tím pádem i více potomků. Příkladem takové struktury je \textit{(a, b)-strom}, kde kořen může mít 2 až $b$ potomků a vnitřní vrcholy mají $a$ až $b$ potomků.\cite[s.~190--198]{pruvodce} Tento koncept se dá modifikovat i pro náš problém a příkladem takové modifikace je \textit{R-strom}.\cite{r-tree}
+K-d strom je v podstatě binární vyhledávací strom. Vyhledávací stromy mohou však být i obecné a v jednotlivých vrcholech mohou mít více dat a tím pádem i více potomků. Příkladem takové struktury je \textit{(a, b)-strom} (občas nazývaný \textit{B-strom}), kde kořen může mít 2 až $b$ potomků a vnitřní vrcholy mají $a$ až $b$ potomků.\cite[s.~190--198]{pruvodce} Tento koncept se dá modifikovat i pro náš problém a příkladem takové modifikace je \textit{R-strom}.\cite{r-tree}
 
-Operace přidávání, odebírání a modifikace prvků v k-d stromě mají slabinu v tom, že jejich provedením může vzniknout nevyvážený strom. Nevyváženosti v binárních vyhledávacích stromech většinou řešíme pomocí rotací vrcholů, ale mohl by nastat problém kvůli nerovnosti diskriminátoru rotovaného vrcholu a jeho rodiče. Kvůli tomu by se musel podstrom zakořeněný v rodiči rotovaného vrcholu celý přestavět, což není příliš časově efektivní. Jednou z modifikací k-d stromu, která si s tímto problémem umí poradit je Bkd-strom, který mj. pravidelně strom přestavuje.\cite{bkd-tree}
+Operace přidávání, odebírání a modifikace prvků v k-d stromě mají slabinu v tom, že jejich provedením může vzniknout nevyvážený strom. Nevyváženosti v binárních vyhledávacích stromech většinou řešíme pomocí rotací vrcholů, čemuž může zabránit nerovnost diskriminátoru rotovaného vrcholu a jeho rodiče. Kvůli tomu by se musel podstrom zakořeněný v rodiči rotovaného vrcholu celý přestavět, což není příliš časově efektivní. Jednou z modifikací k-d stromu, která si s tímto problémem umí poradit je Bkd-strom, který mj. pravidelně strom přestavuje.\cite{bkd-tree}
