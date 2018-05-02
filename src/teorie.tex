@@ -282,12 +282,14 @@ Algoritmus pro hledání všech záznamů, které leží v hyperkouli $B$ se st�
       \If{$L(V) = \emptyset \land R(V) = \emptyset$}
         \State \Return \Call{NaiveSearch}{$S(V)$}
       \EndIf
+      \State $R \leftarrow \emptyset$
       \If{\Call{InRange}{$L(V)$}}
-        \State \Call{KdSearch}{$L(V), q, \delta$}
+        \State $R \leftarrow R \cup \hbox{\Call{KdSearch}{$L(V), q, \delta$}}$
       \EndIf
       \If{\Call{InRange}{$R(V)$}}
-        \State \Call{KdSearch}{$R(V), q, \delta$}
+        \State $R \leftarrow R \cup \hbox{\Call{KdSearch}{$R(V), q, \delta$}}$
       \EndIf
+      \State \Return{$R$}
     \EndProcedure
   \end{algorithmic}
 \end{algorithm}
