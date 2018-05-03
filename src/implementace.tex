@@ -61,12 +61,12 @@ Při implementaci a testování se používal \texttt{Jupyter}, který v prohlí
 
 \section{Implementace cell linked listu}
 
-V teoretické části se pro reprezentaci mřížky cell linked listu použilo nekonečně velké pole, což může být v praxi překážkou. Nechť je dána sada vektorů $S := \{\vec{x_i}\}_{i=1}^n$, kde $\vec{x_i} \in \reals^d$ a cell linked list $C$ s pevně určeným parametrem $\varepsilon(C)$. Chceme určit minimální možnou velikost mřížky $G(C)$ tak, aby v ní bylo možné uchovat všechny vektory z množiny $S$. Zaveďme značení $\min(V)$ a $\max(V)$, čímž se myslí nejmenší resp. největší vektor z nějaké množiny vektorů $V$. Je přirozené, aby vektor $\min(S)$ měl souřadnice $(0, \ldots, 0)^T$. Proto v implementaci je modifikována funkce $I(C, \vec{u}), \vec{u} \in S$ a její výsledek je dán vztahem
+V teoretické části se pro reprezentaci mřížky cell linked listu použilo nekonečně velké pole, což může být v praxi překážkou. Nechť je dána sada vektorů $S := \{\vec{x_i}\}_{i=1}^n$, kde $\vec{x_i} \in \reals^d$ a cell linked list $C$ s pevně určeným parametrem $\varepsilon(C)$. Chceme určit minimální možnou velikost mřížky $G(C)$ tak, aby v ní bylo možné uchovat všechny vektory z množiny $S$. Zaveďme značení $\min(V)$ a $\max(V)$, čímž se myslí nejmenší resp. největší vektor z nějaké množiny vektorů $V$. Je přirozené, aby vektor $\min(S)$ měl souřadnice $(1, \ldots, 1)^T$. Zvolili jsme jednotkový vektor, protože v Julii se pole indexují od 1. Aby byla měla naše struktura minimální možnou velikost, pak stačí tak velké pole, aby do něj šel umístit vektor $\max(S)$. Operaci pro nalezení buňky k vektoru $\vec{u} \in \reals^d$ v cell linked listu $C$ jsme zavedli jako $I(C, \vec{u}) := (\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)}$. Aby souřadnice buňky $\min(S)$ skutečně měla jako souřadnicový vektor $(1, \ldots, 1)$, pak modifikujeme operaci indexace na
 \begin{equation}
   \label{cll-index}
   I_m(C, \vec{u}) = I(C, \vec{u}) - I(C, \min(S(C))) + (1, \ldots, 1).
 \end{equation}
-V Julii se pole indexují od 1, proto je k výsledku \ref{cll-index} přičten jednotkový vektor. Velikost mřížky, která je potřeba k uchování celé sady $S$ získáme spočtením funkce $I(C, \max(S))$.
+Výsledek operace $I_m(C, \max(S))$ je vektorem velikostí vícerozměrného pole, kterým budeme implementovat cell linked list.
 
 Další implementační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, ke kterému chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Určeme souřadnice $c = I_m(C, \vec{q})$. Místo naivní iterace přes celou mřížku $G(C)$ budeme pouze iterovat přes takové buňky $b \in G(C)$, které mají 
 
@@ -93,7 +93,7 @@ Opět budeme minimalizovat chybovou funkci $J$ pomocí parciálních derivací p
 \begin{equation}
   \label{eq:1d-mwls-diff}
   \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x}, \varepsilon)) =
-  2\sum_{\substack{\vec{x_i} \in S,\\\norm{\vec{x} - \vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})(c_v(\vec{x})f_v(\vec{x_i})).\\
+  2\sum_{\substack{\vec{x_i} \in S,\\\norm{\vec{x} - \vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})(c_v(\vec{x})f_v(\vec{x_i})).
 \end{equation}
 
 %TODO: dokončit
