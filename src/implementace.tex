@@ -51,10 +51,10 @@ search: ...
 
 Při implementaci byly použity následující externí knihovny:
 \begin{itemize}
-  \item \texttt{DynamicPolynomials} a \texttt{MultivariatePolynomials} poskytují třídy pro práci s polynomy.
-  \item \texttt{NearestNeighbors} poskytuje implementaci k-d stromu.
-  \item \texttt{DataStructures} poskytuje spojový seznam.
-  \item \texttt{Plots} umožňuje vykreslování grafů.
+  \item \texttt{DynamicPolynomials.jl}\cite{dynamic-polynomials} a \texttt{MultivariatePolynomials.jl}\cite{multivariate-polynomials} poskytují třídy pro práci s polynomy.
+  \item \texttt{NearestNeighbors.jl}\cite{nearest-neighbors} poskytuje implementaci k-d stromu.
+  \item \texttt{DataStructures.jl}\cite{data-structures} poskytuje spojový seznam.
+  \item \texttt{Plots.jl}\cite{plots} je metabalíček, který poskytuje frontend pro velké množství backendů na vykreslování grafů.
 \end{itemize}
 
 Při implementaci a testování se používal \texttt{Jupyter}, který v prohlížeči vytvoří interaktivní prostředí. Terminálové prostředí je nevhodné pro tvorbu rozsáhlejších programů, které se často pouštějí vícekrát, což by znamenalo ruční přepisování příkazů při každém provádění. Na druhou stranu modifikovat skripty často znamená, že i při malých změnách se musí znovu provést interpretace celého skriptu. Navíc je obtížné nechat si k jednotlivým příkazům zobrazit jejich dílčí výstupy. \texttt{Jupyter} kombinuje oba přístupy a umožňuje snadnou modifikaci skriptů (zvané notebooky), zobrazování výstupu každého příkazu a možnost ukládat si posloupnosti příkazů.
@@ -68,7 +68,27 @@ V teoretické části se pro reprezentaci mřížky cell linked listu použilo n
 \end{equation}
 Výsledek operace $I_m(C, \max(S))$ je vektorem velikostí vícerozměrného pole, kterým budeme implementovat cell linked list.
 
-Další implementační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, ke kterému chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Určeme souřadnice $c = I_m(C, \vec{q})$. Místo naivní iterace přes celou mřížku $G(C)$ budeme pouze iterovat přes takové buňky $b \in G(C)$, které mají 
+Další implementační problém nastal při hledání sousedů. Velikost mřížky $G(C)$ je často o mnoho větší než počet buněk obsahující vektory, které chceme prohledat. Nechť je dán vektor $\vec{q}$, k němuž chceme nalézt všechny vektory cell linked listu $C$ vzdálené maximálně o $\delta \in \reals$. Opět si představíme, že vektor $q$ určuje střed hyperkoule $B$ s poloměrem $\delta$. Budeme chtít prohledávat pouze buňky, které nemají prázdný průnik s hyperkoulí $B$. Určení buněk, které mají průnik s $B$ není jednoduché, ale určení hyperkrychle $H$ opsané hyperkouli $B$ je mnohem snadnější. Minimální souřadnici $H_l$ hyperkrychle $H$ určíme jako $q - (\ceil{\delta/\varepsilon})^T$ a maximální souřadnici $H_r$ hyperkrychle $H$ určíme jako $q + (\ceil{\delta/\varepsilon})^T$. Sice jsme nenalezli hyperkrychli $H$ samotnou, ale našli jsme souřadnice buněk cell linked listu, v níž se $H$ nachází. Nyní stačí iterovat od $H_l$ do $H_r$ a pokud má aktuální buňka neprázdný průnik s $B$, pak v ní spustíme \func{NaiveSearch}. Označme $\vec{c}$ jako vektor souřadnic buňky, v níž se nachází vektor $q$. Tento postup je popsán pseudokódem \ref{algo:cll-search-impl}.
+
+\begin{algorithm}[!ht]
+  \caption{Hledání sousedů v cell linked listu}
+  \label{algo:cll-search-impl}
+  \begin{algorithmic}
+    \Require cell linked list $C$, $q \in \reals^d, \delta \in \reals$
+    \Ensure $M \subseteq S(C)$, kde $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in S(C) \setminus M: \norm{\vec{v} - \vec{q}} > \delta$
+    \State $M \leftarrow \emptyset$
+    \State $r \leftarrow \ceil{\delta/\varepsilon(C)}$
+    \State $c \leftarrow I_m(C, q)$
+    \State $H_l \leftarrow c - (r, \ldots, r)$
+    \State $H_r \leftarrow c + (r, \ldots, r)$
+    \For{$\vec{i} \leftarrow H_l, H_r$}
+      \If{$\norm{\vec{i} - \vec{c}} \leq r$}
+        \State $M \leftarrow M \cup \Call{NaiveSearch}{S(G(C, i))}$
+      \EndIf
+    \EndFor
+    \State \Return{$M$}
+  \end{algorithmic}
+\end{algorithm}
 
 \section{Implementace metody pohyblivých vážených nejmenších čtverců}
 
