@@ -100,7 +100,7 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in
 s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
 \begin{equation}
   \label{defi:mwls-min}
-  J(f(\vec{x},\varepsilon)) := \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
+  J(f(\vec{x},\varepsilon)) := \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
 V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ platí $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
 
@@ -112,12 +112,12 @@ Minimalizace chybové funkce \ref{defi:mwls-min} proběhne téměř stejně jako
 kde $\mx{A} \in \reals^{l,l}$ a
 \begin{equation}
   \label{eq:solve-mwls-lhs}
-  \mx{A}_{vj} := \sum_{\{\vec{x_i} \in S|\norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
+  \mx{A}_{vj} := \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
 \end{equation}
 $\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
 \begin{equation}
   \label{eq:solve-mwls-rhs}
-  \vec{b}_v = \sum_{\{\vec{x_i} \in S|\norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+  \vec{b}_v = \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
 \end{equation}
 
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
@@ -139,15 +139,15 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \begin{algorithmic}
     \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
     \Ensure $M \subseteq S$
-    \Procedure{NaiveSearch}{$S, q, \delta$}
+    \Procedure{NaiveSearch}{$S, \vec{q}, \delta$}
       \State $M \leftarrow \emptyset$
       \ForAll{$\vec{u} \in S$}
           \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
             \State $M \leftarrow M \cup \vec{u}$
           \EndIf
       \EndFor
+    \State \Return $M$
     \EndProcedure
-    \Return $M$
   \end{algorithmic}
 \end{algorithm}
 
@@ -280,7 +280,7 @@ Algoritmus pro hledání všech záznamů v rozmezí také pracuje rekurzivně. 
     \Ensure podmnožina vektorů $M \subseteq S(T)$ v k-d stromu $T$ taková, že $\forall \vec{u} \in M: \norm{\vec{u} - \vec{q}} \leq \delta$ a $\forall \vec{v} \in m(T) \setminus S: \norm{\vec{u} - \vec{q}} > \delta$
     \Procedure{KdSearch}{kořen k-d stromu $V$, $q \in \reals^k, \delta \in \reals$}
       \If{$L(V) = \emptyset \land R(V) = \emptyset$}
-        \State \Return \Call{NaiveSearch}{$S(V)$}
+        \State \Return \Call{NaiveSearch}{$S(V), \vec{q}, \delta$}
       \EndIf
       \State $H_l \leftarrow \hbox{ hyperkvádr určený vektory } \vec{L(B_l)} \hbox{ a } \vec{L(B_r)}$
       \State $H_r \leftarrow \hbox{ hyperkvádr určený vektory } \vec{R(B_l)} \hbox{ a } \vec{R(B_r)}$
