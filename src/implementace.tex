@@ -124,7 +124,7 @@ Těžištěm implementace je struktura \texttt{MwlsObject}, který si uchovává
   \item \texttt{EPS} -- reálná hodnota udávající implicitní velikost \uv{okolí} pro konstrukci aproximace
   \item \texttt{weightFunc} -- váhová funkce pro konstrukci aproximace.
 \end{itemize}
-Členské proměnné \texttt{inputs} a \texttt{outputs} lze předat dvěma způsoby, buď jako dvě různá vícerozměrná pole, nebo jedním vícerozměrným polem a kladným celočíselným parametrem, které udává dimenzi výstupních dat. Ačkoliv si Julia uchovává vícerozměrná pole ve sloupcové majoritě, tak se na vstupu očekávají data tak, že dvojice vstupů a výstupů jsou na jednom řádku.
+Členské proměnné \texttt{inputs} a \texttt{outputs} lze předat dvěma způsoby, buď jako dvě různá vícerozměrná pole, nebo jedním vícerozměrným polem a kladným celočíselným parametrem, které udává dimenzi výstupních dat. Ačkoliv si Julia uchovává vícerozměrná pole ve sloupcové majoritě, tak se na vstupu očekávají data tak, že jednotlivé dvojice vstupů a výstupů jsou na jednom řádku.
 
 Třída \texttt{MwlsObject} má 3 různé implementace, které se liší způsobem hledání sousedů v rozsahu. Struktura \texttt{MwlsNaiveObject} používá k hledání naivní iteraci přes celou množinu vstupních dat, \texttt{MwlsCllObject} používá cell linked list a \texttt{MwlsKdObject} používá k-d strom. Pro snadnější vytvoření jednotlivých struktur jsou připraveny pomocné funkce \texttt{mwlsNaive}, \texttt{mwlsCll} a \texttt{mwlsKd}.
 
@@ -140,14 +140,16 @@ V teoretické části se pro aproximaci používala (téměř) libovolná sada f
 \end{priklad}
 Lze si však všimnout, že se mnoho funkcí často opakuje a liší se pouze ve složce, která je nenulová. Proto budeme generovat bázi tak, aby se funkce neduplikovaly. Výsledkem příkladu \ref{exer:basis-example} tedy bude pouze $f_1(x, y) = 1, f_2(x, y) = x, f_3(x,y) = y, f_4(x,y)=x^2,f_5(x, y)=xy,f_6(x, y)=y^2$.
 
-Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Vytvoření matice $\mx{A}$ je přímočarým přepsáním vztahu \ref{eq:solve-mwls-lhs}. Pro výpočet vektoru $\vec{b}$ se bude muset provést několik změn. Způsob, jakým jsme si zavedli funkce, které budou použity k vytvoření aproximace, nám umožňuje pracovat s jednotlivými složkami jednotlivých vektorů $\vec{y_i}$ nezávisle na ostatních. Vytvořme si tedy vektory $\vec{u}_1, \ldots, \vec{u}_m$, kde $u_{ij}$ neznámým koeficientem $j$-té proměnné v $i$-té složce a vektory $\vec{v}_1, \ldots, \vec{v}_m$, kde $\vec{v_i}$ je vektor na pravé straně metody vážených pohyblivých nejmenších čtverců v 1-rozměrné variantě. Budeme tedy řešit soustavy soustav lineárních rovnic
-\begin{align}
-  \mx{A}\vec{u_1} &= \vec{v_1}\notag\\
-                  &\;\;\vdots\notag\\
-  \mx{A}\vec{u_m} &= \vec{v_m}\notag.
-\end{align}
-V implementaci všechny soustavy vyřeší najednou tak, že se vytvoří matice $\mx{U}$ a $\mx{V}$, kde $\mx{U}_{:i} = \vec{u_i}, \forall i \in \hat m$ a $\mx{V}_{:i} = \vec{v_i}, \forall i \in \hat m$ a vyřeší se soustava
+Způsob, kterým generujeme funkce pro konstrukci aproximace, nám umožňuje sestrojit vektory $(\vec{v})_1, \ldots (\vec{v})_m$, kde $\vec{v}_i = ((\vec{y_1})_i, \ldots, (\vec{y_k})_i)^T$ (tzn. vektor $v_i$ obsahuje $i$-té složky všech výstupních hodnot). S jednotlivými vektory se bude pracovat jako s jednorozměrnými vektory výstupů ke vstupním hodnotám $\vec{x_i} \in S$. V závislosti na předanému parametru \texttt{maxDegree} (dále už jen $d$) se vygeneruje báze $f_1, \ldots, f_l$, kde obecně $l=\binom{d + m}{d}$\cite{asap-mwls}. Pro vektory $\vec{v_1},\ldots,\vec{v_m}$ se vytvoří příslušné vektory neznámých koeficientů $c_1,\ldots,c_m$, kde $c_i \in \reals^l$. Dohromady se tedy $m$-krát použije metoda nejmenších pohyblivých vážených čtverců. Matice $\mx{A}$ na levé straně všech rovnic je vždycky stejná, proto je vyřešíme všechny najednou. Shrnujeme, že výsledná soustava lineárních rovnic bude ve tvaru
 \begin{equation}
-  \mx{A}\mx{U} = \mx{V}.
+  \mx{A}\mx{U}=\mx{V},
 \end{equation}
-Samotné řešení soustavy se provádí v Julii operátorem \texttt{\textbackslash}.
+kde
+\begin{equation}
+  \mx{A}_{v,j} := (\mwlssum \theta(\norm{\vec{x}-\vec{x_i}}) f_v(\vec{x_i})f_j(\vec{x_i})), \mx{A} \in \reals^{l,l},
+\end{equation}
+\begin{equation}
+  \mx{V}_{v,j} := (\mwlssum \theta(\norm{\vec{x}-\vec{x_i}}) f_v(\vec{x_i})\vec{y_{ij}}), \mx{V} \in \reals^{l,m},
+\end{equation}
+a $\mx{U}_{v,j}, \mx{U} \in \reals^{l,m}$ je neznámým koeficientem $v$-té funkce v $j$-té složce.
+Samotné řešení soustavy se provádí v Julii operátorem \texttt{\textbackslash}, který zavolá příslušnou metodu z knihovny \texttt{LAPACK} nebo \texttt{openBLAS}.
