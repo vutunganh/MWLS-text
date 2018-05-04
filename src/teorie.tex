@@ -112,12 +112,12 @@ Minimalizace chybové funkce \ref{defi:mwls-min} proběhne téměř stejně jako
 kde $\mx{A} \in \reals^{l,l}$ a
 \begin{equation}
   \label{eq:solve-mwls-lhs}
-  \mx{A}_{vj} := \sum_{\{\vec{x_i}: \norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
+  \mx{A}_{vj} := \sum_{\{\vec{x_i} \in S|\norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
 \end{equation}
 $\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
 \begin{equation}
   \label{eq:solve-mwls-rhs}
-  \vec{b}_v = \sum_{\{\vec{x_i}: \norm{\vec{x} - \vec{x_i}} \leq \varepsilon \}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+  \vec{b}_v = \sum_{\{\vec{x_i} \in S|\norm{\vec{x} - \vec{x_i}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
 \end{equation}
 
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
