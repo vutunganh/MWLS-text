@@ -83,7 +83,7 @@ Další implementační problém nastal při hledání sousedů. Velikost mří�
     \State $H_r \leftarrow c + (r, \ldots, r)$
     \For{$\vec{i} \leftarrow H_l, H_r$}
       \If{$\norm{\vec{i} - \vec{c}} \leq r$}
-        \State $M \leftarrow M \cup \Call{NaiveSearch}{S(G(C, i))}$
+        \State $M \leftarrow M \cup \Call{NaiveSearch}{S(G(C, i)), \vec{q}, \delta}$
       \EndIf
     \EndFor
     \State \Return{$M$}
@@ -92,45 +92,43 @@ Další implementační problém nastal při hledání sousedů. Velikost mří�
 
 \section{Implementace metody pohyblivých vážených nejmenších čtverců}
 
-V této části si popíšeme samotnou implementaci metody pohyblivých vážených nejmenších čtverců. Obsah této části navazuje na popis v teoretické části práce \ref{sec:mwls} a bude používat totožné značení. Metodu pohyblivých vážených nejmenších čtverců jsme si odvodili pro aproximaci funkce $\reals^n \rightarrow \reals^m$. Pro účely této sekce si ji zjednodušíme pro případ, kde výstupní dimenze je $1$, tzn. pro aproximaci funkce $\reals^n \rightarrow \reals$. 
-
-Nechť je dána sada dat $S := \{\vec{x_i}, y_i\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
-\begin{equation}
-  \label{defi:mwls-1d}
-  f(\vec{x},\varepsilon) = \sum_{i=1}^lc_i(\vec{x})f_i,
-\end{equation}
-s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
+V této části si popíšeme samotnou implementaci metody pohyblivých vážených nejmenších čtverců. Obsah této části navazuje na popis v teoretické části práce \ref{sec:mwls} a bude používat totožné značení. Metodu pohyblivých vážených nejmenších čtverců jsme si odvodili pro aproximaci funkce $\reals^n \rightarrow \reals^m$. Pro účely této sekce si ji zjednodušíme pro případ, kde výstupní dimenze je $1$, tzn. pro aproximaci funkce $\reals^n \rightarrow \reals$. Zjednoduší se chybová funkce, která je nyní ve tvaru
 \begin{multline}
   \label{defi:mwls-min-1d}
   J(f(\vec{x},\varepsilon)) :=
-  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - y_i}^2 =\\
-  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =\\
-  \sum_{\{\vec{x_i} : \norm{\vec{x_i} - \vec{x}} \leq \varepsilon\}} \theta(\norm{\vec{x} - \vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i})^2.\\
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})\norm{f(\vec{x_i},\varepsilon)-\vec{y_i}}^2=\\
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})-\vec{y_i}}^2=\\
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})-\vec{y_i})^2.\\
 \end{multline}
-Je-li hledaná funkce ve tvaru $\reals^n \rightarrow \reals$, pak je jednodušší práce s normou, která se ve vztahu objevuje. Objekt, který se v normě nachází je obyčejné číslo z $\reals$ a pro libovolné $a \in \reals$ platí, že $\norm{a} = \abs{a}$.
-
-Opět budeme minimalizovat chybovou funkci $J$ pomocí parciálních derivací podle neznámých koeficientů $c_1, \ldots, c_l$. Pro obecné $v \in \hat l$ platí
+Oproti variantě s vícerozměrnými výstupními hodnotami se zjednodušila práce s normou. Normovaný výraz $\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})-\vec{y_i}}$ je pouze reálné číslo a pro libovolné reálné číslo $a \in \reals$ platí, že $\norm{a}_2 = \sqrt{a^2} = \abs{a}$. V rovnici \ref{defi:mwls-min-1d} lze absolutní hodnotu vypustit, protože hodnotu hned umocňujeme. Také se zjednoduší parciální derivace chybové funkce a řešená soustava lineárních rovnic. Parciální derivace jsou nyní ve tvaru
 \begin{equation}
-  \label{eq:1d-mwls-diff}
-  \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x}, \varepsilon)) =
-  2\sum_{\substack{\vec{x_i} \in S,\\\norm{\vec{x} - \vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})(c_v(\vec{x})f_v(\vec{x_i})).
+  \label{eq:mwls-diff-1d}
+  \frac{\partial}{\partial c_v(\vec{x})} J(f(\vec{x},\varepsilon)) =
+  2\mwlssum \theta(\norm{\vec{x}-\vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})-\vec{y_i})(f_v(\vec{x_i})).
 \end{equation}
+Pro jednotlivá $v \in \hat l$ položme tyto derivace rovny nule a dostáváme
+\begin{multline}
+  \label{eq:mwls-solve-1d}
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})-\vec{y_i})(f_v(\vec{x_i})) = 0\\
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})f_v(\vec{x_i})-f_v(\vec{x_i})\vec{y_i}) = 0\\
+  \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})(\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i})f_v(\vec{x_i})) = \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})f_v(\vec{x_i})\vec{y_i}\\
+  \sum_{j=1}^l \underbrace{(\mwlssum \theta(\norm{\vec{x}-\vec{x_i}}) f_v(\vec{x_i})f_j(\vec{x_i}))}_{\mx{A}_{vj}}c_j(\vec{x}) = \mwlssum \theta(\norm{\vec{x}-\vec{x_i}})f_v(\vec{x_i})\vec{y_i}\\
+  \mx{A}_{v:}\vec{c} = (\vec{b})_v\\
+\end{multline}
+Vztahy pro určení matice $\mx{A}$ a vektoru $\vec{b}$ je mnohem jednodušší oproti variantám \ref{eq:solve-mwls-lhs} a \ref{eq:solve-mwls-rhs} s vícerozměrnými výstupními hodnotami a používáme je v naší implementaci.
 
-%TODO: dokončit
-Položme tyto derivace rovny $0$ pro
-
-Těžištěm implementace je objekt \texttt{MwlsObject}, který si uchovává potřebné vstupy pro výpočet požadovaných aproximací. Mezi jeho členské proměnné patří
+Těžištěm implementace je struktura \texttt{MwlsObject}, který si uchovává potřebné vstupy pro výpočet požadovaných aproximací. Mezi jeho členské proměnné patří
 \begin{itemize}
   \item \texttt{inputs} -- sada vstupních dat $\{\vec{x_i}\}_{i=1}^k, x_i \in \reals^n$,
   \item \texttt{outputs} -- sada výstupních dat $\{\vec{y_i}\}_{i=1}^k, y_i \in \reals^m$,
-  \item \texttt{EPS} -- reálná hodnota udávající implicitní velikost ,,okolí'' pro konstrukci aproximace,
+  \item \texttt{EPS} -- reálná hodnota udávající implicitní velikost \uv{okolí} pro konstrukci aproximace
   \item \texttt{weightFunc} -- váhová funkce pro konstrukci aproximace.
 \end{itemize}
-Atributy \texttt{inputs} a \texttt{outputs} lze předat dvěma způsoby, buď jako dvě různá vícerozměrná pole, nebo jedním vícerozměrným polem a kladným celočíselným parametrem, které udává dimenzi výstupních dat. Ačkoliv si Julia uchovává vícerozměrná pole ve sloupcové majoritě, tak se na vstupu očekávají data tak, že dvojice vstupů a výstupů jsou na jednom řádku.
+Členské proměnné \texttt{inputs} a \texttt{outputs} lze předat dvěma způsoby, buď jako dvě různá vícerozměrná pole, nebo jedním vícerozměrným polem a kladným celočíselným parametrem, které udává dimenzi výstupních dat. Ačkoliv si Julia uchovává vícerozměrná pole ve sloupcové majoritě, tak se na vstupu očekávají data tak, že dvojice vstupů a výstupů jsou na jednom řádku.
 
-Třída \texttt{MwlsObject} má 3 různé implementace, které se liší způsobem hledání sousedů v rozsahu. Struktura \texttt{MwlsNaiveObject} používá k hledání naivní iteraci přes celou množinu vstupních dat, \texttt{MwlsCllObject} používá cell linked list a \texttt{MwlsKdObject} používá k-d strom. Pro snadnější vytvoření jednotlivých objektů jsou připraveny pomocné funkce \texttt{mwlsNaive}, \texttt{mwlsCll} a \texttt{mwlsKd}.
+Třída \texttt{MwlsObject} má 3 různé implementace, které se liší způsobem hledání sousedů v rozsahu. Struktura \texttt{MwlsNaiveObject} používá k hledání naivní iteraci přes celou množinu vstupních dat, \texttt{MwlsCllObject} používá cell linked list a \texttt{MwlsKdObject} používá k-d strom. Pro snadnější vytvoření jednotlivých struktur jsou připraveny pomocné funkce \texttt{mwlsNaive}, \texttt{mwlsCll} a \texttt{mwlsKd}.
 
-V teoretické části se pro aproximaci používala (téměř) libovolná sada funkcí $f_1, \ldots, f_l$. V implementaci se však pouze předá celočíselný parametr \texttt{maxDegree}, který určuje maximální stupeň \textit{polynomiální báze} \texttt{b} použité k aproximaci v každé z jednotlivých dimenzí. Demonstrujeme na příkladu \ref{exer:basis-example}.
+V teoretické části se pro aproximaci používala (téměř) libovolná sada funkcí $f_1, \ldots, f_l$. V implementaci se však pouze předá celočíselný parametr \texttt{maxDegree}, který určuje maximální stupeň \textit{polynomiální báze} \texttt{b} použité k aproximaci v každé z jednotlivých složek. Demonstrujeme na příkladu \ref{exer:basis-example}.
 \begin{priklad}
   \label{exer:basis-example}
   Pro parametr $\texttt{maxDegree} = 2$ a dimenzi výstupních dat $m = 2$ se vytvoří sada funkcí $f_1(x_1, x_2), \ldots, f_{12}(x_1, x_2)$
@@ -142,7 +140,7 @@ V teoretické části se pro aproximaci používala (téměř) libovolná sada f
 \end{priklad}
 Lze si však všimnout, že se mnoho funkcí často opakuje a liší se pouze ve složce, která je nenulová. Proto budeme generovat bázi tak, aby se funkce neduplikovaly. Výsledkem příkladu \ref{exer:basis-example} tedy bude pouze $f_1(x, y) = 1, f_2(x, y) = x, f_3(x,y) = y, f_4(x,y)=x^2,f_5(x, y)=xy,f_6(x, y)=y^2$.
 
-Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Vytvoření matice $\mx{A}$ je přímočarým přepsáním vztahu \ref{eq:solve-mwls-lhs}. Pro výpočet vektoru $\vec{b}$ se bude muset provést několik změn. Způsob, jakým jsme si zavedli funkce, které budou použity k vytvoření aproximace, nám umožňuje pracovat s jednotlivými složkami jednotlivých vektorů $\vec{y_i}$ nezávisle na ostatních. Vytvořme si tedy vektory $\vec{u}_1, \ldots, \vec{u}_m$, kde $u_{ij}$ neznámým koeficientem $j$-té proměnné v $i$-té dimenzi a vektory $\vec{v}_1, \ldots, \vec{v}_m$, kde $\vec{v_i}$ je vektor na pravé straně metody vážených pohyblivých nejmenších čtverců v 1 rozměrné variantě. Budeme tedy řešit soustavy soustav lineárních rovnic
+Přejděme k implementaci výpočtu matice $\mx{A}$ a vektoru $\vec{b}$ z rovnice \ref{eq:sle-mwls}. Vytvoření matice $\mx{A}$ je přímočarým přepsáním vztahu \ref{eq:solve-mwls-lhs}. Pro výpočet vektoru $\vec{b}$ se bude muset provést několik změn. Způsob, jakým jsme si zavedli funkce, které budou použity k vytvoření aproximace, nám umožňuje pracovat s jednotlivými složkami jednotlivých vektorů $\vec{y_i}$ nezávisle na ostatních. Vytvořme si tedy vektory $\vec{u}_1, \ldots, \vec{u}_m$, kde $u_{ij}$ neznámým koeficientem $j$-té proměnné v $i$-té složce a vektory $\vec{v}_1, \ldots, \vec{v}_m$, kde $\vec{v_i}$ je vektor na pravé straně metody vážených pohyblivých nejmenších čtverců v 1-rozměrné variantě. Budeme tedy řešit soustavy soustav lineárních rovnic
 \begin{align}
   \mx{A}\vec{u_1} &= \vec{v_1}\notag\\
                   &\;\;\vdots\notag\\
