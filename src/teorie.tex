@@ -93,6 +93,8 @@ Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé
 \section{Metoda pohyblivých vážených nejmenších čtverců}
 \label{sec:mwls}
 
+\newcommand{\mwlssum}{\sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}}}
+
 Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
 \[
   f(\vec{x},\varepsilon) = \sum_{i=1}^lc_i(\vec{x})f_i,
@@ -100,7 +102,7 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in
 s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
 \begin{equation}
   \label{defi:mwls-min}
-  J(f(\vec{x},\varepsilon)) := \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
+  J(f(\vec{x},\varepsilon)) := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
 V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ platí $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
 
@@ -112,12 +114,12 @@ Minimalizace chybové funkce \ref{defi:mwls-min} proběhne téměř stejně jako
 kde $\mx{A} \in \reals^{l,l}$ a
 \begin{equation}
   \label{eq:solve-mwls-lhs}
-  \mx{A}_{vj} := \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
+  \mx{A}_{vj} := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
 \end{equation}
 $\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
 \begin{equation}
   \label{eq:solve-mwls-rhs}
-  \vec{b}_v = \sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}} \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+  \vec{b}_v = \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
 \end{equation}
 
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
