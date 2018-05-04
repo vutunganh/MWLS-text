@@ -1,5 +1,6 @@
-**.log
-**.pdf
+*.log
+*.pdf
+*.aux
 ctustyle2/
 build/
 latex/
