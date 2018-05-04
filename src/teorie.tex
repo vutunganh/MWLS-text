@@ -189,7 +189,7 @@ Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu 
       \State $\vec{c} \leftarrow I(C, \vec{u})$
       \State $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
     \EndFor
-    \Return $C$
+    \State \Return $C$
   \end{algorithmic}
 \end{algorithm}
 
@@ -211,7 +211,7 @@ Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozděle
         \State $M \leftarrow M \cup \vec{u}$
       \EndFor
     \EndFor
-    \Return $M$
+    \State \Return $M$
   \end{algorithmic}
 \end{algorithm}
 
