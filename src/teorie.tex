@@ -94,36 +94,12 @@ Dosaďme rovnice \eqref{eq:solve-wls-lhs} a \eqref{eq:solve-wls-rhs} do \eqref{e
 \end{equation}
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f(\vec{x}))$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
 
-Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
-\[
-  f(\vec{x},\varepsilon) = \sum_{i=1}^lc_i(\vec{x})f_i,
-\]
-s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
+Častým případem je, když výstupní hodnota váhové funkce $\theta$ je $0$ pro vstupní hodnoty, které jsou větší než pevný parametr $\varepsilon \in \reals^+_0$, tzn. $\exists \varepsilon \in \reals^+, \forall d > \varepsilon: \theta(d) = 0$. Pro tento případ pro aproximovanou funkci zavádíme speciální značení $f(\vec{x}, \varepsilon)$. V důsledku chybová funkce nabude tvaru
+\newcommand{\mwlssum}{\sum_{\substack{i \in \hat k\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}}}
 \begin{equation}
   \label{defi:mwls-min}
   J(f(\vec{x},\varepsilon)) := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
-V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ platí $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
-
-Minimalizace chybové funkce \ref{defi:mwls-min} proběhne téměř stejně jako u metody vážených nejmenších čtverců (viz \ref{eq:solve-wls}). Výsledkem je opět soustava lineárních rovnic
-\begin{equation}
-  \label{eq:sle-mwls}
-  \mx{A}\vec{c} = \vec{b},
-\end{equation}
-kde $\mx{A} \in \reals^{l,l}$ a
-\begin{equation}
-  \label{eq:solve-mwls-lhs}
-  \mx{A}_{vj} := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
-\end{equation}
-$\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
-\begin{equation}
-  \label{eq:solve-mwls-rhs}
-  \vec{b}_v = \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
-\end{equation}
-
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
-
-Metoda pohyblivých (i nepohyblivých) vážených nejmenších čtverců patří mezi metody pro rekonstrukci funkce mimo pravidelnou mřížku (angl. meshfree). Nevyžadují, aby vstupní (vzorová) data $S$ byla umístěná na pravidelné mřížce. Také neexistovalo žádné omezení pro hodnotu vektoru $\vec{x} \in \reals^n$, k němuž jsme chtěli sestrojit aproximaci $f(\vec{x}, \varepsilon)$, což nemusí nutně platit pro metody, které vyžadují po vstupních datech, aby byla umístěná na pravidelné mřížce.
 
 \section{Problém hledání sousedů v daném rozsahu}
 
