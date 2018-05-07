@@ -156,12 +156,12 @@ Pro libovolný vektor $\vec{u} \in \reals^d$ a \eng{cell linked list} $C$ se nab
 Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do \eng{cell linked listu} $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
 \begin{algorithm}[ht!]
-  \caption{CllBuild}
+  \caption{\func{CllBuild}}
   \label{algo:cll-build}
   \begin{algorithmic}
-    \Require $S \subset \reals^d$, $\varepsilon \in \reals$
-    \Ensure cell linked list $C$ obsahující množinu $S$
-    \State $C \leftarrow$ prázdný cell linked list
+    \Require $S \subset \reals^d$, $\varepsilon \in \reals^+$
+    \Ensure \eng{cell linked list} $C$ obsahující množinu $S$
+    \State $C \leftarrow$ prázdný \eng{cell linked list}
     \ForAll{$\vec{u} \in S$}
       \State $\vec{c} \leftarrow I(C, \vec{u})$
       \State $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
