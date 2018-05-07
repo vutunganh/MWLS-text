@@ -247,11 +247,11 @@ Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \
 Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\ceil{|S|/h}- 1$ (dále už budeme označovat pouze jako $n$) listů. Každý vrchol má buď oba potomky, nebo je listem. Kořen má stupeň 2, listy mají stupně 1 a vnitřní vrcholy mají stupeň 3 (1 z rodiče a 2 do potomků). Označme neznámý počet vnitřních vrcholů jako $x$. Z principu sudosti a vlastnosti, že počet vrcholů ve stromě je o $1$ větší než počet hran, lze sestavit rovnici
 \begin{align}
   \label{eq:kd-tree-vertex-count}
-  \sum_{v \in T}deg(v) &= 2|E|\notag\\
-            n + 2 + 3x &= 2(|V|-1)\notag\\
-            n + 2 + 3x &= 2|V|-2\notag\\
-            n + 2 + 3x &= 2(1+n+x)-2\notag\\
-                     x &= n-2\notag
+  \sum_{v \in T}\deg(v) &= 2|E|,\notag\\
+            n + 2 + 3x &= 2(|V|-1),\notag\\
+            n + 2 + 3x &= 2|V|-2,\notag\\
+            n + 2 + 3x &= 2(1+n+x)-2,\notag\\
+                     x &= n-2,\notag
 \end{align}
 z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
