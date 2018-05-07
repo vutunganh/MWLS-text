@@ -57,19 +57,19 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_
 \]
 s neznámými koeficienty $c_1,\ldots,c_\ell \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí \uv{globální} aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Hlavním rozdílem oproti obyčejné metodě nejmenších čtverců je váhová funkce $\theta$, díky níž do chybové funkce \uv{vstupuje} vektor $\vec{x}$, jehož hodnotu chceme aproximovat. Chybová funkce je dána vztahem
 \begin{align}
-  \label{defi:wls-min}
+  \label{defi:mwls-min}
   J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =&\notag\\
   \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^\ell c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =&\notag\\
   \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\sum_{u=1}^m(\sum_{j=1}^\ell c_j(\vec{x})\big(f_j(\vec{x_i})\big)_u - (\vec{y_i})_u)^2.
 \end{align}
-Všimněme si, že pokud je váhová funkce $\theta$ konstantní, pak metoda \uv{degraduje} na obyčejnou metodu nejmenších čtverců. Minimalizační úlohu \eqref{defi:wls-min} pro libovolné $\vec{x} \in \reals^n$ lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat \ell$ platí
+Všimněme si, že pokud je váhová funkce $\theta$ konstantní, pak metoda \uv{degraduje} na obyčejnou metodu nejmenších čtverců. Minimalizační úlohu \eqref{defi:mwls-min} pro libovolné $\vec{x} \in \reals^n$ lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat \ell$ platí
 \[
   \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x})) =
   2\sum_{i=1}^k \theta(\norm{\vec{x}-\vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell (c_j(\vec{x})\left(f_j(\vec{x_i})\right)_u-(\vec{y_i})_u)(f_v(\vec{x_i})_u)).
 \]
 Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat \ell$
 \begin{align}
-  \label{eq:solve-wls}
+  \label{eq:solve-mwls}
   2\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell (c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i})_u)) &= 0,\notag\\
   \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) - (\vec{y_i})_u(f_v(\vec{x_i}))_u &= 0,\notag\\
   \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) &=\notag\\
@@ -79,25 +79,25 @@ Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat \ell
 \end{align}
 Matici $\mx{A}$ má rozměry $\ell \times \ell$, kde prvek na $v$-tém řádku a v $j$-tém sloupci je dán vztahem
 \begin{equation}
-  \label{eq:solve-wls-lhs}
+  \label{eq:solve-mwls-lhs}
   \mx{A}_{vj} = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u,
 \end{equation}
-Nyní lze levou stranu rovnice \eqref{eq:solve-wls} psát jako $\mx{A}\vec{c}$, kde $\vec{c}$ je vektor neznámých koeficientů $\vec{c} = (c_1, \ldots, c_\ell)^T$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_\ell)^T$, kde pro jednotlivá $v \in \hat \ell$ platí
+Nyní lze levou stranu rovnice \eqref{eq:solve-mwls} psát jako $\mx{A}\vec{c}$, kde $\vec{c}$ je vektor neznámých koeficientů $\vec{c} = (c_1, \ldots, c_\ell)^T$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_\ell)^T$, kde pro jednotlivá $v \in \hat \ell$ platí
 \begin{equation}
-  \label{eq:solve-wls-rhs}
+  \label{eq:solve-mwls-rhs}
   \vec{b}_v = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
 \end{equation}
-Dosaďme rovnice \eqref{eq:solve-wls-lhs} a \eqref{eq:solve-wls-rhs} do \eqref{eq:solve-wls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
+Dosaďme rovnice \eqref{eq:solve-mwls-lhs} a \eqref{eq:solve-mwls-rhs} do \eqref{eq:solve-mwls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
 \begin{equation}
-  \label{eq:sle-wls}
+  \label{eq:sle-mwls}
   \mx{A}\vec{c} = \vec{b}.
 \end{equation}
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f(\vec{x}))$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-mwls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f(\vec{x}))$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
 
 Častým případem je, když výstupní hodnota váhové funkce $\theta$ je $0$ pro vstupní hodnoty, které jsou větší než pevný parametr $\varepsilon \in \reals^+_0$, tzn. $\exists \varepsilon \in \reals^+, \forall d > \varepsilon: \theta(d) = 0$. Pro tento případ pro aproximovanou funkci zavádíme speciální značení $f(\vec{x}, \varepsilon)$. V důsledku chybová funkce nabude tvaru
 \newcommand{\mwlssum}{\sum_{\substack{i \in \hat k\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}}}
 \begin{equation}
-  \label{defi:mwls-min}
+  \label{defi:mwls-min-local}
   J(f(\vec{x},\varepsilon)) := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
 
@@ -107,11 +107,11 @@ V předchozí části jsme formulovali speciální variantu metody pohyblivých 
 
 Nechť je dána množina vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem je nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals^+$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 
-Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$, a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
+Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-range-search}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$, a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
 
 \begin{algorithm}[ht!]
   \caption{Naivní řešení problému hledání nejbližších sousedů}
-  \label{algo:naive-nns}
+  \label{algo:naive-range-search}
   \begin{algorithmic}
     \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals^+$
     \Ensure $M \subseteq S$
