@@ -103,10 +103,9 @@ Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé
 
 \section{Problém hledání sousedů v daném rozsahu}
 
-\begin{defi}
-  \label{defi:nns}
-  Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
-\end{defi}
+V předchozí části jsme formulovali speciální variantu metody pohyblivých vážených nejmenších čtverců, kde váhová funkce $\theta$ nabývá nulových hodnot pro hodnoty větší než pevné $\varepsilon$, jejíž chybová funkce je dána vztahem \eqref{defi:mwls-min}. Hledání vektorů $\vec{x_i}$ z množiny vzorových dat, které jsou dostatečně \uv{blízko} k vektoru $\vec{x}$, jehož hodnotu chceme aproximovat, je podstatnou částí naší implementace a proto bychom chtěli tuto úlohu řešit rychle.
+
+Nechť je dána množina vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem je nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals^+$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 
 Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$, a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
 
