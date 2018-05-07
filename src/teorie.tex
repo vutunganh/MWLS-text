@@ -53,7 +53,7 @@ Metoda pohyblivých vážených nejmenších čtverců patří mezi metody pro r
 
 Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_i} \in \reals^n$ a $\vec{y_i} \in \reals^m$, sada funkcí $f_1,\ldots,f_\ell$, kde $f_i: \reals^n \rightarrow \reals^m$ a váhová funkce $\theta: \reals^+_0 \rightarrow \reals^+_0$. Úkolem je nalézt funkci
 \[
-  f(\vec{x}) = \sum_{i=1}^lc_i(\vec{x})f_i,
+  f(\vec{x}) = \sum_{i=1}^\ell c_i(\vec{x})f_i(\vec{x}),
 \]
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí ,,globální'' aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Obdobným způsobem lze zavést chybovou funkci
 \begin{multline}
