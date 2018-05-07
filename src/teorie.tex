@@ -34,17 +34,17 @@ Matice $\mx{A}$ má rozměry $\ell \times \ell$ a prvek na $v$-tém řádku a v 
 \label{eq:solve-ls-lhs}
   \mx{A}_{vj} = \sum_{i=1}^k\sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u.
 \end{equation}
-a vektor $\vec{c} = (c_1,\ldots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:solve-ls} zapsat jako $\mx{A}\vec{c}$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_l)$, kde pro jednotlivá $v \in \hat l$ platí
+Nyní lze levou stranu rovnice \eqref{eq:solve-ls} zapsat jako $\mx{A}\vec{c}$, kde $\vec{c}$ je vektor neznámých koeficientů $\vec{c} = (c_1, \ldots, c_\ell)^T$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_\ell)^T$, kde pro jednotlivá $v \in \hat \ell$ platí
 \begin{equation}
 \label{eq:solve-ls-rhs}
   \vec{b}_v = \sum_{i=1}^k\sum_{u=1}^m (\vec{y_i})_u (f_v(\vec{x_i}))_u.
 \end{equation}
-Dosaďme rovnice \ref{eq:solve-ls-lhs} a \ref{eq:solve-ls-rhs} do \ref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
+Dosaďme rovnice \eqref{eq:solve-ls-lhs} a \eqref{eq:solve-ls-rhs} do \eqref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
 \begin{equation}
   \label{eq:sle-ls}
   \mx{A}\vec{c} = \vec{b}.
 \end{equation}
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-ls} získáme hodnoty hledaných koeficientů.
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \eqref{eq:sle-ls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f)$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
 
 \section{Metoda vážených nejmenších čtverců}
 
