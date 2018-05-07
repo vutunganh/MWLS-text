@@ -55,8 +55,8 @@ Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_
 \[
   f(\vec{x}) = \sum_{i=1}^\ell c_i(\vec{x})f_i(\vec{x}),
 \]
-s neznámými koeficienty $c_1,\ldots,c_l \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí ,,globální'' aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Obdobným způsobem lze zavést chybovou funkci
-\begin{multline}
+s neznámými koeficienty $c_1,\ldots,c_\ell \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí \uv{globální} aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Hlavním rozdílem oproti obyčejné metodě nejmenších čtverců je váhová funkce $\theta$, díky níž do chybové funkce \uv{vstupuje} vektor $\vec{x}$, jehož hodnotu chceme aproximovat. Chybová funkce je dána vztahem
+\begin{align}
   \label{defi:wls-min}
   J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =\\
   \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =\\
