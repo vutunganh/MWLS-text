@@ -286,7 +286,7 @@ Složitost algoritmu \ref{algo:kd-tree-range-search} se obtížně určuje a pro
 
 \subsection{Další možná řešení}
 
-Pro řešení problému existuje řada dalších metod. Datová struktura \textit{quadtree} funguje obdobně jako k-d strom, ale pouze v 2D prostoru. Každé vrchol stromu má 4 potomky, kteří odpovídají rozdělení roviny na 4 části pomocí 2 na sobě kolmých přímek tak, aby v každé části byla přibližně čtvrtina vstupu. Pro obecný k-dimenzionální prostor bude mít každý vrchol $2^k$ potomků, čímž exponenciálně poroste počet vrcholů takového stromu. V praxi se například používá \textit{octree}, který pracuje jako quadtree v 3D prostoru, pro práci s grafikou.\cite{octree-usage}
+Pro řešení problému hledání sousedů v daném rozsahu existuje řada dalších metod. Datová struktura \textit{quadtree} funguje obdobně jako k-d strom, ale pouze v 2D prostoru. Každé vrchol stromu má 4 potomky, kteří odpovídají rozdělení roviny na 4 části pomocí 2 na sobě kolmých přímek tak, aby v každé části byla přibližně čtvrtina vstupu. Pro obecný k-dimenzionální prostor bude mít každý vrchol $2^k$ potomků, čímž exponenciálně poroste počet vrcholů takového stromu. V praxi se například používá \textit{octree}, který pracuje jako quadtree v 3D prostoru, pro práci s grafikou.\cite{octree-usage}
 
 K-d strom je v podstatě binární vyhledávací strom. Vyhledávací stromy mohou však být i obecné a v jednotlivých vrcholech mohou mít více dat a tím pádem i více potomků. Příkladem takové struktury je \textit{(a, b)-strom} (občas nazývaný \textit{B-strom}), kde kořen může mít 2 až $b$ potomků a vnitřní vrcholy mají $a$ až $b$ potomků.\cite[s.~190--198]{pruvodce} Tento koncept se dá modifikovat i pro náš problém a příkladem takové modifikace je \textit{R-strom}.\cite{r-tree}
 
