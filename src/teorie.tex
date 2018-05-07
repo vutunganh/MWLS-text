@@ -190,6 +190,8 @@ Operace \func{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a kladnou hodno
   \end{algorithmic}
 \end{algorithm}
 
+Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozdělení dat $S(C)$, a proto tuto analýzu vynecháváme. Předpokládejme, že chceme vždy pro hledání sousedů v rozsahu použít vždy vzdálenost $\delta \in \reals^+$. Bentley, Stanat a Williams v \cite{cll-complexity} ukázali, že pokud je hrana buňky \eng{cell linked listu} je rovna vzdálenosti $\delta$ a pokud je rozdělení dat $S(C)$ \uv{řídké}, tzn. pro libovolný vektor $\vec{q} \in \reals^d$ platí, že počet vektorů $\vec{x_i} \in S(C)$ jejichž norma je menší nebo rovna $\delta$, je omezen nějakou konstantou $c \in \integers$, pak složitost algoritmu \func{CllSearch} je $O(3^dd(1+c)N)$, kde $N$ je počet dat uchovávaný v datové struktuře. Odmyslí-li se podmínka řídkosti, pak může složitost algoritmu být i kvadratická vzhledem k počtu dat.
+
 \subsection{K-d strom}
 
 K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \hat k$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Každý vrchol $V$ k-d stromu obsahuje tyto 2 vektory a budeme je značit $\vec{B_l}(V)$, resp. $\vec{B_r}(V)$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$. Pokud budeme přistupovat k vektorům uloženým ve vrcholu $V$, pak píšeme $S(V)$. Diskriminátor vrcholu $V$ budeme značit $m(V)$.
