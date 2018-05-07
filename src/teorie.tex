@@ -46,7 +46,10 @@ Dosaďme rovnice \eqref{eq:solve-ls-lhs} a \eqref{eq:solve-ls-rhs} do \eqref{eq:
 \end{equation}
 Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \eqref{eq:sle-ls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f)$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
 
-\section{Metoda vážených nejmenších čtverců}
+\section{Metoda pohyblivých vážených nejmenších čtverců}
+\label{sec:mwls}
+
+Metoda pohyblivých vážených nejmenších čtverců patří mezi metody pro rekonstrukci funkce mimo pravidelnou mřížku (angl. \eng{meshfree}). Nevyžadují, aby vstupní (vzorová) data $S$ byla umístěná na pravidelné mřížce. Také neexistuje žádné omezení pro hodnotu vektoru $\vec{x} \in \reals^n$, k němuž chceme sestrojit aproximaci $f(\vec{x})$, což nemusí nutně platit pro metody, které vyžadují po vstupních datech, aby byla umístěná na pravidelné mřížce.
 
 Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_i} \in \reals^n$ a $\vec{y_i} \in \reals^m$, sada funkcí $f_1,\ldots,f_\ell$, kde $f_i: \reals^n \rightarrow \reals^m$ a váhová funkce $\theta: \reals^+_0 \rightarrow \reals^+_0$. Úkolem je nalézt funkci
 \[
