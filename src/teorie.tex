@@ -170,12 +170,10 @@ Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do \eng{cell linked l
   \end{algorithmic}
 \end{algorithm}
 
-Operace \func{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze na vektory v buňkách se souřadnicemi $\vec{a}$, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|_\infty$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně \uv{blízko} k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
-
-Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozdělení dat $S(C)$, a proto jej vynecháváme.
+Operace \func{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a kladnou hodnotu $\delta \in \reals^+$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze na vektory v buňkách se souřadnicemi $\vec{a}$, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně \uv{blízko} k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
 
 \begin{algorithm}[ht!]
-  \caption{CllSearch}
+  \caption{\func{CllSearch}}
   \label{algo:cll-search}
   \begin{algorithmic}
     \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, \eng{cell linked list} $C$
