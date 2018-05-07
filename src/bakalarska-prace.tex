@@ -38,6 +38,7 @@
 \newcommand{\floor}[1]{\lfloor#1\rfloor}
 \newcommand{\ceil}[1]{\lceil#1\rceil}
 \newcommand{\func}[1]{\textsc{#1}}
+\newcommand{\eng}[1]{\textit{#1}}
 
 \addbibresource{literatura.bib}
 
@@ -71,20 +72,20 @@
 \makeatother
 
 \department{Katedra teoretické informatiky}
-\title{Metoda pohyblivých nejmenších čtverců v Julia}
+\title{Metoda pohyblivých vážených nejmenších čtverců v Julia}
 \authorGN{Tung Anh} %(křestní) jméno (jména) autora
 \authorFN{Vu} %příjmení autora
 \authorWithDegrees{Tung Anh Vu} %jméno autora včetně současných akademických titulů
 \author{Tung Anh Vu} %jméno autora bez akademických titulů
 \supervisor{Ing. Tomáš Kalvoda, Ph.D.}
 \acknowledgements{Děkuji svému vedoucímu Ing. Tomáši Kalvodovi, Ph.D., za cenné rady, připomínky a pravidelné konzultace, které mi byly vždy cennou zpětnou vazbou.}
-\abstractCS{V této práci se implementovala metoda nejmenších čtverců v jazyce Julia. Byl formulován problém hledání nejbližších sousedů a předvedla se 2 řešení toho problému. Také lze nalézt krátký popis programovacího jazyka Julia.}
-\abstractEN{The moving weighted least squares was implemented. Nearest neighbor search problem was formulated and 2 solutions were presented. Also a short description of Julia programming language can be found.}
+\abstractCS{V této práci byla implementována metoda pohyblivých vážených nejmenších čtverců v jazyce Julia. Metoda byla v zkoumána jak po teoretické stránce, tak i experimentálně. Byl formulován problém hledání sousedů v daném rozsahu a předvedla se 2 řešení toho problému. Také lze nalézt krátký popis programovacího jazyka Julia.}
+\abstractEN{In this work an implementation of moving weighted least squares method was created. The method was examined both theoretically and practically. The range search problem was formulated and 2 solutions were presented. A short description of Julia programming language can be found as well.}
 \placeForDeclarationOfAuthenticity{V~Praze}
 \declarationOfAuthenticityOption{4} %volba Prohlášení (číslo 1-6)
 \keywordsCS{metoda pohyblivých nejmenších čtverců, programovací jazyk Julia, hledání nejbliších sousedů, aproximace funkce}
 \keywordsEN{moving weighted least squares, Julia programming language, nearest neighbor search, function approximation}
-% \website{http://site.example/thesis} %volitelná URL práce, objeví se v tiráži - úplně odstraňte, nemáte-li URL práce
+ \website{http://site.example/thesis} %volitelná URL práce, objeví se v tiráži - úplně odstraňte, nemáte-li URL práce
 
 \begin{document}
 
@@ -92,19 +93,17 @@
 % \newacronym{FIT}{FIT}{Fakulta informa{\v c}n{\' i}ch technologi{\' i}}
 
 \begin{introduction}
-Předpokládejme, že je zadána sada dat s jejími výstupními hodnotami $S := \{(x_i, y_i)\}_{i = 1}^n$. Naším cílem je nalézt funkci $f$, která co nejlépe popisuje vztah mezi vstupy a výstupy dat $S$.
+  Představme se, že je zadána sada dvojic vstupních a výstupních hodnot a naší úlohou je nalézt funkci $f: \reals^n \rightarrow \reals^m$, která vztah mezi těmito hodnotami popisuje co nejlépe. Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, jejíž autorem je A. M. Legendre, který v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval na aproximaci tvaru Země.\cite[s.~12--14]{history_of_statistics}
 
-Nejstarší metodou pro řešení této úlohy je metoda nejmenších čtverců z 19. století, která se připisuje pánovi A. M. Legendre, který v roce 1805 metodu popsal ve svém díle ,,Nouvelles Méthodes pour la Détermination des Orbites des Com\`etes'', ve kterém ji aplikoval k aproximaci tvaru Země.\cite[s.~12--14]{history_of_statistics}.
+  V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Metoda pro každý bod $\vec{x}$ vytvoří lokální aproximaci $f(\vec{x})$, která kromě přesnějšího výsledku dokáže například interpolovat nad vstupními daty.
 
-V práci se budeme věnovat vylepšení, které se nazývá metoda pohyblivých vážených nejmenších čtverců. Metoda pro každý bod $\vec{x}$ vytvoří lokální aproximaci $f_{\vec{x}}(\vec{x})$, která kromě přesnějšího výsledku dokáže například interpolovat nad vstupními daty.
+  Častým problémem ve vědeckých výpočtech a programů vyžadujících vysoký výkon je ,,problém dvou jazyků'' -- prototypování probíhá v dynamických vysokoúrovňových jazycích, jako jsou například Matlab, R nebo Python a výsledná implementace vznikne přepsáním prototypu do výkonnějších, staticky typovaných jazyků, kde častými volbami jsou Fortran nebo C. Autoři jazyku Julia si dávají za cíl vytvořit dynamicky typovaný jazyk, který bude výkonem schopen konkurovat nízkoúrovňovému Fortranu nebo C.\cite{julia}
 
-Častým problémem při programování numerických metod a podobně výkonných programů je ,,problém dvou jazyků'' -- prototypování probíhá v dynamických vysokoúrovňových jazycích, jako jsou například Matlab, R nebo Python a výsledná implementace vznikne přepsáním prototypu do výkonnějších, staticky typovaných jazyků, kde častými volbami jsou Fortran nebo C. Autoři jazyku Julia si dávají za cíl vytvořit dynamicky typovaný jazyk, který bude výkonem schopen konkurovat nízkoúrovňovému Fortranu nebo C.\cite{julia}
+  Výstupem této práce by měla být implementace metody pohyblivých vážených nejmenších čtverců v programovacím jazyce Julia.
 
-Výstupem práce by měla být implementace metody pohyblivých vážených nejmenších čtverců v programovacím jazyce Julia.
+  Metoda pohyblivých vážených čtverců teoreticky i prakticky dosahuje velmi dobrých výsledků.\cite{surfaces-mwls, mwls-approximation-power} V době tvorby práce však neexistovala žádná snadno dostupná implementace metody, a proto jsem se rozhodl práci realizovat.
 
-Metoda pohyblivých vážených čtverců teoreticky i prakticky dosahuje velmi dobrých výsledků.\cite{surfaces-mwls, mwls-approximation-power} V době tvorby práce však neexistovala žádná implementace metody, a proto jsem se rozhodl práci realizovat.
-
-V teoretické části si zformulujeme problém, který se dá řešit metodou nejmenších čtverců. Představíme metodu pohyblivých vážených nejmenších čtverců. Dále budeme pokračovat rešerší existujicích implementací metody a rešerší datových struktur, jímiž lze řešit stěžejní podproblém metody pohyblivých vážených nejmenších čtverců a to \textit{problém hledání dat v zadaném rozsahu}. V poslední části si popíšeme návrh a naši implementaci v jazyce Julia, jež je hlavním výstupem této práce.
+  V teoretické části si zformulujeme problém, který se dá řešit metodou nejmenších čtverců. Představíme metodu pohyblivých vážených nejmenších čtverců. Dále budeme pokračovat rešerší existujicích implementací metody a rešerší datových struktur, jímiž lze řešit stěžejní podproblém metody pohyblivých vážených nejmenších čtverců a to \textit{problém hledání dat v zadané oblasti}. V poslední části si popíšeme návrh a naši implementaci v jazyce Julia, jež je hlavním výstupem této práce.
 \end{introduction}
 
 \include{teorie}
