@@ -11,8 +11,8 @@ Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_i} \i
   f_c = \sum_{i=1}^\ell c_if_i,
 \]
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
-\begin{multline}
-\label{defi:ls-min}
+\begin{align}
+  \label{defi:ls-min}
   J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
   \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =\\
   \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
