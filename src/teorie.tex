@@ -129,16 +129,16 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
 
 V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly použity v implementační části práce. Cílem je zejména snížit časovou složitost při hledání nejbližších sousedů.
 
-\subsection{Cell linked list}
+\subsection{\eng{Cell linked list}}
 
 \label{defi:cll}
 \begin{defi}
-  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \textit{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou rovnoměrnou mřížku se stranami rovnoběžnými na osy kartéského systému souřadnic a s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, který se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
+  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \eng{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou nekonečnou rovnoměrnou mřížku se stranami rovnoběžnými na osy kartéského systému souřadnic a s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, které se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
 \end{defi}
 
-Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
+\eng{Cell linked list} lze implementovat pomocí $d$-rozměrného pole, které si v každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
 
-\noindent Cell linked list podporuje následující operace.
+\noindent \eng{Cell linked list} podporuje následující operace.
 
 \begin{table}[ht!]
   \begin{tabular}{lll}
@@ -148,11 +148,11 @@ Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si kaž
   \end{tabular}
 \end{table}
 
-Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávánou v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
+Pro \eng{cell linked list} $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce \eng{cell linked listu} $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Množinu vektorů $S$ uchovávánou v \eng{cell linked listu} $C$ značíme $S(C)$. Data, která si \eng{cell linked list} uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
 
-Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
+Pro libovolný vektor $\vec{u} \in \reals^d$ a \eng{cell linked list} $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit jej do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky se zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
 
-Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
+Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do \eng{cell linked listu} $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
 \begin{algorithm}[ht!]
   \caption{CllBuild}
@@ -177,7 +177,7 @@ Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozděle
   \caption{CllSearch}
   \label{algo:cll-search}
   \begin{algorithmic}
-    \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
+    \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, \eng{cell linked list} $C$
     \Ensure $M \subseteq S(G)$
     \State $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
     \State $c \leftarrow I(C, \vec{q})$
