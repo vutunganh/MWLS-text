@@ -1,137 +1,111 @@
 \chapter{Teorie}
 
-\section{Definice a značení}
+\section{Základní pojmy a značení}
 
 Symbolem $\hat n$ značíme množinu čísel $\{1, 2, \ldots, n\}$. Vektory $\vec{v} \in \reals^n$ značíme písmenem s šipkou. Implicitně se předpokládá standardní báze. Matice $\mx{A}$ značíme zdvojeným písmenem. Normu značíme $\norm{\cdot}_k$. Není-li spodní index $k$ u normy specifikován, pak se myslí Euklidovská norma $\norm{\cdot}_2$. Euklidovskou vzdálenost mezi dvojicí vektorů $\vec{u}$ a $\vec{v}$ tedy značíme $\norm{\vec{u} - \vec{v}}$. V následujících kapitolách se používá porovnání mezi vektory $\vec{u} < \vec{v}$, kde $\vec{u}, \vec{v} \in \reals^d$, které zavádíme takto: vektor $\vec{u}$ je menší než vektor $\vec{v}$, pokud $\forall i \in \hat{d}: \vec{u_i} < \vec{v_i}$, tedy je menší po složkách. Často budeme používat pro různé účely $d$-rozměrná pole a indexaci těchto polí budeme provádět vektory z $\mathbb{Z}^d$ nebo $\integers_0^d$. Máme-li například 2-rozměrné pole, pak se indexem (1, 2) bude rozumět prvek na prvním řádku a druhém sloupci. Mluvíme-li o souřadnicích, pak zpravidla myslíme souřadnice v kartézském souřadnicovém systému.
 
 \section{Metoda nejmenších čtverců}
 
-Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$ a sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$. Úkolem je nalézt funkci
+Nechť je dána sada dat $\{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_i} \in \reals^n$ a $\vec{y_i} \in \reals^m$ a sada funkcí $f_1,\ldots,f_\ell$, kde $f_i: \reals^n \rightarrow \reals^m$. Úkolem je nalézt funkci
 \[
-  f = \sum_{i=1}^l c_if_i,
+  f_c = \sum_{i=1}^\ell c_if_i,
 \]
 s neznámými koeficienty $c_1,\ldots,c_l \in \reals$, která aproximuje sadu dat co nejlépe ve smyslu nejmenších čtverců s chybovou funkcí
-\begin{multline}
-\label{defi:ls-min}
+\begin{align}
+  \label{defi:ls-min}
   J(f) := \sum_{i=1}^k \norm{f(\vec{x_i}) - \vec{y_i}}^2 =
-  \sum_{i=1}^k\norm{\sum_{j=1}^l c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =\\
-  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
-\end{multline}
+  \sum_{i=1}^k\norm{\sum_{j=1}^\ell c_jf_j(\vec{x_i}) - (\vec{y_i})}^2 =&\notag\\
+  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^\ell (c_jf_j(\vec{x_i})_u - (\vec{y_i})_u)^2.
+\end{align}
 
-Minimalizační úlohu \ref{defi:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat l$ platí
+Minimalizační úlohu \eqref{defi:ls-min} lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat l$ platí
 \[
-  \frac{\partial}{\partial c_v}J(f) = 2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l(c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u.
+  \frac{\partial}{\partial c_v}J(f) = 2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^\ell\big(c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u\big)(f_v(\vec{x_i}))_u.
 \]
-Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat l$
-\begin{multline}
+Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat \ell$
+\begin{align}
 \label{eq:solve-ls}
-  2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u = 0\\
-  \sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^l c_j(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u\\
-  \sum_{j=1}^l\underbrace{(\sum_{i=1}^k\sum_{u=1}^m(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u)}_{\mx{A}_{vj}}c_j = \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
-\end{multline}
-Zaveďme matici $\mx{A} \in \reals^{l,l}$, kde 
+2\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^\ell (c_j(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i}))_u &= 0,\notag\\
+\sum_{i=1}^k\sum_{u=1}^m\sum_{j=1}^\ell c_j(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u &= \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u,\notag\\
+\sum_{j=1}^\ell\underbrace{\left(\sum_{i=1}^k\sum_{u=1}^m(f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u\right)}_{\mx{A}_{vj}}c_j &= \sum_{i=1}^k\sum_{u=1}^m(\vec{y_i})_u(f_v(\vec{x_i}))_u.
+\end{align}
+Matice $\mx{A}$ má rozměry $\ell \times \ell$ a prvek na $v$-tém řádku a v $j$-tém sloupci je dán předpisem
 \begin{equation}
 \label{eq:solve-ls-lhs}
-  \mx{A}_{vj} = \sum_{i=1}^k\sum_{u=1}^m = (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u
+  \mx{A}_{vj} = \sum_{i=1}^k\sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u.
 \end{equation}
-a vektor $\vec{c} = (c_1,\ldots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:solve-ls} zapsat jako $\mx{A}\vec{c}$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_l)$, kde pro jednotlivá $v \in \hat l$ platí
+Nyní lze levou stranu rovnice \eqref{eq:solve-ls} zapsat jako $\mx{A}\vec{c}$, kde $\vec{c}$ je vektor neznámých koeficientů $\vec{c} = (c_1, \ldots, c_\ell)^T$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_\ell)^T$, kde pro jednotlivá $v \in \hat \ell$ platí
 \begin{equation}
 \label{eq:solve-ls-rhs}
   \vec{b}_v = \sum_{i=1}^k\sum_{u=1}^m (\vec{y_i})_u (f_v(\vec{x_i}))_u.
 \end{equation}
-Dosaďme rovnice \ref{eq:solve-ls-lhs} a \ref{eq:solve-ls-rhs} do \ref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
+Dosaďme rovnice \eqref{eq:solve-ls-lhs} a \eqref{eq:solve-ls-rhs} do \eqref{eq:solve-ls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
 \begin{equation}
   \label{eq:sle-ls}
   \mx{A}\vec{c} = \vec{b}.
 \end{equation}
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-ls} získáme hodnoty hledaných koeficientů.
-
-\section{Metoda vážených nejmenších čtverců}
-
-Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$ a váhová funkce $\theta(d): \reals \rightarrow \reals$. Úkolem je nalézt funkci
-\[
-  f(\vec{x}) = \sum_{i=1}^lc_i(\vec{x})f_i,
-\]
-s neznámými koeficienty $c_1,\ldots,c_l \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí ,,globální'' aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Obdobným způsobem lze zavést chybovou funkci
-\begin{multline}
-  \label{defi:wls-min}
-  J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =\\
-  \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^l c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =\\
-  \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\sum_{u=1}^m(\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)^2.\\
-\end{multline}
-
-Minimalizační úlohu \ref{defi:wls-min} pro libovolné $\vec{x} \in \reals^n$ lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat l$ platí
-\[
-  \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x})) = 2\sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\sum_{u=1}^m(\sum_{j=1}^l (c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i})_u)). 
-\]
-Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat l$
-\begin{multline}
-  \label{eq:solve-wls}
-  2\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l (c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i})_u)) = 0\\
-  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) - (\vec{y_i})_u(f_v(\vec{x_i}))_u = 0\\
-  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^l c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) =\\ \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u\\
-  \sum_{j=1}^l \underbrace{(\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u)}_{\mx{A}_{vj}}c_j(\vec{x}) =\\ \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.\\
-\end{multline}
-Zaveďme matici $\mx{A} \in \reals^{l,l}$, kde
-\begin{equation}
-  \label{eq:solve-wls-lhs}
-  \mx{A}_{vj} = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u,
-\end{equation}
-a vektor $\vec{c} = (c_1,\dots,c_l)$. Nyní lze levou stranu rovnice \ref{eq:solve-wls} psát jako $\mx{A}\vec{c}$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_l)$, kde pro jednotlivá $v \in \hat l$ platí
-\begin{equation}
-  \label{eq:solve-wls-rhs}
-  \vec{b}_v = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
-\end{equation}
-Dosaďme rovnice \ref{eq:solve-wls-lhs} a \ref{eq:solve-wls-rhs} do \ref{eq:solve-wls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
-\begin{equation}
-  \label{eq:sle-wls}
-  \mx{A}\vec{c} = \vec{b}.
-\end{equation}
-% TODO: citace regularity
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_l$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů.
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \eqref{eq:sle-ls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f)$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
 
 \section{Metoda pohyblivých vážených nejmenších čtverců}
 \label{sec:mwls}
 
-\newcommand{\mwlssum}{\sum_{\substack{i \in \hat k, \vec{x_i} \in S\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}}}
+Metoda pohyblivých vážených nejmenších čtverců patří mezi metody pro rekonstrukci funkce mimo pravidelnou mřížku (angl. \eng{meshfree}). Nevyžadují, aby vstupní (vzorová) data $S$ byla umístěná na pravidelné mřížce. Také neexistuje žádné omezení pro hodnotu vektoru $\vec{x} \in \reals^n$, k němuž chceme sestrojit aproximaci $f(\vec{x})$, což nemusí nutně platit pro metody, které vyžadují po vstupních datech, aby byla umístěná na pravidelné mřížce.
 
-Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $x_i \in \reals^n$ a $y_i \in \reals^m$, sada funkcí $f_1,\ldots,f_l$, kde $f_i: \reals^n \rightarrow \reals^m$, váhová funkce $\theta(d): \reals \rightarrow \reals$ a parametr $\varepsilon \in \reals$. Úkolem je nalézt funkci
+Nechť je dána sada dat $S := \{\vec{x_i}, \vec{y_i}\}_{i = 1}^k$, kde $\vec{x_i} \in \reals^n$ a $\vec{y_i} \in \reals^m$, sada funkcí $f_1,\ldots,f_\ell$, kde $f_i: \reals^n \rightarrow \reals^m$ a váhová funkce $\theta: \reals^+_0 \rightarrow \reals^+_0$. Úkolem je nalézt funkci
 \[
-  f(\vec{x},\varepsilon) = \sum_{i=1}^lc_i(\vec{x})f_i,
+  f(\vec{x}) = \sum_{i=1}^\ell c_i(\vec{x})f_i(\vec{x}),
 \]
-s neznámými koeficienty $c_1, \ldots, c_l \in \reals$. Chybová funkce má tvar
+s neznámými koeficienty $c_1,\ldots,c_\ell \in \reals$. Výsledkem obyčejné metody nejmenších čtverců je jedna funkce, která provádí \uv{globální} aproximaci, zatímco u metody vážených nejmenších čtverců je výsledná funkce závislá na vektoru $\vec{x}$, který chceme aproximovat. Hlavním rozdílem oproti obyčejné metodě nejmenších čtverců je váhová funkce $\theta$, díky níž do chybové funkce \uv{vstupuje} vektor $\vec{x}$, jehož hodnotu chceme aproximovat. Chybová funkce je dána vztahem
+\begin{align}
+  \label{defi:wls-min}
+  J(f(\vec{x})) := \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}) - \vec{y_i}}^2 =&\notag\\
+  \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\norm{\sum_{j=1}^\ell c_j(\vec{x})f_j(\vec{x_i}) - \vec{y_i}}^2 =&\notag\\
+  \sum_{i=1}^k\theta(\norm{\vec{x} - \vec{x_i}})\sum_{u=1}^m(\sum_{j=1}^\ell c_j(\vec{x})\big(f_j(\vec{x_i})\big)_u - (\vec{y_i})_u)^2.
+\end{align}
+Všimněme si, že pokud je váhová funkce $\theta$ konstantní, pak metoda \uv{degraduje} na obyčejnou metodu nejmenších čtverců. Minimalizační úlohu \eqref{defi:wls-min} pro libovolné $\vec{x} \in \reals^n$ lze řešit pomocí nutné podmínky pro existenci lokálního extrému. Pro obecné $v \in \hat \ell$ platí
+\[
+  \frac{\partial}{\partial c_v(\vec{x})}J(f(\vec{x})) =
+  2\sum_{i=1}^k \theta(\norm{\vec{x}-\vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell (c_j(\vec{x})\left(f_j(\vec{x_i})\right)_u-(\vec{y_i})_u)(f_v(\vec{x_i})_u)).
+\]
+Položme tyto derivace rovny nule a dostáváme pro jednotlivá $v \in \hat \ell$
+\begin{align}
+  \label{eq:solve-wls}
+  2\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell (c_j(\vec{x})(f_j(\vec{x_i}))_u - (\vec{y_i})_u)(f_v(\vec{x_i})_u)) &= 0,\notag\\
+  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) - (\vec{y_i})_u(f_v(\vec{x_i}))_u &= 0,\notag\\
+  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\sum_{j=1}^\ell c_j(\vec{x})(f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u) &=\notag\\
+  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u,\notag\\
+  \sum_{j=1}^\ell \underbrace{\left(\sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u\right)}_{\mx{A}_{vj}}c_j(\vec{x}) &=\notag\\
+  \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+\end{align}
+Matici $\mx{A}$ má rozměry $\ell \times \ell$, kde prvek na $v$-tém řádku a v $j$-tém sloupci je dán vztahem
+\begin{equation}
+  \label{eq:solve-wls-lhs}
+  \mx{A}_{vj} = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (f_j(\vec{x_i}))_u(f_v(\vec{x_i}))_u,
+\end{equation}
+Nyní lze levou stranu rovnice \eqref{eq:solve-wls} psát jako $\mx{A}\vec{c}$, kde $\vec{c}$ je vektor neznámých koeficientů $\vec{c} = (c_1, \ldots, c_\ell)^T$. Dále zaveďme vektor $\vec{b} = (b_1,\ldots,b_\ell)^T$, kde pro jednotlivá $v \in \hat \ell$ platí
+\begin{equation}
+  \label{eq:solve-wls-rhs}
+  \vec{b}_v = \sum_{i=1}^k \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
+\end{equation}
+Dosaďme rovnice \eqref{eq:solve-wls-lhs} a \eqref{eq:solve-wls-rhs} do \eqref{eq:solve-wls} a dostáváme soustavu lineárních rovnic s vektorem neznámých $\vec{c}$
+\begin{equation}
+  \label{eq:sle-wls}
+  \mx{A}\vec{c} = \vec{b}.
+\end{equation}
+Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou lineárně nezávislé funkce $f_1, \ldots, f_\ell$ a $\vec{x_1}, \ldots, \vec{x_n}$ jsou po dvojicích různá. Vyřešením soustavy \ref{eq:sle-wls} získáme hodnoty hledaných koeficientů. Minimalizovaná funkce $J(f(\vec{x}))$ je součtem kvadrátů, z čehož plyne, že nalezený extrém bude odpovídat minimu.
+
+Častým případem je, když výstupní hodnota váhové funkce $\theta$ je $0$ pro vstupní hodnoty, které jsou větší než pevný parametr $\varepsilon \in \reals^+_0$, tzn. $\exists \varepsilon \in \reals^+, \forall d > \varepsilon: \theta(d) = 0$. Pro tento případ pro aproximovanou funkci zavádíme speciální značení $f(\vec{x}, \varepsilon)$. V důsledku chybová funkce nabude tvaru
+\newcommand{\mwlssum}{\sum_{\substack{i \in \hat k\\\norm{\vec{x}-\vec{x_i}} \leq \varepsilon}}}
 \begin{equation}
   \label{defi:mwls-min}
   J(f(\vec{x},\varepsilon)) := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}})\norm{f(\vec{x_i}, \varepsilon) - \vec{y_i}}^2.
 \end{equation}
-V metodě vážených nejmenších čtverců se pro tvorbu funkce $f(\vec{x})$ uvažovala celá množina vstupních dat $S$. V této variantě se omezíme pouze na podmnožinu $M \subseteq S$ takovou, že pro každý vektor $\vec{u} \in M$ platí $\norm{\vec{u} - \vec{x}} \leq \varepsilon$.
-
-Minimalizace chybové funkce \ref{defi:mwls-min} proběhne téměř stejně jako u metody vážených nejmenších čtverců (viz \ref{eq:solve-wls}). Výsledkem je opět soustava lineárních rovnic
-\begin{equation}
-  \label{eq:sle-mwls}
-  \mx{A}\vec{c} = \vec{b},
-\end{equation}
-kde $\mx{A} \in \reals^{l,l}$ a
-\begin{equation}
-  \label{eq:solve-mwls-lhs}
-  \mx{A}_{vj} := \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u = 1}^m (f_j(\vec{x_i}))_u (f_v(\vec{x_i}))_u,
-\end{equation}
-$\vec{c}$ je vektor neznámých koeficientů $(\vec{c_1}, \ldots, \vec{c_l})^T$ a $b \in \reals^l$, kde
-\begin{equation}
-  \label{eq:solve-mwls-rhs}
-  \vec{b}_v = \mwlssum \theta(\norm{\vec{x} - \vec{x_i}}) \sum_{u=1}^m (\vec{y_i})_u(f_v(\vec{x_i}))_u.
-\end{equation}
-
-Regularitu matice $\mx{A}$ lze předpokládat, pokud jsou funkce $f_1, \ldots, f_l$ lineárně nezávislé a hodnoty $\vec{x_1}, \ldots, \vec{x_l}$ jsou po dvou různé. Vyřešením soustavy \ref{eq:sle-mwls} získáme hledané koeficienty $c_1, \ldots, c_l$.
-
-Metoda pohyblivých (i nepohyblivých) vážených nejmenších čtverců patří mezi metody pro rekonstrukci funkce mimo pravidelnou mřížku (angl. meshfree). Nevyžadují, aby vstupní (vzorová) data $S$ byla umístěná na pravidelné mřížce. Také neexistovalo žádné omezení pro hodnotu vektoru $\vec{x} \in \reals^n$, k němuž jsme chtěli sestrojit aproximaci $f(\vec{x}, \varepsilon)$, což nemusí nutně platit pro metody, které vyžadují po vstupních datech, aby byla umístěná na pravidelné mřížce.
 
 \section{Problém hledání sousedů v daném rozsahu}
 
-\begin{defi}
-  \label{defi:nns}
-  Nechť je dána sada vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
-\end{defi}
+V předchozí části jsme formulovali speciální variantu metody pohyblivých vážených nejmenších čtverců, kde váhová funkce $\theta$ nabývá nulových hodnot pro hodnoty větší než pevné $\varepsilon$, jejíž chybová funkce je dána vztahem \eqref{defi:mwls-min}. Hledání vektorů $\vec{x_i}$ z množiny vzorových dat, které jsou dostatečně \uv{blízko} k vektoru $\vec{x}$, jehož hodnotu chceme aproximovat, je podstatnou částí naší implementace a proto bychom chtěli tuto úlohu řešit rychle.
+
+Nechť je dána množina vektorů $S := \{\vec{x}_i\}_{i = 1}^n$, kde každé $\vec{x}_i \in \reals^d$. Naším úkolem je nalézt pro vektor $\vec{q} \in \reals^d$ a $\delta \in \reals^+$ podmnožinu $M \subseteq S$ takovou, že pro všechny vektory $\vec{v} \in M$ platí, že $\norm{\vec{v} - \vec{q}} \leq \delta$ a pro všechny vektory $\vec{w} \in S \setminus M$ platí, že $\norm{\vec{w} - \vec{q}} > \delta$ a tedy $\vec{w} \not\in M$.
 
 Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro každý vektor $\vec{u} \in S$ zjistí vzdálenost $\norm{\vec{u} - \vec{q}}$, a pokud je menší než $\delta$, pak $u$ přidá do výsledné množiny. Za předpokladu, že přidávání do výsledné množiny a počítání vzdálenosti mezi 2 vektory zvládneme v čase $O(1)$, tento algoritmus běží v čase $O(|S|)$ a zabírá $O(|S|)$ paměti.
 
@@ -139,14 +113,14 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \caption{Naivní řešení problému hledání nejbližších sousedů}
   \label{algo:naive-nns}
   \begin{algorithmic}
-    \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
+    \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals^+$
     \Ensure $M \subseteq S$
     \Procedure{NaiveSearch}{$S, \vec{q}, \delta$}
       \State $M \leftarrow \emptyset$
       \ForAll{$\vec{u} \in S$}
-          \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
-            \State $M \leftarrow M \cup \vec{u}$
-          \EndIf
+        \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
+          \State $M \leftarrow M \cup \vec{u}$
+        \EndIf
       \EndFor
     \State \Return $M$
     \EndProcedure
@@ -155,38 +129,39 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
 
 V této sekci se budeme zabývat 2 řešeními tohoto problému, které byly použity v implementační části práce. Cílem je zejména snížit časovou složitost při hledání nejbližších sousedů.
 
-\subsection{Cell linked list}
+\subsection{\eng{Cell linked list}}
 
 \label{defi:cll}
 \begin{defi}
-  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \textit{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou rovnoměrnou mřížku se stranami rovnoběžnými na osy kartéského systému souřadnic a s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, který se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
+  Nechť je dána množina vektorů $S \in \reals^d$. Datová struktura \eng{cell linked list} rozdělí prostor $V := \reals^d$ na $d$-rozměrnou nekonečnou rovnoměrnou mřížku se stranami rovnoběžnými na osy kartéského systému souřadnic a s délkou hrany $\varepsilon$ a v každé buňce si udržuje seznam vektorů z $S$, které se v ní nachází.\cite[s.~149--152]{computer_simulation_of_liquids}
 \end{defi}
 
-Cell linked list lze implementovat pomocí $d$-rozměrného pole, které si každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
+\eng{Cell linked list} lze implementovat pomocí $d$-rozměrného pole, které si v každé buňce ukládá spojový seznam vektorů, který se v příslušné buňce nachází.
 
-\noindent Cell linked list podporuje následující operace.
+\noindent \eng{Cell linked list} podporuje následující operace.
 
 \begin{table}[ht!]
-  \begin{tabular}{lll}
+  \begin{tabular}{ll}
     Operace & Komentář\\
-    CllBuild & Sestavení struktury.\\
-    CllSearch & Nalezení sousedů.\\
+    \hline
+    \func{CllBuild} & Sestavení struktury.\\
+    \func{CllSearch} & Nalezení sousedů.\\
   \end{tabular}
 \end{table}
 
-Pro cell linked list $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce cell linked listu $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Vektor velikostí mřížky značíme $|S(G)|$. Množinu vektorů $S$ uchovávánou v cell linked listu $C$ značíme $S(C)$. Data, která si cell linked list uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
+Pro \eng{cell linked list} $C$ zavádíme následující pomocné funkce: $\varepsilon(C)$ vrátí délku hrany mřížky, kterou je rozdělen prostor $\reals^d$. Pro přistoupení k mřížce \eng{cell linked listu} $C$ používáme $G(C)$. Chceme-li navíc vybrat konkrétní buňku, která se v $C$ nachází na souřadnicích $\vec{c}$, pak používáme značení $G(C, \vec{c})$. Množinu vektorů $S$ uchovávánou v \eng{cell linked listu} $C$ značíme $S(C)$. Data, která si \eng{cell linked list} uchovává na $\vec{c}$-tých souřadnicích, značíme $S(C, \vec{c})$.
 
-Pro libovolný vektor $\vec{u} \in \reals^d$ a cell linked list $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit ji do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky s zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
+Pro libovolný vektor $\vec{u} \in \reals^d$ a \eng{cell linked list} $C$ se nabízí otázka, do které buňky vektor $\vec{u}$ vložit. Nejpřirozenější volbou je umístit jej do buňky na indexech $(\floor{\vec{u}_1/\varepsilon(C)}, \ldots, \floor{\vec{u}_d/\varepsilon(C)})$. Tento výpočet budeme dále značit jako $I(C, \vec{u})$. Může se stát, že se vektor bude umisťovat do buňky se zápornými souřadnicemi. V této sekci povolíme indexaci pole zápornými čísly. Také budeme předpokládat, že pole jsou nekonečná, tzn. lze je indexovat libovolným číslem $i \in \mathbb{Z}$.
 
-Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
+Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do \eng{cell linked listu} $C$. Pro každý vektor $\vec{u} \in S$ se spočte $\vec{c} = I(C, \vec{u})$ a umístí se do buňky na indexu $\vec{c}$. Tento algoritmus je doplněn pseudokódem \ref{algo:cll-build}.
 
 \begin{algorithm}[ht!]
-  \caption{CllBuild}
+  \caption{\func{CllBuild}}
   \label{algo:cll-build}
   \begin{algorithmic}
-    \Require $S \subset \reals^d$, $\varepsilon \in \reals$
-    \Ensure cell linked list $C$ obsahující množinu $S$
-    \State $C \leftarrow$ prázdný cell linked list
+    \Require $S \subset \reals^d$, $\varepsilon \in \reals^+$
+    \Ensure \eng{cell linked list} $C$ obsahující množinu $S$
+    \State $C \leftarrow$ prázdný \eng{cell linked list}
     \ForAll{$\vec{u} \in S$}
       \State $\vec{c} \leftarrow I(C, \vec{u})$
       \State $S(C, \vec{c}) \leftarrow S(C, \vec{c}) \cup \vec{u}$
@@ -195,15 +170,13 @@ Operace \func{CllBuild} umístí zadanou sadu vektorů $S$ do cell linked listu 
   \end{algorithmic}
 \end{algorithm}
 
-Operace \func{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a reálnou hodnotu $\delta \in \reals$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze na vektory v buňkách se souřadnicemi $\vec{a}$, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|_\infty$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně \uv{blízko} k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
-
-Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozdělení dat $S(C)$, a proto jej vynecháváme.
+Operace \func{CllSearch} pro daný vektor $\vec{q} \in \reals^d$ a kladnou hodnotu $\delta \in \reals^+$ nalezne všechny vektory $\vec{u}$ v množině $S(C)$, jejichž Euklidovská vzdálenost $\|\vec{u} - \vec{q}\|$ je menší než dané $\delta$. Nebude však naivně procházet celou množinu $S(C)$. Místo toho se podívá pouze na vektory v buňkách se souřadnicemi $\vec{a}$, jejichž maximová norma $\|I(C, \vec{q}) - \vec{a}\|$ je menší nebo rovna $r := \ceil{\delta / \varepsilon(C)}$. Intuice za volbou $r$ je taková, že nechceme vybírat takové buňky, které mají prázdný průnik s pomyslnou hypersférou se středem v $\vec{q}$ a poloměrem $\delta$, protože nemohou obsahovat vektory, které jsou dostatečně \uv{blízko} k vektoru $\vec{q}$. Tento postup je zapsán do pseudokódu \ref{algo:cll-search}.
 
 \begin{algorithm}[ht!]
-  \caption{CllSearch}
+  \caption{\func{CllSearch}}
   \label{algo:cll-search}
   \begin{algorithmic}
-    \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, cell linked list $C$
+    \Require $\delta \in \reals$, $\vec{q} \in \reals^d$, \eng{cell linked list} $C$
     \Ensure $M \subseteq S(G)$
     \State $r \leftarrow \lceil\delta / \varepsilon(C)\rceil$
     \State $c \leftarrow I(C, \vec{q})$
@@ -217,13 +190,23 @@ Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozděle
   \end{algorithmic}
 \end{algorithm}
 
+Složitost algoritmu \func{CllSearch} není snadné určit bez znalosti rozdělení dat $S(C)$, a proto tuto analýzu vynecháváme. Předpokládejme, že chceme vždy pro hledání sousedů v rozsahu použít vždy vzdálenost $\delta \in \reals^+$. Bentley, Stanat a Williams v \cite{cll-complexity} ukázali, že pokud je hrana buňky \eng{cell linked listu} je rovna vzdálenosti $\delta$ a pokud je rozdělení dat $S(C)$ \uv{řídké}, tzn. pro libovolný vektor $\vec{q} \in \reals^d$ platí, že počet vektorů $\vec{x_i} \in S(C)$ jejichž norma je menší nebo rovna $\delta$, je omezen nějakou konstantou $c \in \integers$, pak složitost algoritmu \func{CllSearch} je $O(3^dd(1+c)N)$, kde $N$ je počet dat uchovávaný v datové struktuře. Odmyslí-li se podmínka řídkosti, pak může složitost algoritmu být i kvadratická vzhledem k počtu dat.
+
 \subsection{K-d strom}
 
-K-d strom je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \hat k$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Každý vrchol $V$ k-d stromu obsahuje tyto 2 vektory a budeme je značit $\vec{B_l}(V)$, resp. $\vec{B_r}(V)$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$. Pokud budeme přistupovat k vektorům uloženým ve vrcholu $V$, pak píšeme $S(V)$. Diskriminátor vrcholu $V$ budeme značit $m(V)$.
+K-d strom\footnote{\uv{k} v názvu značí dimenzi prostoru, v níž se pracuje} je binární vyhledávací strom, který si ve vrcholu $V$ pamatuje diskriminátor $m \in \hat k$ a vektory $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$. Podstrom zakořeněný ve vrcholu $V$ si pamatuje pouze vektory $\vec{u} \in \reals^k$, které nejsou menší než $\vec{B_l}$ a nejsou větší než $\vec{B_r}$, tzn. $\vec{B_l} \leq \vec{u} \leq \vec{B_r}$. Každý vrchol $V$ k-d stromu obsahuje tyto 2 vektory a budeme je značit $\vec{B_l}(V)$, resp. $\vec{B_r}(V)$. Levého potomka vrcholu $V$ značíme $L(V)$, pravého $R(V)$. Pokud budeme přistupovat k vektorům uloženým ve vrcholu $V$, pak píšeme $S(V)$. Diskriminátor vrcholu $V$ budeme značit $m(V)$.
 
 V této části popíšeme pouze ty operace k-d stromu, které jsou v práci použity. Jmenovitě vypouštíme operace přidávání prvku, mazání prvku a hledání $k$ nejbližších sousedů. Popisujeme k-d strom dle \cite{kd-tree} a \cite{kd-tree-optimized}.
 
-Konstrukce k-d stromu probíhá rekurzivně. Algoritmus rozdělen do 2 funkcí, kde funkce \func{KdBuild} je pomocnou funkcí volajíc funkci \func{KdBuildRec}, která provádí samotné rekurzivní sestavování stromu. Pro konstrukci zcela nového stromu se zavolá funkce \func{KdBuild} s parametry $S, h$, které postupně udávají množinu ukládaných dat a maximální velikost listu. Rekurzivní funkce \func{KdBuildRec} pro sestavování stromu má navíc 2 parametry $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$, které udávají rozmezí pro vektory, které se nachází v právě sestavovaném vrcholu. Funkce \func{KdBuild} pouze vrací výsledek volání funkce \func{KdBuildRec}, kde hodnotou $\vec{B_l}$ je vektor $(-\infty, \ldots, -\infty)^T$ a hodnotou $\vec{B_r}$ je vektor $(\infty, \ldots, \infty)^T$. Nyní lze přejít k popisu rekurzivní funkce \func{KdBuildRec}. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru s nejmenší $p.$~složkou a vektoru s největší $p.$ složkou. Jinými slovy se hledá dimenze $p$ s největším rozdílem mezi největší a nejmenší $p.$ složkou. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$~složek všech vektorů množiny $S$. Vytvoří se vektory $\vec{b_l} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)$ a $\vec{b_r} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k)$. Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} \leq \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $d(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levým potomkem vrcholu $V$ bude výsledek volání funkce \func{KdBuildRec} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravým potomkem bude obdobně výsledek volání funkce \func{KdBuildRec} s parametry $S_r, h, \vec{b_r}, \vec{B_r}$. Návratovou hodnotou této rekurzivní funkce je vrchol $V$.
+Konstrukce k-d stromu probíhá rekurzivně. Algoritmus je rozdělen do 2 funkcí, kde funkce \func{KdBuild} je pomocnou funkcí volajíc funkci \func{KdBuildRec}, která provádí samotné rekurzivní sestavování stromu. Pro konstrukci zcela nového stromu se zavolá funkce \func{KdBuild} s parametry $S, h$, které postupně udávají množinu ukládaných dat a maximální velikost listu. Rekurzivní funkce \func{KdBuildRec} pro sestavování stromu má navíc 2 parametry $\vec{B_l} \in \reals^k$ a $\vec{B_r} \in \reals^k$, které udávají rozmezí pro vektory, které se nachází v právě sestavovaném vrcholu. Funkce \func{KdBuild} pouze vrací výsledek volání funkce \func{KdBuildRec}, kde hodnotou $\vec{B_l}$ je vektor $(-\infty, \ldots, -\infty)^T$ a hodnotou $\vec{B_r}$ je vektor $(+\infty, \ldots, +\infty)^T$. Nyní lze přejít k popisu rekurzivní funkce \func{KdBuildRec}. Je-li velikost množiny $S$ menší než parametr $h$, pak vracíme list, který obsahuje množinu $S$ a vektory $\vec{B_l}$ a $\vec{B_r}$. Jinak začneme určením diskriminátoru $p \in \hat k$ tak, aby se maximalizoval rozdíl vektoru z množiny vstupních dat $S$ s nejmenší $p.$~složkou a vektoru s největší $p.$ složkou. To znamená, že hledáme $p \in \hat k$ tak, aby se maximalizovala hodnota $\norm{\min((\vec{S})_p) - \max((\vec{S})_p)}$. Po nalezení $p$ se hledá medián $q$ z množiny $\{(\vec{u})_p | \forall \vec{u} \in S\}$ $p.$~složek všech vektorů množiny $S$. Vytvoříme vektory
+\[
+\vec{b_l} = ((\vec{B_r})_1, \ldots, (\vec{B_r})_{p-1}, q, (\vec{B_r})_{p+1}, \ldots, (\vec{B_r})_k)
+\]
+\centerline a
+\[
+\vec{b_r} = ((\vec{B_l})_1, \ldots, (\vec{B_l})_{p-1}, q, (\vec{B_l})_{p+1}, \ldots, (\vec{B_l})_k).
+\]
+Rozdělíme množinu $S$ na množiny $S_l$ a $S_r$, kde $S_l = {\forall\vec{u} \in S: \vec{u} \leq \vec{b_l}}$ a $S_r = S \setminus S_l$. Vytvoří se vrchol k-d stromu $V$, kde $d(V) = p$, $\vec{B_l}(V) = \vec{B_l}$ a $\vec{B_l}(V) = \vec{B_r}$. Levým potomkem vrcholu $V$ bude výsledek volání funkce \func{KdBuildRec} s parametry $S_l, h, \vec{B_l}, \vec{b_l}$. Pravým potomkem bude obdobně výsledek volání funkce \func{KdBuildRec} s parametry $S_r, h, \vec{b_r}, \vec{B_r}$. Návratovou hodnotou této rekurzivní funkce je vrchol $V$.
 
 \begin{algorithm}[ht!]
   \caption{Algoritmus sestavení k-d stromu}
@@ -264,13 +247,13 @@ Konstrukce k-d stromu probíhá rekurzivně. Algoritmus rozdělen do 2 funkcí, 
 Z koncové podmínky rekurzivního sestavení stromu bude mít výsledný strom $\ceil{|S|/h}- 1$ (dále už budeme označovat pouze jako $n$) listů. Každý vrchol má buď oba potomky, nebo je listem. Kořen má stupeň 2, listy mají stupně 1 a vnitřní vrcholy mají stupeň 3 (1 z rodiče a 2 do potomků). Označme neznámý počet vnitřních vrcholů jako $x$. Z principu sudosti a vlastnosti, že počet vrcholů ve stromě je o $1$ větší než počet hran, lze sestavit rovnici
 \begin{align}
   \label{eq:kd-tree-vertex-count}
-  \sum_{v \in T}deg(v) &= 2|E|\notag\\
-            n + 2 + 3x &= 2(|V|-1)\notag\\
-            n + 2 + 3x &= 2|V|-2\notag\\
-            n + 2 + 3x &= 2(1+n+x)-2\notag\\
-                     x &= n-2\notag
+  \sum_{v \in T}\deg(v) &= 2|E|,\notag\\
+            n + 2 + 3x &= 2(|V|-1),\notag\\
+            n + 2 + 3x &= 2|V|-2,\notag\\
+            n + 2 + 3x &= 2(1+n+x)-2,\notag\\
+                     x &= n-2,\notag
 \end{align}
-z čehož plyne, že sestavený storm bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
+z čehož plyne, že sestavený strom bude mít $2n - 1$ vrcholů a paměťová složitost je tedy $O(n)$. Pro lineární hledání mediánu v každém vytváření vrcholu stromu lze předzpracovat data seřazením přes každou složku, což zabere $O(k|S|\log(|S|))$ času. Pro sestavení každého vrcholu se musí projít předaná množina dat $S$ pro nalezení diskriminátoru. Tento rekurentní vztah lze zapsat jako $T(|S|) = 2T(|S|/2) + k|S|$ a z Mistrovské věty lze určit celkový čas pro sestavení stromu jako $O(k|S|\log(|S|))$.
 
 Algoritmus pro hledání všech záznamů v rozmezí také pracuje rekurzivně. Parametry pro hledání jsou vrchol stromu $V$, který algoritmus zrovna prohledává, vektor $\vec{q}$ a reálné číslo $\delta \in \reals$ určující data, která chceme hledat. Vhodnou představou je, že $\vec{q}$ a $\delta$ určují hyperkouli $B$ a cílem je nalézt všechny záznamy v k-d stromu, které jsou \uv{uvnitř} $B$. Vektory $\vec{B_l}(V)$ a $\vec{B_r}(V)$ určují pomyslný hyperkvádr $H$ v prostoru $\reals^k$, který má hrany rovnoběžné s osami kartézského souřadnicového systému. Algoritmus zjistí, jestli má hyperkvádr $H$ a $B$ neprázdný průnik. Pokud $H \cap B = \emptyset$, pak neexistuje záznam, který by ležel v $B$ a rekurze končí. Pokud $H \cap B \neq \emptyset$, pak v podstromě zakořeněném ve vrcholu $V$ mohou existovat záznamy, které chceme nalézt a rekurze se musí zanořit do obou potomků. Zpravidla se nejprve zanořuje do potomka, jehož hyperkvádr má \uv{větší} průnik ve smyslu objemu s hyperkoulí $B$. Dojde-li algoritmus do listu, pak musí zkontrolovat platnost $\norm{\vec{q} - \vec{u}} \leq \delta$ každý záznam $\vec{u}$, který se v listu nachází. Hledání průniku hyperkvádru a hyperkoule není konstantní operací, proto pokud $H \cap B = H$, pak hledání průniku přeskočíme pro všechny vrcholy podstromu zakořeněném ve vrcholu $V$ a rovnou se podíváme na všechny listy tohoto podstromu a provádíme kontrolu z předchozí věty.
 
@@ -303,7 +286,7 @@ Složitost algoritmu \ref{algo:kd-tree-range-search} se obtížně určuje a pro
 
 \subsection{Další možná řešení}
 
-Pro řešení problému existuje řada dalších metod. Datová struktura \textit{quadtree} funguje obdobně jako k-d strom, ale pouze v 2D prostoru. Každé vrchol stromu má 4 potomky, kteří odpovídají rozdělení roviny na 4 části pomocí 2 na sobě kolmých přímek tak, aby v každé části byla přibližně čtvrtina vstupu. Pro obecný k-dimenzionální prostor bude mít každý vrchol $2^k$ potomků, čímž exponenciálně poroste počet vrcholů takového stromu. V praxi se například používá \textit{octree}, který pracuje jako quadtree v 3D prostoru, pro práci s grafikou.\cite{octree-usage}
+Pro řešení problému hledání sousedů v daném rozsahu existuje řada dalších metod. Datová struktura \textit{quadtree} funguje obdobně jako k-d strom, ale pouze v 2D prostoru. Každé vrchol stromu má 4 potomky, kteří odpovídají rozdělení roviny na 4 části pomocí 2 na sobě kolmých přímek tak, aby v každé části byla přibližně čtvrtina vstupu. Pro obecný k-dimenzionální prostor bude mít každý vrchol $2^k$ potomků, čímž exponenciálně poroste počet vrcholů takového stromu. V praxi se například používá \textit{octree}, který pracuje jako quadtree v 3D prostoru, pro práci s grafikou.\cite{octree-usage}
 
 K-d strom je v podstatě binární vyhledávací strom. Vyhledávací stromy mohou však být i obecné a v jednotlivých vrcholech mohou mít více dat a tím pádem i více potomků. Příkladem takové struktury je \textit{(a, b)-strom} (občas nazývaný \textit{B-strom}), kde kořen může mít 2 až $b$ potomků a vnitřní vrcholy mají $a$ až $b$ potomků.\cite[s.~190--198]{pruvodce} Tento koncept se dá modifikovat i pro náš problém a příkladem takové modifikace je \textit{R-strom}.\cite{r-tree}
 
