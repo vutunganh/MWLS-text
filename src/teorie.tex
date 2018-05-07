@@ -113,14 +113,14 @@ Tuto úlohu lze řešit naivně algoritmem \ref{algo:naive-nns}, který pro kaž
   \caption{Naivní řešení problému hledání nejbližších sousedů}
   \label{algo:naive-nns}
   \begin{algorithmic}
-    \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals$
+    \Require $S \subset \reals^n$, $\vec{q} \in \reals^n$, $\delta \in \reals^+$
     \Ensure $M \subseteq S$
     \Procedure{NaiveSearch}{$S, \vec{q}, \delta$}
       \State $M \leftarrow \emptyset$
       \ForAll{$\vec{u} \in S$}
-          \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
-            \State $M \leftarrow M \cup \vec{u}$
-          \EndIf
+        \If{$\norm{\vec{u} - \vec{q}} \leq \delta$}
+          \State $M \leftarrow M \cup \vec{u}$
+        \EndIf
       \EndFor
     \State \Return $M$
     \EndProcedure
