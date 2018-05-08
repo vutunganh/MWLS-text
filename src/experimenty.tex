@@ -1,3 +1,86 @@
 \chapter{Experimenty a testování}
 
-Všechny testy byly prováděny na procesoru \texttt{Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz}.
+\newcommand{\insertplot}[1]{\includegraphics[width=0.95\textwidth]{#1}}
+
+Všechny testy byly prováděny na procesoru \texttt{Intel(R) Core(TM) i5-2520M CPU @ 2.50GHz}. Byla použita verze Julie 0.6.
+
+\section{Obecný postup experimentu}
+
+Pro každý experiment se zvolí funkce, jež se bude aproximovat. Volené aproximované funkce většinou nebudou mít žádný speciální význam a jsou voleny náhodně (ve smyslu libovolně). Volby váhových funkcí zdůvodníme v pozdějších sekcích. Pro řešení problému hledání sousedů v dané oblasti použijeme k-d strom i \eng{cell linked list}. Jak si ukážeme v následující části, práce s čísly s pohyblivou řádovou čárkou (angl. \eng{floating points numbers}) nemusí v externích knihovnách být zcela bezchybná, proto není na škodu mít i vlastní byť pomalejší řešení. Vykreslíme si grafy výsledných aproximací a grafy absolutních a relativních chyb těchto výpočtů. Absolutní chyba mezi přesnou hodnotou $y$ a aproximovanou hodnotou $y'$ je dána vztahem $\abs{y - y'}$, relativní chyba je dána vztahem $\frac{\abs{y - y'}}{\abs{y}}$. U chyb nás může zajímat i výběrový průměr a rozptyl.
+
+\section{Ukázka funkčnosti}
+
+Nejprve si ukážeme funkčnost našeho balíčku na aproximaci funkce $f(x) = 2\sin(x) + \cos(x) + 10$. Tato funkce je periodická, má omezený obor hodnot a definiční obor je celé $\reals$. Jako vzorovou množinu vstupních dat zvolíme hodnoty od $-4$ do $4$ s rozestupem $0.2$, tzn. $x = \{-4, -3.8, \ldots, 3.8, 4\}$. Pro určení aproximace volíme polynom jedné proměnné stupně $2$, tedy funkce $f_1(x) = 1, f_2(x) = x, f_3(x) = x^2$. Jako váhovou funkci zvolíme $\theta(d) = \euler^{-d^2}$ a pro všechny hodnoty $\varepsilon > 0.4$ bude výsledkem váhové funkce $0$. Graf této funkce je na obrázku \ref{fig:1d-to-1d:function-values}. Dále zobrazíme grafy sestrojených aproximací. V grafu \ref{fig:1d-to-1d:kd-tree-approximation} je aproximace, kde se pro řešení problému hledání sousedů v daném rozsahu použil k-d strom. V grafu \ref{fig:1d-to-1d:cll-approximation} je aproximace při použití \eng{cell linked listu}. Absolutní chyby jsou zobrazené ve grafech \ref{fig:1d-to-1d:kd-aerr} a \ref{fig:1d-to-1d:cll-aerr}.
+
+\begin{figure}[!ht]
+  \centering
+  \insertplot{code-samples/r-to-r/latex/output_2_0.pdf}
+  \caption{Graf funkce $f(x) = 2\sin(x) + \cos(x)$.}
+  \label{fig:1d-to-1d:function-values}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \insertplot{code-samples/r-to-r/latex/output_4_0.pdf}
+  \caption{Aproximace funkce $f(x) = 2\sin(x) + \cos(x)$ s použitím k-d stromu.}
+  \label{fig:1d-to-1d:kd-tree-approximation}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \insertplot{code-samples/r-to-r/latex/output_8_0.pdf}
+  \caption{Aproximace funkce $f(x) = 2\sin(x) + \cos(x)$ s použitím \eng{cell linked listu}.}
+  \label{fig:1d-to-1d:cll-approximation}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \insertplot{code-samples/r-to-r/latex/output_5_0.pdf}
+  \caption{Absolutní chyba aproximace funkce $f(x) = 2\sin(x) + \cos(x)$ za použití k-d stromu.}
+  \label{fig:1d-to-1d:kd-aerr}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \insertplot{code-samples/r-to-r/latex/output_9_0.pdf}
+  \caption{Absolutní chyba aproximace funkce $f(x) = 2\sin(x) + \cos(x)$ za použití \eng{cell linked listu}.}
+  \label{fig:1d-to-1d:cll-aerr}
+\end{figure}
+
+Lze si všimnout, že grafy absolutních chyb při použití k-d stromu a při použití \eng{cell linked listu} se od sebe značně liší, ačkoliv by neměly. Jednou z možných příčin by mohlo být to, že v některých aproximovaných bodech se použilo nesprávné řešení problému hledání sousedů v daném rozsahu. Tuto hypotézu otestujeme programem \ref{listing:kd-vs-cll}. Pokud se nerovná řešení \eng{cell linked listu} a k-d stromu, tak vypíšeme vstup a tyto rozdílné výsledky. Jednotlivými výsledky jsou pole indexů do pole vstupních dat, které jsou v dostatečné blízkosti ke vstupní hodnotě.
+
+\begin{lstlisting}[caption={Srovnání řešení k-d stromu a cell linked listu}, label={listing:kd-vs-cll}]
+using MovingWeightedLeastSquares
+
+xs = collect(-4:0.2:4)
+f = x -> 2sin(x) * cos(x) + 10
+fs = [f(x) for x in xs]
+w = (d, e) -> exp(-d^2)
+
+kd = mwlsKd(xs, fs, 0.4, w)
+cll = mwlsCll(xs, fs, 0.4, w)
+
+for x in xs
+    cllRes = sort(cllInrange(cll.cll, [x, 0], cll.EPS))
+    kdRes = sort(inrange(kd.tree, [x, 0], kd.EPS))
+    if cllRes != kdRes
+      @show x, cllRes, kdres
+    end
+end
+\end{lstlisting}
+
+ Z výstupu programu \ref{listing:kd-vs-cll} (viz \ref{output:kd-vs-cll}) vidíme, že k-d strom v některých vstupních hodnotách vrací nepřesné výsledky. To může být např. dáno tím, že tato implementace nepodporuje práci v $1$-rozměrném prostoru.
+
+\begin{lstlisting}[caption={Výstup programu \ref{listing:kd-vs-cll}}, label={output:kd-vs-cll}]
+(x, cllRes, kdRes) = (-3.2, [3, 4, 5, 6, 7], [3, 4, 5, 6])
+(x, cllRes, kdRes) = (-2.8, [5, 6, 7, 8, 9], [6, 7, 8, 9])
+(x, cllRes, kdRes) = (-2.2, [8, 9, 10, 11, 12], [8, 9, 10, 11])
+...
+...
+(x, cllRes, kdRes) = (-1.4, [12, 13, 14, 15, 16], [13, 14, 15, 16])
+...
+(x, cllRes, kdRes) = (2.2, [30, 31, 32, 33, 34], [31, 32, 33, 34])
+(x, cllRes, kdRes) = (2.8, [33, 34, 35, 36, 37], [33, 34, 35, 36])
+(x, cllRes, kdRes) = (3.2, [35, 36, 37, 38, 39], [36, 37, 38, 39])
+\end{lstlisting}
+
